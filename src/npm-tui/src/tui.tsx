@@ -10,7 +10,7 @@ function Fetch() {
 
     useEffect(() => {
         async function fetchComponents() {
-            const response = await fetch("http://localhost:8000/api/");
+            const response = await fetch("https://tui-w8c1.onrender.com/api/");
             const data = await response.json();
             console.log(data);
             setPropsList(data);
