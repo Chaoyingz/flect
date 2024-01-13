@@ -1,7 +1,8 @@
-import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from tui.components import Avatar, Button, Container
+from fastapi.responses import HTMLResponse
+from tui.components import Avatar, Button, Container, Logo
+from tui.prebuild import get_prebuild_html
 
 app = FastAPI()
 
@@ -15,8 +16,9 @@ app.add_middleware(
 
 
 @app.get('/api/')
-async def api_root():
+async def home():
     return [
+        Logo(text='tui', size='lg'),
         Button(children='Hello Button!'),
         Avatar(fallback='Hello Avatar!'),
         Container(
@@ -28,9 +30,5 @@ async def api_root():
 
 
 @app.get('/')
-async def root():
-    return {'message': 'Hello World'}
-
-
-if __name__ == '__main__':
-    uvicorn.run(app, port=8000)
+async def prebuild():
+    return HTMLResponse(get_prebuild_html('tui', 'https://cdn.jsdelivr.net/npm/@chaoying/npm-tui@0.1.0/dist'))

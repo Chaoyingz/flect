@@ -1,7 +1,7 @@
 {
-    "name": "npm-tui",
-    "private": true,
-    "version": "0.0.0",
+    "name": "@chaoying/npm-tui",
+    "private": false,
+    "version": "0.1.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -37,5 +37,9 @@
         "ts-json-schema-generator": "^1.5.0",
         "typescript": "^5.2.2",
         "vite": "^5.0.8"
-    }
+    },
+    "description": "Tui is a quick and easy way to build web applications. It's based on FastAPI for speedy backend development and Shadcn UI for slick user interfaces.",
+    "main": "dist/index.html",
+    "author": "chaoying",
+    "license": "MIT"
 }

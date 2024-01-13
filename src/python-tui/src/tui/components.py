@@ -21,13 +21,20 @@ class Avatar(BaseModel):
 
 class Container(BaseModel):
     ctype: Literal['container'] = 'container'
+
     className: Optional[str] = None
     components: Optional[list['AnyComponent']] = None
-
     tag: Optional[Literal['div', 'section', 'header', 'footer', 'main', 'nav']] = None
 
 
+class Logo(BaseModel):
+    ctype: Literal['logo'] = 'logo'
+
+    size: Literal['sm', 'md', 'lg'] = 'md'
+    text: str
+
+
 AnyComponent = Annotated[
-    Union[Button, Avatar, Container],
+    Union[Button, Avatar, Container, Logo],
     Field(discriminator='ctype'),
 ]
