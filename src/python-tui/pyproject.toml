@@ -1,0 +1,27 @@
+[project]
+name = "tui"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Chaoying", email = "chaunceywe@gmail.com"},
+]
+dependencies = [
+    "fastapi>=0.108.0",
+    "uvicorn>=0.25.0",
+]
+requires-python = ">=3.9"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+package-type = "library"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "ruff>=0.1.12",
+]
