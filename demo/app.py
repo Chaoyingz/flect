@@ -31,4 +31,4 @@ async def home():
 
 @app.get('/')
 async def prebuild():
-    return HTMLResponse(get_prebuild_html('tui', 'https://cdn.jsdelivr.net/npm/@chaoying/npm-tui@0.1.0/dist'))
+    return HTMLResponse(get_prebuild_html('tui', 'https://cdn.jsdelivr.net/npm/@chaoying/npm-tui@0.1.1/dist'))
