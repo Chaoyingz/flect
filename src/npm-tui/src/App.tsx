@@ -1,7 +1,7 @@
-import { Tui } from "./tui";
+import { Tui } from './tui'
 
 function App() {
-    return <Tui />;
+  return <Tui />
 }
 
-export default App;
+export default App
