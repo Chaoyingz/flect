@@ -15,3 +15,9 @@ repos:
           entry: make format
           language: system
           pass_filenames: false
+
+        - id: js-prettier
+          name: js-prettier
+          types_or: [ javascript, jsx, ts, tsx, css, json, markdown ]
+          entry: npm run prettier
+          language: system
