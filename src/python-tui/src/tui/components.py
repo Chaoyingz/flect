@@ -24,7 +24,7 @@ class Container(BaseModel):
 
     className: Optional[str] = None
     components: Optional[list["AnyComponent"]] = None
-    tag: Optional[Literal["div", "section", "header", "footer", "main", "nav"]] = None
+    tag: Optional[Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
 
 
 class Logo(BaseModel):
@@ -34,7 +34,23 @@ class Logo(BaseModel):
     text: str
 
 
+class Heading(BaseModel):
+    ctype: Literal["heading"] = "heading"
+
+    level: Literal[1, 2, 3, 4, 5, 6]
+    text: str
+    id: Optional[str] = None
+
+
+class Link(BaseModel):
+    ctype: Literal["link"] = "link"
+
+    href: str
+    text: str
+    className: Optional[str] = None
+
+
 AnyComponent = Annotated[
-    Union[Button, Avatar, Container, Logo],
+    Union[Button, Avatar, Container, Logo, Heading, Link],
     Field(discriminator="ctype"),
 ]

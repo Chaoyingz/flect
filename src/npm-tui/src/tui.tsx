@@ -6,7 +6,10 @@ type TuiProps = {
 }
 
 export function Tui({ rootUrl = '/api' }: TuiProps) {
-  return <Fetch url={rootUrl} />
+  console.log(window.location.href)
+  console.log(window.location)
+  const url = rootUrl + window.location.pathname
+  return <Fetch url={url} />
 }
 
 type FetchProps = {
@@ -17,14 +20,21 @@ function Fetch({ url }: FetchProps) {
   const [propsList, setPropsList] = useState<ComponentProps[]>([])
 
   useEffect(() => {
+    let ignore = false
     async function fetchComponents() {
+      if (ignore) {
+        return
+      }
       const response = await fetch(url)
       const data = await response.json()
       console.log(data)
       setPropsList(data)
     }
     fetchComponents()
-  }, [])
+    return () => {
+      ignore = true
+    }
+  }, [url])
   return <Render propsList={propsList} />
 }
 

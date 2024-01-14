@@ -1,7 +1,7 @@
 import { Tui } from './tui'
 
 function App() {
-  return <Tui />
+  return <Tui rootUrl="/api" />
 }
 
 export default App
