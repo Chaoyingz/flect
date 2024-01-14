@@ -78,7 +78,7 @@ def layout(components: list[c.AnyComponent]) -> list[c.AnyComponent]:
 
 @app.get("/api/")
 async def home():
-    return layout([])
+    return layout([c.Heading(level=1, text="Tui")])
 
 
 @app.get("/api/components/button")
@@ -121,6 +121,6 @@ async def link():
     return layout([c.Link(href="/components/button", text="Link")])
 
 
-@app.get("/")
+@app.get("/{path:path}")
 async def prebuild():
     return HTMLResponse(get_prebuild_html("tui", "https://cdn.jsdelivr.net/npm/@chaoying/npm-tui@0.1.2/dist"))
