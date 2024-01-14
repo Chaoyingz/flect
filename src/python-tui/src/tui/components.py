@@ -4,15 +4,15 @@ from pydantic import BaseModel, Field
 
 
 class Button(BaseModel):
-    ctype: Literal['button'] = 'button'
+    ctype: Literal["button"] = "button"
 
-    variant: Literal['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'] = 'default'
-    size: Literal['default', 'sm', 'lg', 'icon'] = 'default'
+    variant: Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = "default"
+    size: Literal["default", "sm", "lg", "icon"] = "default"
     children: str
 
 
 class Avatar(BaseModel):
-    ctype: Literal['avatar'] = 'avatar'
+    ctype: Literal["avatar"] = "avatar"
 
     src: Optional[str] = None
     alt: Optional[str] = None
@@ -20,21 +20,21 @@ class Avatar(BaseModel):
 
 
 class Container(BaseModel):
-    ctype: Literal['container'] = 'container'
+    ctype: Literal["container"] = "container"
 
     className: Optional[str] = None
-    components: Optional[list['AnyComponent']] = None
-    tag: Optional[Literal['div', 'section', 'header', 'footer', 'main', 'nav']] = None
+    components: Optional[list["AnyComponent"]] = None
+    tag: Optional[Literal["div", "section", "header", "footer", "main", "nav"]] = None
 
 
 class Logo(BaseModel):
-    ctype: Literal['logo'] = 'logo'
+    ctype: Literal["logo"] = "logo"
 
-    size: Literal['sm', 'md', 'lg'] = 'md'
+    size: Literal["sm", "md", "lg"] = "md"
     text: str
 
 
 AnyComponent = Annotated[
     Union[Button, Avatar, Container, Logo],
-    Field(discriminator='ctype'),
+    Field(discriminator="ctype"),
 ]
