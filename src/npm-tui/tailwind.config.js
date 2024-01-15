@@ -1,8 +1,30 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
-  content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
-  safelist: [{ pattern: /./ }],
+  content: ['./src/**/*.{ts,tsx}'],
+  safelist: [
+    {
+      pattern: /^w-/,
+    },
+    {
+      pattern: /^h-/,
+    },
+    {
+      pattern: /^flex-/,
+    },
+    {
+      pattern: /^grid-/,
+    },
+    {
+      pattern: /^m\w?-/,
+    },
+    {
+      pattern: /^p\w?-/,
+    },
+    {
+      pattern: /^gap-/,
+    },
+  ],
   prefix: '',
   theme: {
     container: {

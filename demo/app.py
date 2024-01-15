@@ -21,7 +21,10 @@ def layout(components: list[c.AnyComponent]) -> list[c.AnyComponent]:
             tag="header",
             className="flex justify-between container h-14 border-b items-center",
             components=[
-                c.Logo(text="tui", size="lg"),
+                c.Link(
+                    href="/",
+                    text="Tui",
+                )
             ],
         ),
         c.Container(
