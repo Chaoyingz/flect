@@ -4,8 +4,16 @@ import { Container, ContainerProps } from '@/components/tui/container'
 import { Logo, LogoProps } from './tui/logo'
 import { Heading, HeadingProps } from './tui/heading'
 import { Link, LinkProps } from './tui/link'
+import { Text, TextProps } from './tui/text'
 
-export type ComponentProps = ButtonProps | AvatarProps | ContainerProps | LogoProps | HeadingProps | LinkProps
+export type ComponentProps =
+  | ButtonProps
+  | AvatarProps
+  | ContainerProps
+  | LogoProps
+  | HeadingProps
+  | LinkProps
+  | TextProps
 
 export function AnyComponentList({ propsList }: { propsList: ComponentProps[] }) {
   return (
@@ -32,5 +40,7 @@ export function AnyComponent(props: ComponentProps) {
       return <Heading {...props} />
     case 'link':
       return <Link {...props} />
+    case 'text':
+      return <Text {...props} />
   }
 }

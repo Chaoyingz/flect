@@ -46,11 +46,16 @@ class Link(BaseModel):
     ctype: Literal["link"] = "link"
 
     href: str
+    components: Optional[list["AnyComponent"]] = None
+
+
+class Text(BaseModel):
+    ctype: Literal["text"] = "text"
+
     text: str
-    className: Optional[str] = None
 
 
 AnyComponent = Annotated[
-    Union[Button, Avatar, Container, Logo, Heading, Link],
+    Union[Button, Avatar, Container, Logo, Heading, Link, Text],
     Field(discriminator="ctype"),
 ]

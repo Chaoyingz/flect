@@ -23,7 +23,11 @@ def layout(components: list[c.AnyComponent]) -> list[c.AnyComponent]:
             components=[
                 c.Link(
                     href="/",
-                    text="Tui",
+                    components=[
+                        c.Logo(
+                            text="Tui",
+                        )
+                    ],
                 )
             ],
         ),
@@ -45,27 +49,59 @@ def layout(components: list[c.AnyComponent]) -> list[c.AnyComponent]:
                                     components=[
                                         c.Link(
                                             href="/components/button",
-                                            text="Button",
+                                            components=[
+                                                c.Text(
+                                                    text="Button",
+                                                )
+                                            ],
                                         ),
                                         c.Link(
                                             href="/components/avatar",
-                                            text="Avatar",
+                                            components=[
+                                                c.Text(
+                                                    text="Avatar",
+                                                )
+                                            ],
                                         ),
                                         c.Link(
                                             href="/components/container",
-                                            text="Container",
+                                            components=[
+                                                c.Text(
+                                                    text="Container",
+                                                )
+                                            ],
                                         ),
                                         c.Link(
                                             href="/components/logo",
-                                            text="Logo",
+                                            components=[
+                                                c.Text(
+                                                    text="Logo",
+                                                )
+                                            ],
                                         ),
                                         c.Link(
                                             href="/components/heading",
-                                            text="Heading",
+                                            components=[
+                                                c.Text(
+                                                    text="Heading",
+                                                )
+                                            ],
                                         ),
                                         c.Link(
                                             href="/components/link",
-                                            text="Link",
+                                            components=[
+                                                c.Text(
+                                                    text="Link",
+                                                )
+                                            ],
+                                        ),
+                                        c.Link(
+                                            href="/components/text",
+                                            components=[
+                                                c.Text(
+                                                    text="Text",
+                                                )
+                                            ],
                                         ),
                                     ],
                                 ),
@@ -81,7 +117,12 @@ def layout(components: list[c.AnyComponent]) -> list[c.AnyComponent]:
 
 @app.get("/api/")
 async def home():
-    return layout([c.Heading(level=1, text="Tui")])
+    return layout(
+        [
+            c.Heading(level=1, text="Tui"),
+            c.Text(text="Welcome to Tui!"),
+        ]
+    )
 
 
 @app.get("/api/components/button")
@@ -104,6 +145,9 @@ async def container():
         [
             c.Container(
                 tag="div",
+                components=[
+                    c.Text(text="Container"),
+                ],
             )
         ]
     )
@@ -121,9 +165,14 @@ async def heading():
 
 @app.get("/api/components/link")
 async def link():
-    return layout([c.Link(href="/components/button", text="Link")])
+    return layout([c.Link(href="/components/button", components=[c.Text(text="Link")])])
+
+
+@app.get("/api/components/text")
+async def text():
+    return layout([c.Text(text="Text")])
 
 
 @app.get("/{path:path}")
 async def prebuild():
-    return HTMLResponse(get_prebuild_html("tui", "https://cdn.jsdelivr.net/npm/@chaoying/npm-tui@0.1.2/dist"))
+    return HTMLResponse(get_prebuild_html("tui", "https://cdn.jsdelivr.net/npm/@chaoying/npm-tui@0.1.3/dist"))
