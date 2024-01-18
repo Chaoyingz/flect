@@ -1,3 +1,7 @@
+from fastapi import FastAPI
+from starlette.responses import HTMLResponse
+
+
 def get_prebuild_html(title: str, static_assets_url: str) -> str:
     prebuild_html = f"""\
         <!DOCTYPE html>
@@ -30,3 +34,13 @@ def get_prebuild_html(title: str, static_assets_url: str) -> str:
     </html>
         """
     return prebuild_html
+
+
+def add_prebuild_route(
+    app: FastAPI,
+    title: str,
+    static_assets_url: str,
+) -> None:
+    @app.get("/{path:path}")
+    async def prebuild():
+        return HTMLResponse(get_prebuild_html(title, static_assets_url))

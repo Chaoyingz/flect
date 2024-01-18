@@ -5,9 +5,7 @@ type TuiProps = {
   rootUrl: string
 }
 
-export function Tui({ rootUrl = '/api' }: TuiProps) {
-  console.log(window.location.href)
-  console.log(window.location)
+export function Tui({ rootUrl }: TuiProps) {
   const url = rootUrl + window.location.pathname
   return <Fetch url={url} />
 }
@@ -27,7 +25,6 @@ function Fetch({ url }: FetchProps) {
       }
       const response = await fetch(url)
       const data = await response.json()
-      console.log(data)
       setPropsList(data)
     }
     fetchComponents()

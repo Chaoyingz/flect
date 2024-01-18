@@ -16,6 +16,10 @@ lint:
 	ruff check $(path) demo
 	ruff format --check $(path) demo
 
+.PHONY: typecheck
+typecheck:
+	pyright
+
 .PHONY: dev
 dev:
 	uvicorn demo.app:app --reload --reload-dir .
