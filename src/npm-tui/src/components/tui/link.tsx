@@ -5,14 +5,14 @@ export interface LinkProps {
   ctype: 'link'
   href: string
   text: string
-  components?: ComponentProps[]
+  children?: ComponentProps[]
 }
 
 export function Link(props: LinkProps) {
-  const { href, components } = props
+  const { href, children } = props
   return (
     <a href={href} className={cn('text-primary underline-offset-4 hover:underline')}>
-      <AnyComponentList propsList={components || []} />
+      <AnyComponentList children={children} />
     </a>
   )
 }

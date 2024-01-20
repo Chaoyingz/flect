@@ -23,7 +23,7 @@ class Container(BaseModel):
     ctype: Literal["container"] = "container"
 
     className: Optional[str] = None
-    components: Optional[list["AnyComponent"]] = None
+    children: Optional[list["AnyComponent"]] = None
     tag: Optional[Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
 
 
@@ -46,7 +46,7 @@ class Link(BaseModel):
     ctype: Literal["link"] = "link"
 
     href: str
-    components: Optional[list["AnyComponent"]] = None
+    children: Optional[list["AnyComponent"]] = None
 
 
 class Text(BaseModel):

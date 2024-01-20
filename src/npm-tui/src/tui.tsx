@@ -15,7 +15,7 @@ type FetchProps = {
 }
 
 function Fetch({ url }: FetchProps) {
-  const [propsList, setPropsList] = useState<ComponentProps[]>([])
+  const [components, setComponents] = useState<ComponentProps[]>([])
 
   useEffect(() => {
     let ignore = false
@@ -25,16 +25,16 @@ function Fetch({ url }: FetchProps) {
       }
       const response = await fetch(url)
       const data = await response.json()
-      setPropsList(data)
+      setComponents(data)
     }
     fetchComponents()
     return () => {
       ignore = true
     }
   }, [url])
-  return <Render propsList={propsList} />
+  return <Render children={components} />
 }
 
-function Render(params: { propsList: ComponentProps[] }) {
-  return <AnyComponentList propsList={params.propsList} />
+function Render(params: { children: ComponentProps[] }) {
+  return <AnyComponentList children={params.children} />
 }

@@ -6,7 +6,7 @@ async def landing_page() -> list[c.AnyComponent]:
         c.Container(
             tag="section",
             className="container",
-            components=[
+            children=[
                 c.Heading(
                     level=1,
                     text="Turning ideas into web app fast.",
