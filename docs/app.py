@@ -1,7 +1,7 @@
 from fastapi import FastAPI
+from tui import init_tui
 
 from docs.routes import root_layout_router
-from tui import init_tui
 
 
 def get_application() -> FastAPI:

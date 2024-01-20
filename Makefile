@@ -8,13 +8,13 @@ install:
 
 .PHONY: format
 format:
-	ruff check --fix-only $(path) demo
-	ruff format $(path) demo
+	ruff check --fix-only $(path) demo docs
+	ruff format $(path) demo docs
 
 .PHONY: lint
 lint:
 	ruff check $(path) demo
-	ruff format --check $(path) demo
+	ruff format --check $(path) demo docs
 
 .PHONY: typecheck
 typecheck:

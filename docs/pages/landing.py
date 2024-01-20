@@ -11,6 +11,6 @@ async def landing_page() -> list[c.AnyComponent]:
                     level=1,
                     text="Turning ideas into web app fast.",
                 )
-            ]
+            ],
         )
     ]
