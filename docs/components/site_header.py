@@ -4,11 +4,11 @@ from tui import components as c
 async def site_header() -> c.AnyComponent:
     return c.Container(
         tag="header",
-        className="flex justify-between container h-14 border-b items-center",
+        className="flex w-full justify-between container h-14 border-b items-center text-sm",
         children=[
             c.Container(
                 tag="nav",
-                className="flex items-center gap-6 text-sm",
+                className="flex items-center gap-6",
                 children=[
                     c.Link(
                         href="/",
@@ -35,6 +35,19 @@ async def site_header() -> c.AnyComponent:
                             )
                         ],
                     ),
+                ],
+            ),
+            c.Container(
+                tag="div",
+                children=[
+                    c.Link(
+                        href="https://github.com/Chaoyingz/tui",
+                        children=[
+                            c.Text(
+                                text="GitHub",
+                            )
+                        ],
+                    )
                 ],
             ),
         ],

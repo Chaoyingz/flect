@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils'
+
 export interface HeadingProps {
   ctype: 'heading'
   className?: string
@@ -10,7 +12,7 @@ export function Heading(props: HeadingProps) {
   const { level, text, id } = props
   const Tag = `h${level}` as keyof JSX.IntrinsicElements
   return (
-    <Tag id={id} className="font-semibold">
+    <Tag id={id} className={cn('font-semibold', props.className)}>
       {text}
     </Tag>
   )

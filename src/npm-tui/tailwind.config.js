@@ -30,9 +30,16 @@ module.exports = {
       pattern: /^text-\w{2}$/,
     },
     {
+      pattern: /^text-\d{1}\w{2}$/,
+    },
+    {
       pattern: /^font-/,
     },
+    {
+      pattern: /^justify-/,
+    },
     'border-b',
+    'text-center',
   ],
   prefix: '',
   theme: {
