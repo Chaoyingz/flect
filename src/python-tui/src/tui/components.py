@@ -11,14 +11,6 @@ class _BaseContainerComponent(_BaseComponent):
     children: _t.Optional[list["AnyComponent"]] = None
 
 
-class Button(_BaseComponent):
-    ctype: _t.Literal["button"] = "button"
-
-    variant: _t.Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = "default"
-    size: _t.Literal["default", "sm", "lg", "icon"] = "default"
-    children: str
-
-
 class Avatar(_BaseComponent):
     ctype: _t.Literal["avatar"] = "avatar"
 
@@ -27,18 +19,19 @@ class Avatar(_BaseComponent):
     fallback: str
 
 
+class Button(_BaseComponent):
+    ctype: _t.Literal["button"] = "button"
+
+    variant: _t.Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = "default"
+    size: _t.Literal["default", "sm", "lg", "icon"] = "default"
+    children: str
+
+
 class Container(_BaseContainerComponent):
     ctype: _t.Literal["container"] = "container"
 
     className: _t.Optional[str] = None
     tag: _t.Optional[_t.Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
-
-
-class Logo(_BaseComponent):
-    ctype: _t.Literal["logo"] = "logo"
-
-    size: _t.Literal["sm", "md", "lg"] = "md"
-    text: str
 
 
 class Heading(_BaseComponent):
@@ -55,6 +48,13 @@ class Link(_BaseContainerComponent):
     href: str
 
 
+class Logo(_BaseComponent):
+    ctype: _t.Literal["logo"] = "logo"
+
+    size: _t.Literal["sm", "md", "lg"] = "md"
+    text: str
+
+
 class Text(_BaseComponent):
     ctype: _t.Literal["text"] = "text"
 
@@ -62,7 +62,7 @@ class Text(_BaseComponent):
 
 
 AnyComponent = _t.Annotated[
-    _t.Union[Button, Avatar, Container, Logo, Heading, Link, Text],
+    _t.Union[Avatar, Button, Container, Heading, Link, Logo, Text],
     _p.Field(discriminator="ctype"),
 ]
 AnyComponents = list[AnyComponent]
@@ -73,12 +73,12 @@ for container_component in _BaseContainerComponent.__subclasses__():
 
 
 __all__ = (
-    "Button",
     "Avatar",
+    "Button",
     "Container",
-    "Logo",
     "Heading",
     "Link",
+    "Logo",
     "Text",
     "AnyComponent",
     "AnyComponents",
