@@ -1,61 +1,72 @@
-from typing import Annotated, Literal, Optional, Union
+import typing as _t
 
-from pydantic import BaseModel, Field
+import pydantic as _p
 
 
-class Button(BaseModel):
-    ctype: Literal["button"] = "button"
+class BaseComponent(_p.BaseModel):
+    model_config = _p.ConfigDict(extra="forbid")
 
-    variant: Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = "default"
-    size: Literal["default", "sm", "lg", "icon"] = "default"
+
+class BaseContainerComponent(BaseComponent):
+    children: _t.Optional[list["AnyComponent"]] = None
+
+
+class Button(BaseComponent):
+    ctype: _t.Literal["button"] = "button"
+
+    variant: _t.Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = "default"
+    size: _t.Literal["default", "sm", "lg", "icon"] = "default"
     children: str
 
 
-class Avatar(BaseModel):
-    ctype: Literal["avatar"] = "avatar"
+class Avatar(BaseComponent):
+    ctype: _t.Literal["avatar"] = "avatar"
 
-    src: Optional[str] = None
-    alt: Optional[str] = None
+    src: _t.Optional[str] = None
+    alt: _t.Optional[str] = None
     fallback: str
 
 
-class Container(BaseModel):
-    ctype: Literal["container"] = "container"
+class Container(BaseContainerComponent):
+    ctype: _t.Literal["container"] = "container"
 
-    className: Optional[str] = None
-    children: Optional[list["AnyComponent"]] = None
-    tag: Optional[Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
+    className: _t.Optional[str] = None
+    tag: _t.Optional[_t.Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
 
 
-class Logo(BaseModel):
-    ctype: Literal["logo"] = "logo"
+class Logo(BaseComponent):
+    ctype: _t.Literal["logo"] = "logo"
 
-    size: Literal["sm", "md", "lg"] = "md"
+    size: _t.Literal["sm", "md", "lg"] = "md"
     text: str
 
 
-class Heading(BaseModel):
-    ctype: Literal["heading"] = "heading"
+class Heading(BaseComponent):
+    ctype: _t.Literal["heading"] = "heading"
 
-    level: Literal[1, 2, 3, 4, 5, 6]
+    level: _t.Literal[1, 2, 3, 4, 5, 6]
     text: str
-    id: Optional[str] = None
+    id: _t.Optional[str] = None
 
 
-class Link(BaseModel):
-    ctype: Literal["link"] = "link"
+class Link(BaseContainerComponent):
+    ctype: _t.Literal["link"] = "link"
 
     href: str
-    children: Optional[list["AnyComponent"]] = None
 
 
-class Text(BaseModel):
-    ctype: Literal["text"] = "text"
+class Text(BaseComponent):
+    ctype: _t.Literal["text"] = "text"
 
     text: str
 
 
-AnyComponent = Annotated[
-    Union[Button, Avatar, Container, Logo, Heading, Link, Text],
-    Field(discriminator="ctype"),
+AnyComponent = _t.Annotated[
+    _t.Union[Button, Avatar, Container, Logo, Heading, Link, Text],
+    _p.Field(discriminator="ctype"),
 ]
+
+
+# Rebuild forward ref models
+for container_component in BaseContainerComponent.__subclasses__():
+    container_component.model_rebuild()

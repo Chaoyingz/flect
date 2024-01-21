@@ -1,6 +1,15 @@
+from fastapi import APIRouter
 from tui import components as c
 
+from docs.layouts.root_layout import root_layout
 
+router = APIRouter(
+    prefix="/api",
+)
+
+
+@router.get(path="/")
+@root_layout
 async def landing_page() -> list[c.AnyComponent]:
     return [
         c.Container(
