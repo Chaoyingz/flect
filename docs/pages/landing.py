@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from tui import apply_layout
 from tui import components as c
 
 from docs.layouts.root_layout import root_layout
@@ -9,7 +10,7 @@ router = APIRouter(
 
 
 @router.get(path="/")
-@root_layout
+@apply_layout(root_layout)
 async def landing_page() -> list[c.AnyComponent]:
     return [
         c.Container(
