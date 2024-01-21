@@ -11,7 +11,7 @@ router = APIRouter(
 
 @router.get(path="/")
 @apply_layout(root_layout)
-async def landing_page() -> list[c.AnyComponent]:
+async def landing_page() -> c.AnyComponents:
     return [
         c.Container(
             tag="section",

@@ -15,7 +15,7 @@ export type ComponentProps =
   | LinkProps
   | TextProps
 
-export function AnyComponentList({ children }: { children?: ComponentProps[] }) {
+export function AnyComponents({ children }: { children?: ComponentProps[] }) {
   return <>{children && children.map((props, index) => <AnyComponent key={index} {...props} />)}</>
 }
 

@@ -1,4 +1,4 @@
-import { AnyComponentList, ComponentProps } from '../any-component'
+import { AnyComponents, ComponentProps } from '../any-component'
 
 export interface ContainerProps {
   ctype: 'container'
@@ -12,7 +12,7 @@ export function Container(props: ContainerProps) {
   const Tag = tag || 'div'
   return (
     <Tag className={className}>
-      <AnyComponentList children={children} />
+      <AnyComponents children={children} />
     </Tag>
   )
 }

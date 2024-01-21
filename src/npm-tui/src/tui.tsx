@@ -1,4 +1,4 @@
-import { AnyComponentList, ComponentProps } from './components/any-component'
+import { AnyComponents, ComponentProps } from './components/any-component'
 import { useEffect, useState } from 'react'
 
 type TuiProps = {
@@ -36,5 +36,5 @@ function Fetch({ url }: FetchProps) {
 }
 
 function Render(params: { children: ComponentProps[] }) {
-  return <AnyComponentList children={params.children} />
+  return <AnyComponents children={params.children} />
 }

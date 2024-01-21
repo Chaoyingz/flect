@@ -3,15 +3,15 @@ import typing as _t
 import pydantic as _p
 
 
-class BaseComponent(_p.BaseModel):
+class _BaseComponent(_p.BaseModel):
     model_config = _p.ConfigDict(extra="forbid")
 
 
-class BaseContainerComponent(BaseComponent):
+class _BaseContainerComponent(_BaseComponent):
     children: _t.Optional[list["AnyComponent"]] = None
 
 
-class Button(BaseComponent):
+class Button(_BaseComponent):
     ctype: _t.Literal["button"] = "button"
 
     variant: _t.Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = "default"
@@ -19,7 +19,7 @@ class Button(BaseComponent):
     children: str
 
 
-class Avatar(BaseComponent):
+class Avatar(_BaseComponent):
     ctype: _t.Literal["avatar"] = "avatar"
 
     src: _t.Optional[str] = None
@@ -27,21 +27,21 @@ class Avatar(BaseComponent):
     fallback: str
 
 
-class Container(BaseContainerComponent):
+class Container(_BaseContainerComponent):
     ctype: _t.Literal["container"] = "container"
 
     className: _t.Optional[str] = None
     tag: _t.Optional[_t.Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
 
 
-class Logo(BaseComponent):
+class Logo(_BaseComponent):
     ctype: _t.Literal["logo"] = "logo"
 
     size: _t.Literal["sm", "md", "lg"] = "md"
     text: str
 
 
-class Heading(BaseComponent):
+class Heading(_BaseComponent):
     ctype: _t.Literal["heading"] = "heading"
 
     level: _t.Literal[1, 2, 3, 4, 5, 6]
@@ -49,13 +49,13 @@ class Heading(BaseComponent):
     id: _t.Optional[str] = None
 
 
-class Link(BaseContainerComponent):
+class Link(_BaseContainerComponent):
     ctype: _t.Literal["link"] = "link"
 
     href: str
 
 
-class Text(BaseComponent):
+class Text(_BaseComponent):
     ctype: _t.Literal["text"] = "text"
 
     text: str
@@ -65,8 +65,21 @@ AnyComponent = _t.Annotated[
     _t.Union[Button, Avatar, Container, Logo, Heading, Link, Text],
     _p.Field(discriminator="ctype"),
 ]
-
+AnyComponents = list[AnyComponent]
 
 # Rebuild forward ref models
-for container_component in BaseContainerComponent.__subclasses__():
+for container_component in _BaseContainerComponent.__subclasses__():
     container_component.model_rebuild()
+
+
+__all__ = (
+    "Button",
+    "Avatar",
+    "Container",
+    "Logo",
+    "Heading",
+    "Link",
+    "Text",
+    "AnyComponent",
+    "AnyComponents",
+)
