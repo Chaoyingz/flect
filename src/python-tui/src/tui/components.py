@@ -48,13 +48,6 @@ class Link(_BaseContainerComponent):
     href: str
 
 
-class Logo(_BaseComponent):
-    ctype: _t.Literal["logo"] = "logo"
-
-    size: _t.Literal["sm", "md", "lg"] = "md"
-    text: str
-
-
 class Text(_BaseComponent):
     ctype: _t.Literal["text"] = "text"
 
@@ -62,7 +55,7 @@ class Text(_BaseComponent):
 
 
 AnyComponent = _t.Annotated[
-    _t.Union[Avatar, Button, Container, Heading, Link, Logo, Text],
+    _t.Union[Avatar, Button, Container, Heading, Link, Text],
     _p.Field(discriminator="ctype"),
 ]
 AnyComponents = list[AnyComponent]
@@ -78,7 +71,6 @@ __all__ = (
     "Container",
     "Heading",
     "Link",
-    "Logo",
     "Text",
     "AnyComponent",
     "AnyComponents",

@@ -12,7 +12,11 @@ async def site_header() -> c.AnyComponent:
                 children=[
                     c.Link(
                         href="/",
-                        children=[c.Logo(text="tui", size="lg")],
+                        children=[
+                            c.Text(
+                                text="tui",
+                            )
+                        ],
                     ),
                     c.Link(
                         href="/docs",
