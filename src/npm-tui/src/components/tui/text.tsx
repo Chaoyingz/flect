@@ -5,6 +5,6 @@ export interface TextProps {
 }
 
 export function Text(props: TextProps) {
-  const { text } = props
-  return <>{text}</>
+  const { text, className } = props
+  return <>{className ? <span className={className}>{text}</span> : <>{text}</>}</>
 }

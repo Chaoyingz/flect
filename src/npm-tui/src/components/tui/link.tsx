@@ -12,7 +12,7 @@ export interface LinkProps {
 export function Link(props: LinkProps) {
   const { href, children } = props
   return (
-    <a href={href} className={cn('text-primary underline-offset-4 hover:underline')}>
+    <a href={href} className={cn('text-primary underline-offset-4 hover:underline', props.className)}>
       <AnyComponents children={children} />
     </a>
   )

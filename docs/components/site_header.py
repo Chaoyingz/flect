@@ -8,13 +8,14 @@ async def site_header() -> c.AnyComponent:
         children=[
             c.Container(
                 tag="nav",
-                className="flex items-center gap-6",
+                className="flex items-center gap-6 text-sm",
                 children=[
                     c.Link(
                         href="/",
                         children=[
                             c.Text(
                                 text="tui",
+                                className="font-medium text-xl",
                             )
                         ],
                     ),

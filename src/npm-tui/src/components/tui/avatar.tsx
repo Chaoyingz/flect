@@ -9,7 +9,7 @@ export interface AvatarProps {
 }
 export function Avatar(props: AvatarProps) {
   return (
-    <AvatarUI>
+    <AvatarUI className={props.className}>
       <AvatarImage src={props.src} alt={props.alt} />
       <AvatarFallback>{props.fallback}</AvatarFallback>
     </AvatarUI>

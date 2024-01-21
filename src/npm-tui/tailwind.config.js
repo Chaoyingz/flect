@@ -18,20 +18,21 @@ module.exports = {
       pattern: /^grid-/,
     },
     {
-      pattern: /^m\w?-/,
+      pattern: /^m\w?-\d/,
     },
     {
-      pattern: /^p\w?-/,
+      pattern: /^p\w?-\d/,
     },
     {
-      pattern: /^gap-/,
+      pattern: /^gap-\d/,
     },
     {
-      pattern: /^text-/,
+      pattern: /^text-\w{2}$/,
     },
     {
       pattern: /^font-/,
     },
+    'border-b',
   ],
   prefix: '',
   theme: {
