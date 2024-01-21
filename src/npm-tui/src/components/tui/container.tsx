@@ -2,8 +2,8 @@ import { AnyComponents, ComponentProps } from '../any-component'
 
 export interface ContainerProps {
   ctype: 'container'
-  children?: ComponentProps[]
   className?: string
+  children?: ComponentProps[]
   tag?: 'div' | 'section' | 'header' | 'footer' | 'main' | 'nav' | 'aside'
 }
 

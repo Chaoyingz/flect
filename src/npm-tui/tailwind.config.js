@@ -29,6 +29,9 @@ module.exports = {
     {
       pattern: /^text-/,
     },
+    {
+      pattern: /^font-/,
+    },
   ],
   prefix: '',
   theme: {

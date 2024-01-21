@@ -3,6 +3,7 @@ import { AnyComponents, ComponentProps } from '../any-component'
 
 export interface LinkProps {
   ctype: 'link'
+  className?: string
   href: string
   text: string
   children?: ComponentProps[]

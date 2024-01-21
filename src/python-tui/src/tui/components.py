@@ -6,6 +6,8 @@ import pydantic as _p
 class _BaseComponent(_p.BaseModel):
     model_config = _p.ConfigDict(extra="forbid")
 
+    className: _t.Optional[str] = None
+
 
 class _BaseContainerComponent(_BaseComponent):
     children: _t.Optional[list["AnyComponent"]] = None
@@ -30,7 +32,6 @@ class Button(_BaseComponent):
 class Container(_BaseContainerComponent):
     ctype: _t.Literal["container"] = "container"
 
-    className: _t.Optional[str] = None
     tag: _t.Optional[_t.Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
 
 

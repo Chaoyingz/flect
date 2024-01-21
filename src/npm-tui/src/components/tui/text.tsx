@@ -1,5 +1,6 @@
 export interface TextProps {
   ctype: 'text'
+  className?: string
   text: string
 }
 
