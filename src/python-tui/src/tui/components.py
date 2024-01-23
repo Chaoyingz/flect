@@ -6,11 +6,17 @@ import pydantic as _p
 class _BaseComponent(_p.BaseModel):
     model_config = _p.ConfigDict(extra="forbid")
 
-    className: _t.Optional[str] = None
+    className: _t.Optional[str] = _p.Field(
+        None,
+        description="The tailwind class names of the component.",
+    )
 
 
 class _BaseContainerComponent(_BaseComponent):
-    children: _t.Optional[list["AnyComponent"]] = None
+    children: _t.Optional[list["AnyComponent"]] = _p.Field(
+        None,
+        description="The children of the component.",
+    )
 
 
 class Avatar(_BaseComponent):
@@ -55,6 +61,20 @@ class Link(_BaseContainerComponent):
     href: str
 
 
+class Table(_BaseComponent):
+    ctype: _t.Literal["table"] = "table"
+
+    labels: list[str] = []
+    datasets: list[_p.SerializeAsAny[_p.BaseModel]]
+
+    @_p.model_validator(mode="before")
+    @classmethod
+    def set_default_labels(cls, values: _t.Any) -> _t.Any:
+        if not values.get("labels"):
+            values["labels"] = list(values["datasets"][0].model_fields.keys())
+        return values
+
+
 class Text(_BaseComponent):
     ctype: _t.Literal["text"] = "text"
 
@@ -62,7 +82,7 @@ class Text(_BaseComponent):
 
 
 AnyComponent = _t.Annotated[
-    _t.Union[Avatar, Button, Container, Heading, Link, Text],
+    _t.Union[Avatar, Button, Container, Heading, Link, Table, Text],
     _p.Field(discriminator="ctype"),
 ]
 AnyComponents = list[AnyComponent]

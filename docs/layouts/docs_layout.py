@@ -89,6 +89,14 @@ async def docs_layout(children: c.AnyComponents) -> c.AnyComponents:
                                             ],
                                         ),
                                         c.Link(
+                                            href="/components/table",
+                                            children=[
+                                                c.Text(
+                                                    text="Table",
+                                                )
+                                            ],
+                                        ),
+                                        c.Link(
                                             href="/components/text",
                                             children=[
                                                 c.Text(

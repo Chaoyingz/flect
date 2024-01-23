@@ -24,7 +24,7 @@ async def landing_page() -> c.AnyComponents:
                         ),
                         c.Text(
                             text="In the backend, use Pydantic models that match the props of frontend React "
-                            "components. This allows you to create beautiful, interactive UIs use Python.",
+                            "components. This allows you to create beautiful, interactive UIs using Python.",
                             className="text-center text-xl mt-8 w-1/2",
                         ),
                         c.Container(
