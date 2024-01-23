@@ -24,8 +24,14 @@ class Avatar(_BaseComponent):
 class Button(_BaseComponent):
     ctype: _t.Literal["button"] = "button"
 
-    variant: _t.Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = "default"
-    size: _t.Literal["default", "sm", "lg", "icon"] = "default"
+    variant: _t.Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = _p.Field(
+        "default",
+        description="The variant of the button.",
+    )
+    size: _t.Literal["default", "sm", "lg", "icon"] = _p.Field(
+        "default",
+        description="The size of the button.",
+    )
     children: str
 
 

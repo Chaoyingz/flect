@@ -44,7 +44,7 @@ async def landing_page() -> c.AnyComponents:
                                     children=[
                                         c.Button(
                                             children="GitHub",
-                                            variant="secondary",
+                                            variant="outline",
                                         )
                                     ],
                                 ),
