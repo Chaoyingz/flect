@@ -15,7 +15,7 @@ from tui import components as c
 
 app = FastAPI()
 
-@app.get("/")
+@app.get("/api/")
 def read_root() -> c.AnyComponents:
     return [c.Button(children="Hello tui!")]
 
