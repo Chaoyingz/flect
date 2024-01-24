@@ -14,8 +14,8 @@ tui_router.include_router(components_router)
 def get_application() -> FastAPI:
     application = FastAPI()
     application.include_router(tui_router)
-    init_tui(application)
     return application
 
 
 app = get_application()
+init_tui(app)
