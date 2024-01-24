@@ -22,9 +22,18 @@ class _BaseContainerComponent(_BaseComponent):
 class Avatar(_BaseComponent):
     ctype: _t.Literal["avatar"] = "avatar"
 
-    src: _t.Optional[str] = None
-    alt: _t.Optional[str] = None
-    fallback: str
+    src: _t.Optional[str] = _p.Field(
+        None,
+        description="The source of the avatar.",
+    )
+    alt: _t.Optional[str] = _p.Field(
+        None,
+        description="The alternative text of the avatar.",
+    )
+    fallback: str = _p.Field(
+        ...,
+        description="The fallback text of the avatar.",
+    )
 
 
 class Button(_BaseComponent):
@@ -50,22 +59,40 @@ class Container(_BaseContainerComponent):
 class Heading(_BaseComponent):
     ctype: _t.Literal["heading"] = "heading"
 
-    level: _t.Literal[1, 2, 3, 4, 5, 6]
-    text: str
-    id: _t.Optional[str] = None
+    level: _t.Literal[1, 2, 3, 4, 5, 6] = _p.Field(
+        ...,
+        description="The level of the heading.",
+    )
+    text: str = _p.Field(
+        ...,
+        description="The text of the heading.",
+    )
+    id: _t.Optional[str] = _p.Field(
+        None,
+        description="The id of the heading.",
+    )
 
 
 class Link(_BaseContainerComponent):
     ctype: _t.Literal["link"] = "link"
 
-    href: str
+    href: str = _p.Field(
+        ...,
+        description="The href of the link.",
+    )
 
 
 class Table(_BaseComponent):
     ctype: _t.Literal["table"] = "table"
 
-    labels: list[str] = []
-    datasets: list[_p.SerializeAsAny[_p.BaseModel]]
+    labels: list[str] = _p.Field(
+        [],
+        description="The labels of the table, defaults to the keys of the dataset.",
+    )
+    datasets: list[_p.SerializeAsAny[_p.BaseModel]] = _p.Field(
+        ...,
+        description="The datasets of the table.",
+    )
 
     @_p.model_validator(mode="before")
     @classmethod
@@ -78,7 +105,10 @@ class Table(_BaseComponent):
 class Text(_BaseComponent):
     ctype: _t.Literal["text"] = "text"
 
-    text: str
+    text: str = _p.Field(
+        ...,
+        description="The text of the text.",
+    )
 
 
 AnyComponent = _t.Annotated[
