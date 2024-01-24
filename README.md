@@ -20,7 +20,7 @@ from tui import components as c
 app = FastAPI()
 
 @app.get("/api/")
-def read_root() -> c.AnyComponents:
+def index() -> c.AnyComponents:
     return [c.Button(children="Hello tui!")]
 
 init_tui(app)
