@@ -4,18 +4,18 @@ from tui import components as c
 async def site_header() -> c.AnyComponent:
     return c.Container(
         tag="header",
-        className="flex w-full justify-between container h-14 border-b items-center text-sm",
+        class_name="flex w-full justify-between container h-14 border-b items-center text-sm",
         children=[
             c.Container(
                 tag="nav",
-                className="flex items-center gap-6",
+                class_name="flex items-center gap-6",
                 children=[
                     c.Link(
                         href="/",
                         children=[
                             c.Text(
                                 text="tui",
-                                className="font-medium text-xl",
+                                class_name="font-medium text-xl",
                             )
                         ],
                     ),

@@ -6,9 +6,8 @@ import pydantic as _p
 class _BaseComponent(_p.BaseModel):
     model_config = _p.ConfigDict(extra="forbid")
 
-    className: _t.Optional[str] = _p.Field(
-        None,
-        description="The tailwind class names of the component.",
+    class_name: _t.Optional[str] = _p.Field(
+        None, description="The tailwind class names of the component.", serialization_alias="className"
     )
 
 

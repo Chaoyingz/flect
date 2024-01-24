@@ -7,11 +7,11 @@ async def docs_layout(children: c.AnyComponents) -> c.AnyComponents:
     layout_children = [
         c.Container(
             tag="main",
-            className="flex",
+            class_name="flex",
             children=[
                 c.Container(
                     tag="aside",
-                    className="py-8 pr-6 flex flex-col gap-6 w-60",
+                    class_name="py-8 pr-6 flex flex-col gap-6 w-60",
                     children=[
                         c.Container(
                             tag="div",
@@ -19,7 +19,7 @@ async def docs_layout(children: c.AnyComponents) -> c.AnyComponents:
                                 c.Heading(
                                     level=2,
                                     text="Getting Started",
-                                    className="mb-2",
+                                    class_name="mb-2",
                                 ),
                                 c.Container(
                                     tag="nav",
@@ -42,11 +42,11 @@ async def docs_layout(children: c.AnyComponents) -> c.AnyComponents:
                                 c.Heading(
                                     level=2,
                                     text="Components",
-                                    className="mb-2",
+                                    class_name="mb-2",
                                 ),
                                 c.Container(
                                     tag="nav",
-                                    className="flex flex-col gap-2",
+                                    class_name="flex flex-col gap-2",
                                     children=[
                                         c.Link(
                                             href="/components/avatar",
@@ -110,7 +110,7 @@ async def docs_layout(children: c.AnyComponents) -> c.AnyComponents:
                         ),
                     ],
                 ),
-                c.Container(tag="section", className="py-8 flex-1", children=children),
+                c.Container(tag="section", class_name="py-8 flex-1", children=children),
             ],
         )
     ]

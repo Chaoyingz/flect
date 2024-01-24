@@ -21,7 +21,7 @@ async def get_component_description_section(
             c.Heading(
                 level=1,
                 text=title,
-                className="text-3xl mb-3",
+                class_name="text-3xl mb-3",
             ),
             c.Text(text=description),
         ],
@@ -43,7 +43,7 @@ async def get_component_preview_literal_component(
 ) -> c.Container:
     return c.Container(
         tag="div",
-        className="flex flex-col gap-10",
+        class_name="flex flex-col gap-10",
         children=[
             c.Container(
                 tag="div",
@@ -54,7 +54,7 @@ async def get_component_preview_literal_component(
                     ),
                     c.Container(
                         tag="div",
-                        className="flex gap-4 mt-3",
+                        class_name="flex gap-4 mt-3",
                         children=[
                             component_type(
                                 **{
@@ -82,7 +82,7 @@ async def get_component_preview_section(
             c.Heading(
                 level=2,
                 text="Preview",
-                className="text-2xl mb-6 border-b pb-2",
+                class_name="text-2xl mb-6 border-b pb-2",
             ),
             *previews,
         ],
@@ -114,7 +114,7 @@ async def get_component_api_reference_section(component: c.AnyComponent) -> c.Co
             c.Heading(
                 level=2,
                 text="API Reference",
-                className="text-2xl mb-6 border-b pb-2",
+                class_name="text-2xl mb-6 border-b pb-2",
             ),
             c.Table(datasets=props),
         ],
@@ -129,7 +129,7 @@ async def get_component_page(
     return [
         c.Container(
             tag="div",
-            className="flex gap-12 flex-col",
+            class_name="flex gap-12 flex-col",
             children=[description_section, preview_section, api_reference_section],
         )
     ]
@@ -147,7 +147,7 @@ async def avatar_page() -> c.AnyComponents:
             previews=[
                 c.Container(
                     tag="div",
-                    className="flex gap-3",
+                    class_name="flex gap-3",
                     children=[
                         c.Avatar(
                             src="https://github.com/shadcn.png",
