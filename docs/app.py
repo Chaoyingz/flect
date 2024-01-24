@@ -12,7 +12,7 @@ tui_router.include_router(components_router)
 
 
 def get_application() -> FastAPI:
-    application = FastAPI()
+    application = FastAPI(docs_url="/documentation")
     application.include_router(tui_router)
     return application
 
