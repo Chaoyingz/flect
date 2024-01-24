@@ -20,7 +20,7 @@ async def site_header() -> c.AnyComponent:
                         ],
                     ),
                     c.Link(
-                        href="/docs/",
+                        href="/docs",
                         children=[
                             c.Text(
                                 text="Docs",
@@ -28,7 +28,7 @@ async def site_header() -> c.AnyComponent:
                         ],
                     ),
                     c.Link(
-                        href="/docs/components/avatar/",
+                        href="/docs/components/avatar",
                         children=[
                             c.Text(
                                 text="Components",
