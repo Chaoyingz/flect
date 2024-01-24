@@ -2,3 +2,6 @@
 line-length = 120
 extend-select = ["Q", "RUF100", "UP", "I"]
 target-version = "py39"
+
+[tool.pyright]
+include = ["src/python-tui/src/tui"]

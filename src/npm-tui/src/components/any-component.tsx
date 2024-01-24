@@ -1,45 +1,39 @@
 import { Avatar, AvatarProps } from '@/components/tui/avatar'
 import { Button, ButtonProps } from '@/components/tui/button'
 import { Container, ContainerProps } from '@/components/tui/container'
-import { Logo, LogoProps } from './tui/logo'
 import { Heading, HeadingProps } from './tui/heading'
 import { Link, LinkProps } from './tui/link'
 import { Text, TextProps } from './tui/text'
+import { Table, TableProps } from './tui/table'
 
 export type ComponentProps =
-  | ButtonProps
   | AvatarProps
+  | ButtonProps
   | ContainerProps
-  | LogoProps
   | HeadingProps
   | LinkProps
+  | TableProps
   | TextProps
 
-export function AnyComponentList({ propsList }: { propsList: ComponentProps[] }) {
-  return (
-    <>
-      {propsList.map((props, index) => (
-        <AnyComponent key={index} {...props} />
-      ))}
-    </>
-  )
+export function AnyComponents({ children }: { children?: ComponentProps[] }) {
+  return <>{children && children.map((props, index) => <AnyComponent key={index} {...props} />)}</>
 }
 
 export function AnyComponent(props: ComponentProps) {
   const { ctype } = props
   switch (ctype) {
-    case 'button':
-      return <Button {...props} />
     case 'avatar':
       return <Avatar {...props} />
+    case 'button':
+      return <Button {...props} />
     case 'container':
       return <Container {...props} />
-    case 'logo':
-      return <Logo {...props} />
     case 'heading':
       return <Heading {...props} />
     case 'link':
       return <Link {...props} />
+    case 'table':
+      return <Table {...props} />
     case 'text':
       return <Text {...props} />
   }

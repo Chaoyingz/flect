@@ -8,14 +8,18 @@ install:
 
 .PHONY: format
 format:
-	ruff check --fix-only $(path) demo
-	ruff format $(path) demo
+	ruff check --fix-only $(path) docs
+	ruff format $(path) docs
 
 .PHONY: lint
 lint:
-	ruff check $(path) demo
-	ruff format --check $(path) demo
+	ruff check $(path) docs
+	ruff format --check $(path) docs
+
+.PHONY: typecheck
+typecheck:
+	pyright
 
 .PHONY: dev
 dev:
-	uvicorn demo.app:app --reload --reload-dir .
+	uvicorn docs.app:app --reload --reload-dir .

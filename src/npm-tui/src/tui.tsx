@@ -1,13 +1,11 @@
-import { AnyComponentList, ComponentProps } from './components/any-component'
+import { AnyComponents, ComponentProps } from './components/any-component'
 import { useEffect, useState } from 'react'
 
 type TuiProps = {
   rootUrl: string
 }
 
-export function Tui({ rootUrl = '/api' }: TuiProps) {
-  console.log(window.location.href)
-  console.log(window.location)
+export function Tui({ rootUrl }: TuiProps) {
   const url = rootUrl + window.location.pathname
   return <Fetch url={url} />
 }
@@ -17,7 +15,7 @@ type FetchProps = {
 }
 
 function Fetch({ url }: FetchProps) {
-  const [propsList, setPropsList] = useState<ComponentProps[]>([])
+  const [components, setComponents] = useState<ComponentProps[]>([])
 
   useEffect(() => {
     let ignore = false
@@ -27,17 +25,16 @@ function Fetch({ url }: FetchProps) {
       }
       const response = await fetch(url)
       const data = await response.json()
-      console.log(data)
-      setPropsList(data)
+      setComponents(data)
     }
     fetchComponents()
     return () => {
       ignore = true
     }
   }, [url])
-  return <Render propsList={propsList} />
+  return <Render children={components} />
 }
 
-function Render(params: { propsList: ComponentProps[] }) {
-  return <AnyComponentList propsList={params.propsList} />
+function Render(params: { children: ComponentProps[] }) {
+  return <AnyComponents children={params.children} />
 }

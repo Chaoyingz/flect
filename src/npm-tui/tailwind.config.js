@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
@@ -16,14 +18,28 @@ module.exports = {
       pattern: /^grid-/,
     },
     {
-      pattern: /^m\w?-/,
+      pattern: /^m\w?-\d/,
     },
     {
-      pattern: /^p\w?-/,
+      pattern: /^p\w?-\d/,
     },
     {
-      pattern: /^gap-/,
+      pattern: /^gap-\d/,
     },
+    {
+      pattern: /^text-\w{2}$/,
+    },
+    {
+      pattern: /^text-\d{1}\w{2}$/,
+    },
+    {
+      pattern: /^font-/,
+    },
+    {
+      pattern: /^justify-/,
+    },
+    'border-b',
+    'text-center',
   ],
   prefix: '',
   theme: {
@@ -90,7 +106,8 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
       fontFamily: {
-        Outfit: ['Outfit'],
+        Inter: ['Inter'],
+        sans: ['"Inter"', ...defaultTheme.fontFamily.sans],
       },
     },
   },
