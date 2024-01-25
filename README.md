@@ -6,7 +6,7 @@ tui is a project inspired by [FastUI](https://github.com/pydantic/FastUI), desig
 
 ## Documentation
 
-https://tui-w8c1.onrender.com/
+[https://tui-w8c1.onrender.com/](https://tui.celerforge.com/)
 
 ## Example
 
