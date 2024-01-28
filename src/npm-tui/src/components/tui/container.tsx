@@ -1,4 +1,4 @@
-import { AnyComponents, ComponentProps } from '../any-component'
+import { AnyComponents, ComponentProps } from '@/components/tui/any-component'
 
 export interface ContainerProps {
   ctype: 'container'

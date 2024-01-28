@@ -81,6 +81,10 @@ class Link(_BaseContainerComponent):
     )
 
 
+class Outlet(_BaseComponent):
+    ctype: _t.Literal["outlet"] = "outlet"
+
+
 class Table(_BaseComponent):
     ctype: _t.Literal["table"] = "table"
 
@@ -111,7 +115,7 @@ class Text(_BaseComponent):
 
 
 AnyComponent = _t.Annotated[
-    _t.Union[Avatar, Button, Container, Heading, Link, Table, Text],
+    _t.Union[Avatar, Button, Container, Heading, Link, Outlet, Table, Text],
     _p.Field(discriminator="ctype"),
 ]
 AnyComponents = list[AnyComponent]
@@ -127,6 +131,8 @@ __all__ = (
     "Container",
     "Heading",
     "Link",
+    "Outlet",
+    "Table",
     "Text",
     "AnyComponent",
     "AnyComponents",

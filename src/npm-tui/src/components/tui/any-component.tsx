@@ -1,10 +1,11 @@
 import { Avatar, AvatarProps } from '@/components/tui/avatar'
 import { Button, ButtonProps } from '@/components/tui/button'
 import { Container, ContainerProps } from '@/components/tui/container'
-import { Heading, HeadingProps } from './tui/heading'
-import { Link, LinkProps } from './tui/link'
-import { Text, TextProps } from './tui/text'
-import { Table, TableProps } from './tui/table'
+import { Heading, HeadingProps } from '@/components/tui/heading'
+import { Link, LinkProps } from '@/components/tui/link'
+import { Text, TextProps } from '@/components/tui/text'
+import { Table, TableProps } from '@/components/tui/table'
+import { Outlet, OutletProps } from '@/components/tui/outlet'
 
 export type ComponentProps =
   | AvatarProps
@@ -12,6 +13,7 @@ export type ComponentProps =
   | ContainerProps
   | HeadingProps
   | LinkProps
+  | OutletProps
   | TableProps
   | TextProps
 
@@ -32,6 +34,8 @@ export function AnyComponent(props: ComponentProps) {
       return <Heading {...props} />
     case 'link':
       return <Link {...props} />
+    case 'outlet':
+      return <Outlet />
     case 'table':
       return <Table {...props} />
     case 'text':

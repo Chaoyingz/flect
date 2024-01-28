@@ -5,9 +5,9 @@ import { defineConfig } from 'vite'
 const serverConfig = {
   host: true,
   port: 3000,
-  proxy: {
-    '/api': 'http://localhost:8000',
-  },
+  // proxy: {
+  //   '/api': 'http://localhost:8000',
+  // },
 }
 
 export default defineConfig({
