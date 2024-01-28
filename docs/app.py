@@ -2,6 +2,7 @@ from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from tui import components as c
 from tui import init_tui
+from tui.route import Route
 
 tui_router = APIRouter(prefix="/tui")
 # tui_router.include_router(landing_router)
@@ -11,21 +12,21 @@ tui_router = APIRouter(prefix="/tui")
 
 @tui_router.get("/_route")
 async def route():
-    return c.Route(
+    return Route(
         path="",
         children=[
-            c.Route(
+            Route(
                 path="",
                 index=True,
             ),
-            c.Route(
+            Route(
                 path="hello",
                 children=[
-                    c.Route(
+                    Route(
                         path="hello",
                         index=True,
                     ),
-                    c.Route(
+                    Route(
                         path="world",
                     ),
                 ],
