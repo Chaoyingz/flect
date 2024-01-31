@@ -10,6 +10,8 @@ import { AnyComponents, ComponentProps } from '@/components/tui/any-component'
 
 export type RouteProps = RemixRouteProps & {
   children?: RouteProps[]
+  segment: string
+  pathname: string
 }
 
 function RouteElement() {
@@ -29,29 +31,28 @@ async function layoutLoader(pathname: string): Promise<ComponentProps[]> {
 
 function parseRoute(route: RouteProps): RouteObject[] {
   const routeObjs: RouteObject[] = []
-
-  function converter(route: RouteProps, parentPath = '') {
-    const pathname = route.children ? parentPath + route.path + '/' : parentPath
+  function converter(route: RouteProps) {
     const routeObj: RouteObject = {
-      path: route.path,
+      path: route.segment,
       element: <RouteElement />,
-      loader: route.children ? () => layoutLoader(pathname) : routeLoader,
+      loader: route.children ? () => layoutLoader(route.pathname) : routeLoader,
       index: route.index,
     }
     if (route.children && route.children.length > 0) {
-      routeObj.children = route.children.map((child) => converter(child, pathname))
+      routeObj.children = route.children.map((child) => converter(child))
     }
     return routeObj
   }
-
+  console.log(route)
   routeObjs.push(converter(route))
+  console.log(routeObjs)
   return routeObjs
 }
 
 async function getRouteObject(): Promise<RouteObject[]> {
   const response = await fetch('http://127.0.0.1:8000/tui/_route')
-  const routeProps = (await response.json()) as RouteProps
-  return await parseRoute(routeProps)
+  const routeProps = (await response.json()) as RouteProps[]
+  return await parseRoute(routeProps[0])
 }
 
 export function Router() {
