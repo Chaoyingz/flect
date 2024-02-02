@@ -1,48 +1,48 @@
-import typing as _t
+from typing import Annotated, Any, Literal, Optional, Union
 
-import pydantic as _p
+from pydantic import BaseModel, ConfigDict, Field, SerializeAsAny, model_validator
 
 
-class _BaseComponent(_p.BaseModel):
-    model_config = _p.ConfigDict(extra="forbid")
+class _BaseComponent(BaseModel):
+    model_config = ConfigDict(extra="forbid")
 
-    class_name: _t.Optional[str] = _p.Field(
+    class_name: Optional[str] = Field(
         None, description="The tailwind class names of the component.", serialization_alias="className"
     )
 
 
 class _BaseContainerComponent(_BaseComponent):
-    children: _t.Optional[list["AnyComponent"]] = _p.Field(
+    children: Optional[list["AnyComponent"]] = Field(
         None,
         description="The children of the component.",
     )
 
 
 class Avatar(_BaseComponent):
-    ctype: _t.Literal["avatar"] = "avatar"
+    ctype: Literal["avatar"] = "avatar"
 
-    src: _t.Optional[str] = _p.Field(
+    src: Optional[str] = Field(
         None,
         description="The source of the avatar.",
     )
-    alt: _t.Optional[str] = _p.Field(
+    alt: Optional[str] = Field(
         None,
         description="The alternative text of the avatar.",
     )
-    fallback: str = _p.Field(
+    fallback: str = Field(
         ...,
         description="The fallback text of the avatar.",
     )
 
 
 class Button(_BaseComponent):
-    ctype: _t.Literal["button"] = "button"
+    ctype: Literal["button"] = "button"
 
-    variant: _t.Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = _p.Field(
+    variant: Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = Field(
         "default",
         description="The variant of the button.",
     )
-    size: _t.Literal["default", "sm", "lg", "icon"] = _p.Field(
+    size: Literal["default", "sm", "lg", "icon"] = Field(
         "default",
         description="The size of the button.",
     )
@@ -50,73 +50,73 @@ class Button(_BaseComponent):
 
 
 class Container(_BaseContainerComponent):
-    ctype: _t.Literal["container"] = "container"
+    ctype: Literal["container"] = "container"
 
-    tag: _t.Optional[_t.Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
+    tag: Optional[Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
 
 
 class Heading(_BaseComponent):
-    ctype: _t.Literal["heading"] = "heading"
+    ctype: Literal["heading"] = "heading"
 
-    level: _t.Literal[1, 2, 3, 4, 5, 6] = _p.Field(
+    level: Literal[1, 2, 3, 4, 5, 6] = Field(
         ...,
         description="The level of the heading.",
     )
-    text: str = _p.Field(
+    text: str = Field(
         ...,
         description="The text of the heading.",
     )
-    id: _t.Optional[str] = _p.Field(
+    id: Optional[str] = Field(
         None,
         description="The id of the heading.",
     )
 
 
 class Link(_BaseContainerComponent):
-    ctype: _t.Literal["link"] = "link"
+    ctype: Literal["link"] = "link"
 
-    href: str = _p.Field(
+    href: str = Field(
         ...,
         description="The href of the link.",
     )
 
 
 class Outlet(_BaseComponent):
-    ctype: _t.Literal["outlet"] = "outlet"
+    ctype: Literal["outlet"] = "outlet"
 
 
 class Table(_BaseComponent):
-    ctype: _t.Literal["table"] = "table"
+    ctype: Literal["table"] = "table"
 
-    labels: list[str] = _p.Field(
+    labels: list[str] = Field(
         [],
         description="The labels of the table, defaults to the keys of the dataset.",
     )
-    datasets: list[_p.SerializeAsAny[_p.BaseModel]] = _p.Field(
+    datasets: list[SerializeAsAny[BaseModel]] = Field(
         ...,
         description="The datasets of the table.",
     )
 
-    @_p.model_validator(mode="before")
+    @model_validator(mode="before")
     @classmethod
-    def set_default_labels(cls, values: _t.Any) -> _t.Any:
+    def set_default_labels(cls, values: Any) -> Any:
         if not values.get("labels"):
             values["labels"] = list(values["datasets"][0].model_fields.keys())
         return values
 
 
 class Text(_BaseComponent):
-    ctype: _t.Literal["text"] = "text"
+    ctype: Literal["text"] = "text"
 
-    text: str = _p.Field(
+    text: str = Field(
         ...,
         description="The text of the text.",
     )
 
 
-AnyComponent = _t.Annotated[
-    _t.Union[Avatar, Button, Container, Heading, Link, Outlet, Table, Text],
-    _p.Field(discriminator="ctype"),
+AnyComponent = Annotated[
+    Union[Avatar, Button, Container, Heading, Link, Outlet, Table, Text],
+    Field(discriminator="ctype"),
 ]
 AnyComponents = list[AnyComponent]
 

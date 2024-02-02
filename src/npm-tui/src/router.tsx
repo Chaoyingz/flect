@@ -12,6 +12,7 @@ export type RouteProps = RemixRouteProps & {
   children?: RouteProps[]
   segment: string
   pathname: string
+  endpoint: 'layout' | 'page'
 }
 
 function RouteElement() {
@@ -20,39 +21,37 @@ function RouteElement() {
 }
 
 async function routeLoader({ request }: { request: Request }): Promise<ComponentProps[]> {
-  const response = await fetch('http://127.0.0.1:8000/tui' + new URL(request.url).pathname)
+  const response = await fetch('/tui' + new URL(request.url).pathname)
   return await response.json()
 }
 
 async function layoutLoader(pathname: string): Promise<ComponentProps[]> {
-  const response = await fetch(`http://127.0.0.1:8000/tui${pathname}_layout`)
+  const response = await fetch(`/tui${pathname}_layout`)
   return await response.json()
 }
 
-function parseRoute(route: RouteProps): RouteObject[] {
-  const routeObjs: RouteObject[] = []
-  function converter(route: RouteProps) {
+function parseRoute(routes: RouteProps[]): RouteObject[] {
+  function converter(route: RouteProps): RouteObject {
     const routeObj: RouteObject = {
       path: route.segment,
       element: <RouteElement />,
-      loader: route.children ? () => layoutLoader(route.pathname) : routeLoader,
+      loader: route.endpoint === 'layout' ? () => layoutLoader(route.pathname) : routeLoader,
       index: route.index,
     }
+
     if (route.children && route.children.length > 0) {
-      routeObj.children = route.children.map((child) => converter(child))
+      routeObj.children = route.children.map(converter)
     }
+
     return routeObj
   }
-  console.log(route)
-  routeObjs.push(converter(route))
-  console.log(routeObjs)
-  return routeObjs
+  return routes.map(converter)
 }
 
 async function getRouteObject(): Promise<RouteObject[]> {
-  const response = await fetch('http://127.0.0.1:8000/tui/_route')
+  const response = await fetch('/tui/_route')
   const routeProps = (await response.json()) as RouteProps[]
-  return await parseRoute(routeProps[0])
+  return await parseRoute(routeProps)
 }
 
 export function Router() {

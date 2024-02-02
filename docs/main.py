@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from tui import init_tui
-from tui.router import get_router
+from tui.routing import get_router
 
 from docs import app as docs_app
 

@@ -20,6 +20,16 @@ lint:
 typecheck:
 	pyright
 
+
+.PHONY: test
+test:
+	coverage run -m pytest
+
+
+.PHONY: testcov
+testcov: test
+	coverage html
+
 .PHONY: dev
 dev:
-	uvicorn docs.app:app --reload --reload-dir .
+	uvicorn docs.main:app --reload --reload-dir .
