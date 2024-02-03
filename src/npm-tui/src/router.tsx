@@ -3,6 +3,7 @@ import {
   RouteObject,
   RouterProvider,
   useLoaderData,
+  useRouteError,
   RouteProps as RemixRouteProps,
 } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -20,6 +21,23 @@ function RouteElement() {
   return <AnyComponents children={components} />
 }
 
+function ErrorElement() {
+  const error = useRouteError() as { statusText?: string; message?: string }
+  console.error(error)
+
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center text-center">
+      <div>
+        <h1 className="text-4xl font-medium mb-6">Oops!</h1>
+        <p className="mb-6">Sorry, an unexpected error has occurred.</p>
+        <p>
+          <i>{error.statusText || error.message}</i>
+        </p>
+      </div>
+    </div>
+  )
+}
+
 async function routeLoader({ request }: { request: Request }): Promise<ComponentProps[]> {
   const response = await fetch('/tui' + new URL(request.url).pathname)
   return await response.json()
@@ -35,6 +53,7 @@ function parseRoute(routes: RouteProps[]): RouteObject[] {
     const routeObj: RouteObject = {
       path: route.segment,
       element: <RouteElement />,
+      errorElement: <ErrorElement />,
       loader: route.endpoint === 'layout' ? () => layoutLoader(route.pathname) : routeLoader,
       index: route.index,
     }
