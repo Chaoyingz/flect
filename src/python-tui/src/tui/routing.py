@@ -1,14 +1,21 @@
 import pathlib
 from collections.abc import Awaitable
+from contextlib import AsyncExitStack
 from importlib import machinery
 from types import ModuleType
 from typing import Callable
 
 from fastapi import APIRouter
+from fastapi.dependencies.utils import solve_dependencies
 from fastapi.requests import Request
+from fastapi.responses import HTMLResponse
+from fastapi.routing import APIRoute
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
+from starlette._utils import get_route_path
+from starlette.types import Scope
 
 from tui import components as c
+from tui.render import get_prebuild_html, render_components_to_html
 
 ROUTE_ROOT_FOLDER_NAME = "app"
 ROUTE_INDEX_FILENAME = "page.py"
@@ -94,7 +101,7 @@ def get_routes(
 
 
 def get_routes_router(routes: list[Route]) -> APIRouter:
-    router = APIRouter()
+    router = APIRouter(prefix=ROOT_ROUTER_PREFIX)
 
     @router.get(ROUTE_ROUTER_PREFIX, response_model=list[Route])
     async def get_root_routes() -> list[Route]:
@@ -103,10 +110,7 @@ def get_routes_router(routes: list[Route]) -> APIRouter:
     return router
 
 
-def get_loader_router(
-    routes: list[Route],
-    router: APIRouter = APIRouter(),
-) -> APIRouter:
+def get_loader_router(routes: list[Route], router: APIRouter = APIRouter(prefix=ROOT_ROUTER_PREFIX)) -> APIRouter:
     for route in routes:
         path = route.pathname if route.index else route.pathname + LAYOUT_ROUTER_SUFFIX
         router.add_api_route(
@@ -119,11 +123,52 @@ def get_loader_router(
     return router
 
 
+async def get_route_response(route: APIRoute, request: Request) -> c.AnyComponents:
+    async with AsyncExitStack() as async_exit_stack:
+        solved_result = await solve_dependencies(
+            request=request,
+            dependant=route.dependant,
+            async_exit_stack=async_exit_stack,
+        )
+        values, errors, background_tasks, sub_response, _ = solved_result
+    components = await route.dependant.call(**values)
+    return components
+
+
+def get_related_routes(routes: list[APIRoute], scope: Scope) -> list[APIRoute]:
+    related_routes = []
+    for route in routes:
+        if route.name == "prebuild":
+            continue
+        route_path = ROOT_ROUTER_PREFIX + get_route_path(scope)
+        match = route.path_regex.match(route_path)
+        if match:
+            related_routes.append(route)
+    return related_routes
+
+
+def get_prebuild_router(routes: list[APIRoute]) -> APIRouter:
+    router = APIRouter()
+
+    @router.get("/{path:path}")
+    async def prebuild(request: Request) -> HTMLResponse:
+        if request.method == "GET":
+            related_routes = get_related_routes(routes, request.scope)
+            if related_routes:
+                components = await get_route_response(related_routes[0], request)
+                html = render_components_to_html(components)
+                return HTMLResponse(get_prebuild_html("tui", server_html=html))
+        return HTMLResponse(get_prebuild_html("tui"))
+
+    return router
+
+
 def get_router(app: ModuleType) -> APIRouter:
     app_folder = pathlib.Path(app.__file__).parent
-    root_router = APIRouter(prefix=ROOT_ROUTER_PREFIX)
+    root_router = APIRouter()
 
     routes = get_routes(app_folder)
     root_router.include_router(get_routes_router(routes))
     root_router.include_router(get_loader_router(routes))
+    root_router.include_router(get_prebuild_router(root_router.routes))
     return root_router

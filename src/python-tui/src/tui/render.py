@@ -1,8 +1,12 @@
-from fastapi import FastAPI
-from starlette.responses import HTMLResponse
+from tui import components as c
+
+STATIC_ASSETS_URL = "http://localhost:7777/dist"
 
 
-def get_prebuild_html(title: str, static_assets_url: str) -> str:
+def get_prebuild_html(
+    title: str,
+    server_html: str = "",
+) -> str:
     prebuild_html = f"""\
         <!DOCTYPE html>
     <html lang="en">
@@ -20,15 +24,16 @@ def get_prebuild_html(title: str, static_assets_url: str) -> str:
             <script
                 type="module"
                 crossorigin
-                src="{static_assets_url}/assets/index.js"
+                src="{STATIC_ASSETS_URL}/assets/index.js"
             ></script>
             <link
                 rel="stylesheet"
                 crossorigin
-                href="{static_assets_url}/assets/index.css"
+                href="{STATIC_ASSETS_URL}/assets/index.css"
             />
         </head>
         <body>
+            <div class="invisible h-0 w-0">{server_html}</div>
             <div id="root"></div>
         </body>
     </html>
@@ -36,11 +41,5 @@ def get_prebuild_html(title: str, static_assets_url: str) -> str:
     return prebuild_html
 
 
-def add_prebuild_route(
-    app: FastAPI,
-    title: str,
-    static_assets_url: str,
-) -> None:
-    @app.get("/{path:path}")
-    async def prebuild():
-        return HTMLResponse(get_prebuild_html(title, static_assets_url))
+def render_components_to_html(components: c.AnyComponents) -> str:
+    return "".join(component.render_to_html() for component in components)

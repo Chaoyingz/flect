@@ -1,24 +1,28 @@
+from html import escape
 from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, SerializeAsAny, model_validator
 
 
-class _BaseComponent(BaseModel):
+class BaseComponent(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     class_name: Optional[str] = Field(
         None, description="The tailwind class names of the component.", serialization_alias="className"
     )
 
+    def render_to_html(self) -> str:
+        return ""
 
-class _BaseContainerComponent(_BaseComponent):
+
+class BaseContainerComponent(BaseComponent):
     children: Optional[list["AnyComponent"]] = Field(
         None,
         description="The children of the component.",
     )
 
 
-class Avatar(_BaseComponent):
+class Avatar(BaseComponent):
     ctype: Literal["avatar"] = "avatar"
 
     src: Optional[str] = Field(
@@ -34,8 +38,17 @@ class Avatar(_BaseComponent):
         description="The fallback text of the avatar.",
     )
 
+    def render_to_html(self) -> str:
+        return f"""\
+        <img
+            src="{escape(self.src)}"
+            alt="{escape(self.alt)}"
+        />
+        <span>{escape(self.fallback)}</span>
+        """
 
-class Button(_BaseComponent):
+
+class Button(BaseComponent):
     ctype: Literal["button"] = "button"
 
     variant: Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = Field(
@@ -48,14 +61,28 @@ class Button(_BaseComponent):
     )
     children: str
 
+    def render_to_html(self) -> str:
+        return f"""\
+        <button>
+            {escape(self.children)}
+        </button>
+        """
 
-class Container(_BaseContainerComponent):
+
+class Container(BaseContainerComponent):
     ctype: Literal["container"] = "container"
 
     tag: Optional[Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
 
+    def render_to_html(self) -> str:
+        return f"""\
+        <{self.tag}>
+            {"".join(component.render_to_html() for component in self.children)}
+        </{self.tag}>
+        """
 
-class Heading(_BaseComponent):
+
+class Heading(BaseComponent):
     ctype: Literal["heading"] = "heading"
 
     level: Literal[1, 2, 3, 4, 5, 6] = Field(
@@ -71,8 +98,15 @@ class Heading(_BaseComponent):
         description="The id of the heading.",
     )
 
+    def render_to_html(self) -> str:
+        return f"""\
+        <h{self.level}>
+            {escape(self.text)}
+        </h{self.level}>
+        """
 
-class Link(_BaseContainerComponent):
+
+class Link(BaseContainerComponent):
     ctype: Literal["link"] = "link"
 
     href: str = Field(
@@ -80,12 +114,19 @@ class Link(_BaseContainerComponent):
         description="The href of the link.",
     )
 
+    def render_to_html(self) -> str:
+        return f"""\
+        <a href="{escape(self.href)}">
+            {"".join(component.render_to_html() for component in self.children)}
+        </a>
+        """
 
-class Outlet(_BaseComponent):
+
+class Outlet(BaseComponent):
     ctype: Literal["outlet"] = "outlet"
 
 
-class Table(_BaseComponent):
+class Table(BaseComponent):
     ctype: Literal["table"] = "table"
 
     labels: list[str] = Field(
@@ -104,14 +145,30 @@ class Table(_BaseComponent):
             values["labels"] = list(values["datasets"][0].model_fields.keys())
         return values
 
+    def render_to_html(self) -> str:
+        return f"""\
+        <table>
+            <thead>
+                <tr>
+                    {"".join(f"<th>{escape(label)}</th>" for label in self.labels)}
+                </tr>
+            </thead>
+        </table>
+        """
 
-class Text(_BaseComponent):
+
+class Text(BaseComponent):
     ctype: Literal["text"] = "text"
 
     text: str = Field(
         ...,
         description="The text of the text.",
     )
+
+    def render_to_html(self) -> str:
+        return f"""\
+        <p>{escape(self.text)}</p>
+        """
 
 
 AnyComponent = Annotated[
@@ -121,7 +178,7 @@ AnyComponent = Annotated[
 AnyComponents = list[AnyComponent]
 
 # Rebuild forward ref models
-for container_component in _BaseContainerComponent.__subclasses__():
+for container_component in BaseContainerComponent.__subclasses__():
     container_component.model_rebuild()
 
 
