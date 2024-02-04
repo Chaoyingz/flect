@@ -49,10 +49,6 @@ def get_prebuild_html(
     return prebuild_html
 
 
-def render_components_to_html(component: c.AnyComponents) -> str:
-    return "".join(component.render_to_html() for component in component)
-
-
 async def get_route_response(
     request: Request, route: APIRoute, outlet: Optional[c.AnyComponent] = None
 ) -> c.AnyComponent:
@@ -71,27 +67,23 @@ async def get_pre_render_html(
     request: Request,
     routes: list[APIRoute],
 ) -> Optional[str]:
+    route_path = "/tui" + get_route_path(request.scope)
+    routes = [r for r in routes if r.name != "prebuild"]
     for route in routes:
-        if route.name == "prebuild":
-            continue
-        route_path = "/tui" + get_route_path(request.scope)
-        match = route.path_regex.match(route_path)
-        if not match:
+        if not route.path_regex.match(route_path):
             continue
 
         component = await get_route_response(request, route)
-        layout_path = route_path + "/_layout"
-        while layout_path:
-            for route_ in routes:
-                if route_.name == "prebuild":
-                    continue
-                if route_.path_regex.match(layout_path):
-                    component = await get_route_response(request, route_, component)
-            split_path = layout_path.split("/")
-            if len(split_path) > 2:
-                layout_path = "/".join(split_path[:-2]) + "/_layout"
+        layout_path = route_path + "_layout/"
+        while layout_path.startswith("/tui"):
+            try:
+                matched_path = next(r for r in routes if r.path_regex.match(layout_path))
+            except StopIteration:
+                ...
             else:
-                break
+                component = await get_route_response(request, matched_path, component)
+            finally:
+                layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/_layout/"
         return component.render_to_html()
 
     return None

@@ -23,7 +23,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> c.AnyComponent:
                                 ],
                             ),
                             c.Link(
-                                href="/docs",
+                                href="/docs/",
                                 children=[
                                     c.Text(
                                         text="Docs",
@@ -31,7 +31,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> c.AnyComponent:
                                 ],
                             ),
                             c.Link(
-                                href="/docs/components/avatar",
+                                href="/docs/components/avatar/",
                                 children=[
                                     c.Text(
                                         text="Components",

@@ -19,8 +19,8 @@ ROUTE_LAYOUT_FILENAME = "layout.py"
 ROUTE_DEFAULT_SEGMENT = ""
 
 ROOT_ROUTER_PREFIX = "/tui"
-ROUTE_ROUTER_PREFIX = "/_route"
-LAYOUT_ROUTER_SUFFIX = "/_layout"
+ROUTE_ROUTER_PATH = "/_route/"
+LAYOUT_ROUTER_SUFFIX = "_layout/"
 
 
 class Route(BaseModel):
@@ -68,6 +68,8 @@ def get_routes(
     routes = []
     segment = ROUTE_DEFAULT_SEGMENT if folder.stem == ROUTE_ROOT_FOLDER_NAME else folder.stem
     pathname = parent_pathname + segment
+    if segment:
+        pathname += "/"
 
     layout_file = folder / ROUTE_LAYOUT_FILENAME
     page_file = folder / ROUTE_INDEX_FILENAME
@@ -99,7 +101,7 @@ def get_routes(
 def get_routes_router(routes: list[Route]) -> APIRouter:
     router = APIRouter(prefix=ROOT_ROUTER_PREFIX)
 
-    @router.get(ROUTE_ROUTER_PREFIX, response_model=list[Route])
+    @router.get(ROUTE_ROUTER_PATH, response_model=list[Route])
     async def get_root_routes() -> list[Route]:
         return routes
 
@@ -117,15 +119,6 @@ def get_loader_router(routes: list[Route], router: APIRouter = APIRouter(prefix=
         if route.children:
             get_loader_router(route.children, router)
     return router
-
-
-# class NestedRoute(BaseModel):
-#     model_config = ConfigDict(arbitrary_types_allowed=True)
-#     route: c
-#     parent: Optional["NestedRoute"] = None
-
-
-# NestedRoute.model_rebuild()
 
 
 def get_prebuild_router(routes: list[APIRoute]) -> APIRouter:

@@ -44,7 +44,7 @@ async function routeLoader({ request }: { request: Request }): Promise<Component
 }
 
 async function layoutLoader(pathname: string): Promise<ComponentProps[]> {
-  const response = await fetch(`/tui${pathname}/_layout`)
+  const response = await fetch(`/tui${pathname}_layout/`)
   return await response.json()
 }
 
@@ -68,7 +68,7 @@ function parseRoute(routes: RouteProps[]): RouteObject[] {
 }
 
 async function getRouteObject(): Promise<RouteObject[]> {
-  const response = await fetch('/tui/_route')
+  const response = await fetch('/tui/_route/')
   const routeProps = (await response.json()) as RouteProps[]
   return await parseRoute(routeProps)
 }

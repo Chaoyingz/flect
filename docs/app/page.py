@@ -23,7 +23,7 @@ async def page() -> c.AnyComponent:
                         class_name="flex gap-4 mt-8",
                         children=[
                             c.Link(
-                                href="/docs",
+                                href="/docs/",
                                 children=[
                                     c.Button(
                                         children="Get Started",
