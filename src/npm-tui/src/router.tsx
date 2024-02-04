@@ -7,7 +7,7 @@ import {
   RouteProps as RemixRouteProps,
 } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { AnyComponents, ComponentProps } from '@/components/tui/any-component'
+import { AnyComponent, ComponentProps } from '@/components/tui/any-component'
 
 export type RouteProps = RemixRouteProps & {
   children?: RouteProps[]
@@ -17,8 +17,8 @@ export type RouteProps = RemixRouteProps & {
 }
 
 function RouteElement() {
-  const components = useLoaderData() as ComponentProps[]
-  return <AnyComponents children={components} />
+  const component = useLoaderData() as ComponentProps
+  return <AnyComponent {...component} />
 }
 
 function ErrorElement() {
@@ -44,14 +44,14 @@ async function routeLoader({ request }: { request: Request }): Promise<Component
 }
 
 async function layoutLoader(pathname: string): Promise<ComponentProps[]> {
-  const response = await fetch(`/tui${pathname}_layout`)
+  const response = await fetch(`/tui${pathname}/_layout`)
   return await response.json()
 }
 
 function parseRoute(routes: RouteProps[]): RouteObject[] {
   function converter(route: RouteProps): RouteObject {
     const routeObj: RouteObject = {
-      path: route.segment,
+      path: route.index ? '' : route.segment,
       element: <RouteElement />,
       errorElement: <ErrorElement />,
       loader: route.endpoint === 'layout' ? () => layoutLoader(route.pathname) : routeLoader,

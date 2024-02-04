@@ -17,10 +17,6 @@ export type ComponentProps =
   | TableProps
   | TextProps
 
-export function AnyComponents({ children }: { children?: ComponentProps[] }) {
-  return <>{children && children.map((props, index) => <AnyComponent key={index} {...props} />)}</>
-}
-
 export function AnyComponent(props: ComponentProps) {
   const { ctype } = props
   switch (ctype) {
@@ -41,4 +37,8 @@ export function AnyComponent(props: ComponentProps) {
     case 'text':
       return <Text {...props} />
   }
+}
+
+export function AnyComponents({ children }: { children?: ComponentProps[] }) {
+  return <>{children && children.map((props, index) => <AnyComponent key={index} {...props} />)}</>
 }

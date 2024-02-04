@@ -1,21 +1,17 @@
 import pathlib
 from collections.abc import Awaitable
-from contextlib import AsyncExitStack
 from importlib import machinery
 from types import ModuleType
 from typing import Callable
 
 from fastapi import APIRouter
-from fastapi.dependencies.utils import solve_dependencies
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
 from fastapi.routing import APIRoute
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
-from starlette._utils import get_route_path
-from starlette.types import Scope
 
 from tui import components as c
-from tui.render import get_prebuild_html, render_components_to_html
+from tui.render import get_pre_render_html, get_prebuild_html
 
 ROUTE_ROOT_FOLDER_NAME = "app"
 ROUTE_INDEX_FILENAME = "page.py"
@@ -24,7 +20,7 @@ ROUTE_DEFAULT_SEGMENT = ""
 
 ROOT_ROUTER_PREFIX = "/tui"
 ROUTE_ROUTER_PREFIX = "/_route"
-LAYOUT_ROUTER_SUFFIX = "_layout"
+LAYOUT_ROUTER_SUFFIX = "/_layout"
 
 
 class Route(BaseModel):
@@ -43,7 +39,7 @@ class Route(BaseModel):
         description="Determines if the route is an index route."
         "Index routes render into their parent's Outlet at their parent's URL.",
     )
-    endpoint: Callable[[Request], Awaitable[c.AnyComponents]] = Field(
+    endpoint: Callable[[...], Awaitable[c.AnyComponent]] = Field(
         ...,
         description="The endpoint of the route.",
     )
@@ -67,11 +63,11 @@ def load_module(file_path: pathlib.Path, route_pathname: str) -> ModuleType:
 
 def get_routes(
     folder: pathlib.Path,
-    parent_pathname: str = "",
+    parent_pathname: str = "/",
 ) -> list[Route]:
     routes = []
     segment = ROUTE_DEFAULT_SEGMENT if folder.stem == ROUTE_ROOT_FOLDER_NAME else folder.stem
-    pathname = parent_pathname + segment + "/"
+    pathname = parent_pathname + segment
 
     layout_file = folder / ROUTE_LAYOUT_FILENAME
     page_file = folder / ROUTE_INDEX_FILENAME
@@ -116,35 +112,20 @@ def get_loader_router(routes: list[Route], router: APIRouter = APIRouter(prefix=
         router.add_api_route(
             path,
             route.endpoint,
-            response_model=c.AnyComponents,
+            response_model=c.AnyComponent,
         )
         if route.children:
             get_loader_router(route.children, router)
     return router
 
 
-async def get_route_response(route: APIRoute, request: Request) -> c.AnyComponents:
-    async with AsyncExitStack() as async_exit_stack:
-        solved_result = await solve_dependencies(
-            request=request,
-            dependant=route.dependant,
-            async_exit_stack=async_exit_stack,
-        )
-        values, errors, background_tasks, sub_response, _ = solved_result
-    components = await route.dependant.call(**values)
-    return components
+# class NestedRoute(BaseModel):
+#     model_config = ConfigDict(arbitrary_types_allowed=True)
+#     route: c
+#     parent: Optional["NestedRoute"] = None
 
 
-def get_related_routes(routes: list[APIRoute], scope: Scope) -> list[APIRoute]:
-    related_routes = []
-    for route in routes:
-        if route.name == "prebuild":
-            continue
-        route_path = ROOT_ROUTER_PREFIX + get_route_path(scope)
-        match = route.path_regex.match(route_path)
-        if match:
-            related_routes.append(route)
-    return related_routes
+# NestedRoute.model_rebuild()
 
 
 def get_prebuild_router(routes: list[APIRoute]) -> APIRouter:
@@ -153,11 +134,8 @@ def get_prebuild_router(routes: list[APIRoute]) -> APIRouter:
     @router.get("/{path:path}")
     async def prebuild(request: Request) -> HTMLResponse:
         if request.method == "GET":
-            related_routes = get_related_routes(routes, request.scope)
-            if related_routes:
-                components = await get_route_response(related_routes[0], request)
-                html = render_components_to_html(components)
-                return HTMLResponse(get_prebuild_html("tui", server_html=html))
+            html = await get_pre_render_html(request, routes)
+            return HTMLResponse(get_prebuild_html("tui", server_html=html))
         return HTMLResponse(get_prebuild_html("tui"))
 
     return router
