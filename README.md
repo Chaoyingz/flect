@@ -2,7 +2,7 @@
 
 Turning ideas into web app fast.
 
-Use Pydantic models in the backend that correspond to the properties of React components in the frontend. This enables you to develop visually appealing and interactive user interfaces using Python.
+Use Pydantic models in the backend that correspond to the properties of React components in the frontend. This enables you to quickly develop interactive and beautiful UIs using Python.
 
 ## Documentation
 
