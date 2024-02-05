@@ -14,8 +14,9 @@ async def page() -> c.AnyComponent:
                         level=1, text="Turning ideas into web app fast", class_name="text-center text-5xl font-bold"
                     ),
                     c.Text(
-                        text="In the backend, use Pydantic models that match the props of frontend React "
-                        "components. This allows you to create beautiful, interactive UIs using Python.",
+                        text="Use Pydantic models in the backend that correspond to the properties of React components "
+                        "in the frontend. This enables you to develop visually appealing and interactive user "
+                        "interfaces using Python.",
                         class_name="text-center text-xl mt-8 w-1/2",
                     ),
                     c.Container(

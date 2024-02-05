@@ -14,9 +14,9 @@ async def page() -> c.AnyComponent:
                 class_name="mt-3",
                 children=[
                     c.Text(
-                        text="tui is a project inspired by FastUI, designed to simplify and accelerate web application "
-                        "development. It is built on the powerful combination of FastAPI for backend efficiency and "
-                        "Shadcn UI for creating stylish and responsive user interfaces.",
+                        text="Use Pydantic models in the backend that correspond to the properties of React components "
+                        "in the frontend. This enables you to develop visually appealing and interactive user "
+                        "interfaces using Python.",
                         class_name="text-lg mt-3",
                     )
                 ],
