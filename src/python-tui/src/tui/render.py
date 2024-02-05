@@ -65,29 +65,31 @@ async def get_route_response(
     return None
 
 
+def find_matched_route(
+    path: str,
+    routes: list[APIRoute],
+) -> Optional[APIRoute]:
+    for route in routes:
+        if route.path_regex.match(path):
+            return route
+    return None
+
+
 async def get_pre_render_html(
     request: Request,
     routes: list[APIRoute],
 ) -> Optional[str]:
     route_path = "/tui" + get_route_path(request.scope)
-    routes = [r for r in routes if r.name != "prebuild"]
-    for route in routes:
-        if not route.path_regex.match(route_path):
-            continue
-
-        component = await get_route_response(request, route)
+    routes = [r for r in routes if r.name != "pre_render"]
+    page_route = find_matched_route(route_path, routes)
+    if page_route is not None:
+        component = await get_route_response(request, page_route)
         layout_path = route_path + "_layout/"
         while layout_path.startswith("/tui"):
-            try:
-                matched_path = next(r for r in routes if r.path_regex.match(layout_path))
-            except StopIteration:
-                ...
-            else:
-                component = await get_route_response(request, matched_path, component)
-            finally:
-                layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/_layout/"
+            layout_route = find_matched_route(layout_path, routes)
+            if layout_route is not None:
+                component = await get_route_response(request, layout_route, component)
+            layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/_layout/"
         if component is not None:
             return component.render_to_html()
-        break
-
     return None
