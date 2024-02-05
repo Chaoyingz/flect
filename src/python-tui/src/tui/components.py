@@ -1,5 +1,5 @@
 from html import escape
-from typing import Annotated, Any, Literal, Optional, Union
+from typing import Annotated, Literal, Optional, Self, Union
 
 from pydantic import BaseModel, ConfigDict, Field, SerializeAsAny, model_validator
 
@@ -41,8 +41,8 @@ class Avatar(BaseComponent):
     def render_to_html(self) -> str:
         return f"""\
         <img
-            src="{escape(self.src)}"
-            alt="{escape(self.alt)}"
+            src="{escape(self.src or "")}"
+            alt="{escape(self.alt or "")}"
         />
         <span>{escape(self.fallback)}</span>
         """
@@ -77,7 +77,7 @@ class Container(BaseContainerComponent):
     def render_to_html(self) -> str:
         return f"""\
         <{self.tag}>
-            {"".join(component.render_to_html() for component in self.children)}
+            {"".join(component.render_to_html() for component in self.children) if self.children else ""}
         </{self.tag}>
         """
 
@@ -117,7 +117,7 @@ class Link(BaseContainerComponent):
     def render_to_html(self) -> str:
         return f"""\
         <a href="{escape(self.href)}">
-            {"".join(component.render_to_html() for component in self.children)}
+            {"".join(component.render_to_html() for component in self.children) if self.children else ""}
         </a>
         """
 
@@ -138,12 +138,11 @@ class Table(BaseComponent):
         description="The datasets of the table.",
     )
 
-    @model_validator(mode="before")
-    @classmethod
-    def set_default_labels(cls, values: Any) -> Any:
-        if not values.get("labels"):
-            values["labels"] = list(values["datasets"][0].model_fields.keys())
-        return values
+    @model_validator(mode="after")
+    def set_default_labels(self) -> Self:
+        if not self.labels:
+            self.labels = list(self.datasets[0].model_fields.keys())
+        return self
 
     def render_to_html(self) -> str:
         return f"""\

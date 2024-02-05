@@ -51,16 +51,18 @@ def get_prebuild_html(
 
 async def get_route_response(
     request: Request, route: APIRoute, outlet: Optional[c.AnyComponent] = None
-) -> c.AnyComponent:
+) -> Optional[c.AnyComponent]:
     async with AsyncExitStack() as async_exit_stack:
         values, *_ = await solve_dependencies(
             request=request,
             dependant=route.dependant,
             async_exit_stack=async_exit_stack,
         )
-    if outlet is not None:
-        values["outlet"] = outlet
-    return await route.dependant.call(**values)
+        if outlet is not None:
+            values["outlet"] = outlet
+        if route.dependant.call:
+            return await route.dependant.call(**values)
+    return None
 
 
 async def get_pre_render_html(
@@ -84,6 +86,8 @@ async def get_pre_render_html(
                 component = await get_route_response(request, matched_path, component)
             finally:
                 layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/_layout/"
-        return component.render_to_html()
+        if component is not None:
+            return component.render_to_html()
+        break
 
     return None

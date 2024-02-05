@@ -18,7 +18,7 @@ lint:
 
 .PHONY: typecheck
 typecheck:
-	pyright
+	pdm run -p $(path) pyright
 
 
 .PHONY: test

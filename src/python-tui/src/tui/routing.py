@@ -2,7 +2,7 @@ import pathlib
 from collections.abc import Awaitable
 from importlib import machinery
 from types import ModuleType
-from typing import Callable
+from typing import Any, Callable
 
 from fastapi import APIRouter
 from fastapi.requests import Request
@@ -39,7 +39,7 @@ class Route(BaseModel):
         description="Determines if the route is an index route."
         "Index routes render into their parent's Outlet at their parent's URL.",
     )
-    endpoint: Callable[[...], Awaitable[c.AnyComponent]] = Field(
+    endpoint: Callable[[Any], Awaitable[c.AnyComponent]] = Field(
         ...,
         description="The endpoint of the route.",
     )
@@ -61,7 +61,7 @@ def load_module(file_path: pathlib.Path, route_pathname: str) -> ModuleType:
     return machinery.SourceFileLoader(module_name, str(file_path)).load_module()
 
 
-def get_routes(
+def get_route_models(
     folder: pathlib.Path,
     parent_pathname: str = "/",
 ) -> list[Route]:
@@ -81,35 +81,40 @@ def get_routes(
                 pathname=pathname,
                 endpoint=load_module(page_file, pathname).page,
                 index=layout_file.is_file(),
+                children=[],
             )
         )
 
     for child_folder in folder.iterdir():
         if child_folder.is_dir():
-            routes.extend(get_routes(child_folder, pathname))
+            routes.extend(get_route_models(child_folder, pathname))
 
     if layout_file.is_file():
         routes = [
             Route(
-                segment=segment, pathname=pathname, endpoint=load_module(layout_file, pathname).layout, children=routes
+                segment=segment,
+                pathname=pathname,
+                index=False,
+                endpoint=load_module(layout_file, pathname).layout,
+                children=routes,
             )
         ]
 
     return routes
 
 
-def get_routes_router(routes: list[Route]) -> APIRouter:
+def get_routes_router(route_models: list[Route]) -> APIRouter:
     router = APIRouter(prefix=ROOT_ROUTER_PREFIX)
 
     @router.get(ROUTE_ROUTER_PATH, response_model=list[Route])
     async def get_root_routes() -> list[Route]:
-        return routes
+        return route_models
 
     return router
 
 
-def get_loader_router(routes: list[Route], router: APIRouter = APIRouter(prefix=ROOT_ROUTER_PREFIX)) -> APIRouter:
-    for route in routes:
+def get_loader_router(route_models: list[Route], router: APIRouter = APIRouter(prefix=ROOT_ROUTER_PREFIX)) -> APIRouter:
+    for route in route_models:
         path = route.pathname if route.index else route.pathname + LAYOUT_ROUTER_SUFFIX
         router.add_api_route(
             path,
@@ -121,25 +126,27 @@ def get_loader_router(routes: list[Route], router: APIRouter = APIRouter(prefix=
     return router
 
 
-def get_prebuild_router(routes: list[APIRoute]) -> APIRouter:
+def get_pre_render_router(routes: list[APIRoute]) -> APIRouter:
     router = APIRouter()
 
     @router.get("/{path:path}")
     async def prebuild(request: Request) -> HTMLResponse:
         if request.method == "GET":
             html = await get_pre_render_html(request, routes)
-            return HTMLResponse(get_prebuild_html("tui", server_html=html))
+            return HTMLResponse(get_prebuild_html("tui", server_html=html or ""))
         return HTMLResponse(get_prebuild_html("tui"))
 
     return router
 
 
 def get_router(app: ModuleType) -> APIRouter:
+    if app.__file__ is None:
+        raise RuntimeError("The app module must have a __file__ attribute.")
     app_folder = pathlib.Path(app.__file__).parent
     root_router = APIRouter()
 
-    routes = get_routes(app_folder)
-    root_router.include_router(get_routes_router(routes))
-    root_router.include_router(get_loader_router(routes))
-    root_router.include_router(get_prebuild_router(root_router.routes))
+    route_models = get_route_models(app_folder)
+    root_router.include_router(get_routes_router(route_models))
+    root_router.include_router(get_loader_router(route_models))
+    root_router.include_router(get_pre_render_router(root_router.routes))  # type: ignore
     return root_router
