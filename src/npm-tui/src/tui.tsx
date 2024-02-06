@@ -1,4 +1,4 @@
-import { Router } from '@/router'
+import { Router } from '@/routing'
 
 export function Tui() {
   return <Router />

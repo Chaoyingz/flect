@@ -11,8 +11,7 @@ from tui import components as c
 STATIC_ASSETS_URL = "http://localhost:7777/dist"
 
 
-def get_prebuild_html(
-    title: str,
+def render_html(
     server_html: str = "",
 ) -> str:
     prebuild_html = f"""\
@@ -28,7 +27,7 @@ def get_prebuild_html(
                 rel="stylesheet"
             />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>{title}</title>
+            <title>tui</title>
             <script
                 type="module"
                 crossorigin
@@ -75,21 +74,27 @@ def find_matched_route(
     return None
 
 
-async def get_pre_render_html(
+async def get_component(
+    request: Request, route_path: str, routes: list[APIRoute], outlet: Optional[c.AnyComponent] = None
+) -> Optional[c.AnyComponent]:
+    matched_route = find_matched_route(route_path, routes)
+    if matched_route:
+        return await get_route_response(request, matched_route, outlet)
+    return None
+
+
+async def render_server_html(
     request: Request,
     routes: list[APIRoute],
+    root_router_prefix: str,
+    layout_router_suffix: str,
 ) -> Optional[str]:
-    route_path = "/tui" + get_route_path(request.scope)
-    routes = [r for r in routes if r.name != "pre_render"]
-    page_route = find_matched_route(route_path, routes)
-    if page_route is not None:
-        component = await get_route_response(request, page_route)
-        layout_path = route_path + "_layout/"
-        while layout_path.startswith("/tui"):
-            layout_route = find_matched_route(layout_path, routes)
-            if layout_route is not None:
-                component = await get_route_response(request, layout_route, component)
-            layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/_layout/"
-        if component is not None:
-            return component.render_to_html()
-    return None
+    route_path = root_router_prefix + get_route_path(request.scope)
+    component = await get_component(request, route_path, routes)
+
+    layout_path = route_path + layout_router_suffix
+    while layout_path.startswith(root_router_prefix):
+        component = await get_component(request, layout_path, routes, component)
+        layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/" + layout_router_suffix
+
+    return component.render_to_html() if component else None

@@ -1,5 +1,5 @@
-from tui import tui
+from tui import Tui
 
 from docs import app as docs_app
 
-app = tui(docs_app)
+app = Tui(docs_app)

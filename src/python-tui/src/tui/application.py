@@ -3,14 +3,19 @@ from typing import Any
 
 from fastapi import FastAPI
 
-from tui.routing import get_router
+from tui.routing import get_tui_router
 
 
-class tui(FastAPI):
-    def __init__(self, app_module: ModuleType, *args: Any, **kwargs: Any):
-        super().__init__(docs_url=None, redoc_url=None, *args, **kwargs)
-        self.setup_tui(app_module)
+class Tui(FastAPI):
+    def __init__(
+        self,
+        app: ModuleType,
+        **kwargs: Any,
+    ) -> None:
+        kwargs.update({"docs_url": None, "redoc_url": None})
+        super().__init__(**kwargs)
+        self.app = app
+        self.setup_tui()
 
-    def setup_tui(self, app_module: ModuleType) -> None:
-        router = get_router(app_module)
-        self.include_router(router)
+    def setup_tui(self) -> None:
+        self.include_router(get_tui_router(self.app))

@@ -1,5 +1,5 @@
-from tui.application import tui
+from tui.application import Tui
 
 __all__ = [
-    "tui",
+    "Tui",
 ]

@@ -11,12 +11,10 @@ from fastapi.routing import APIRoute
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
 
 from tui import components as c
-from tui.render import get_pre_render_html, get_prebuild_html
+from tui.render import render_html, render_server_html
 
-ROUTE_ROOT_FOLDER_NAME = "app"
 ROUTE_INDEX_FILENAME = "page.py"
 ROUTE_LAYOUT_FILENAME = "layout.py"
-ROUTE_DEFAULT_SEGMENT = ""
 
 ROOT_ROUTER_PREFIX = "/tui"
 ROUTE_ROUTER_PATH = "/_route/"
@@ -56,20 +54,19 @@ class Route(BaseModel):
 Route.model_rebuild()
 
 
-def load_module(file_path: pathlib.Path, route_pathname: str) -> ModuleType:
-    module_name = f"{route_pathname}_{file_path.stem}"
+def load_module(file_path: pathlib.Path) -> ModuleType:
+    module_name = f"module_{file_path.stem}"
     return machinery.SourceFileLoader(module_name, str(file_path)).load_module()
 
 
-def get_routes(
+def build_routes_from_folder(
     folder: pathlib.Path,
     parent_pathname: str = "/",
+    is_root: bool = True,
 ) -> list[Route]:
     routes = []
-    segment = ROUTE_DEFAULT_SEGMENT if folder.stem == ROUTE_ROOT_FOLDER_NAME else folder.stem
-    pathname = parent_pathname + segment
-    if segment:
-        pathname += "/"
+    segment = "" if is_root else folder.stem
+    pathname = f"{parent_pathname}{segment}/" if segment else parent_pathname
 
     layout_file = folder / ROUTE_LAYOUT_FILENAME
     page_file = folder / ROUTE_INDEX_FILENAME
@@ -79,7 +76,7 @@ def get_routes(
             Route(
                 segment=segment,
                 pathname=pathname,
-                endpoint=load_module(page_file, pathname).page,
+                endpoint=load_module(page_file).page,
                 index=layout_file.is_file(),
                 children=[],
             )
@@ -87,7 +84,7 @@ def get_routes(
 
     for child_folder in folder.iterdir():
         if child_folder.is_dir():
-            routes.extend(get_routes(child_folder, pathname))
+            routes.extend(build_routes_from_folder(child_folder, pathname, False))
 
     if layout_file.is_file():
         routes = [
@@ -95,7 +92,7 @@ def get_routes(
                 segment=segment,
                 pathname=pathname,
                 index=False,
-                endpoint=load_module(layout_file, pathname).layout,
+                endpoint=load_module(layout_file).layout,
                 children=routes,
             )
         ]
@@ -106,10 +103,10 @@ def get_routes(
 def get_routes_router(routes: list[Route]) -> APIRouter:
     router = APIRouter(prefix=ROOT_ROUTER_PREFIX)
 
-    @router.get(ROUTE_ROUTER_PATH, response_model=list[Route])
     async def get_root_routes() -> list[Route]:
         return routes
 
+    router.add_api_route(ROUTE_ROUTER_PATH, get_root_routes, methods=["GET"])
     return router
 
 
@@ -120,6 +117,7 @@ def get_loader_router(routes: list[Route], router: APIRouter = APIRouter(prefix=
             path,
             route.endpoint,
             response_model=c.AnyComponent,
+            methods=["GET"],
         )
         if route.children:
             get_loader_router(route.children, router)
@@ -130,21 +128,21 @@ def get_pre_render_router(routes: list[APIRoute]) -> APIRouter:
     router = APIRouter()
 
     async def pre_render(request: Request) -> HTMLResponse:
-        if request.method == "GET":
-            html = await get_pre_render_html(request, routes)
-            return HTMLResponse(get_prebuild_html("tui", server_html=html or ""))
-        return HTMLResponse(get_prebuild_html("tui"))
+        html = await render_server_html(
+            request, [r for r in routes if r.name != "pre_render"], ROOT_ROUTER_PREFIX, LAYOUT_ROUTER_SUFFIX
+        )
+        return HTMLResponse(render_html(server_html=html or ""))
 
     router.add_api_route("/{path:path}", pre_render, methods=["GET"])
     return router
 
 
-def get_router(app: ModuleType) -> APIRouter:
+def get_tui_router(app: ModuleType) -> APIRouter:
     if app.__file__ is None:
         raise RuntimeError("The app module must have a __file__ attribute.")
     app_folder = pathlib.Path(app.__file__).parent
 
-    routes = get_routes(app_folder)
+    routes = build_routes_from_folder(app_folder)
 
     root_router = APIRouter()
     root_router.include_router(get_routes_router(routes))
