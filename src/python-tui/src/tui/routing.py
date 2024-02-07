@@ -50,6 +50,10 @@ class Route(BaseModel):
     def serialize_endpoint(self, value: Callable[[Request], Awaitable[c.AnyComponents]]) -> str:
         return value.__name__
 
+    # @property
+    # def is_layout(self) -> bool:
+    #     return self.pathname.endswith(LAYOUT_ROUTER_SUFFIX)
+
 
 Route.model_rebuild()
 
@@ -174,7 +178,7 @@ def get_loader_router(routes: list[Route], router: APIRouter = APIRouter(prefix=
         The configured APIRouter instance.
     """
     for route in routes:
-        path = route.pathname if route.index else route.pathname + LAYOUT_ROUTER_SUFFIX
+        path = route.pathname if not route.children else route.pathname + LAYOUT_ROUTER_SUFFIX
         router.add_api_route(
             path,
             route.endpoint,

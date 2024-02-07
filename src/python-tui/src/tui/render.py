@@ -27,38 +27,26 @@ def generate_html(
     str
         The complete HTML document as a string.
     """
-    prebuild_html = f"""\
-        <!DOCTYPE html>
+    return f"""\
+    <!DOCTYPE html>
     <html lang="en">
         <head>
             <meta charset="UTF-8" />
             <link rel="icon" type="image/svg+xml" href="/vite.svg" />
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-            <link
-                href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap"
-                rel="stylesheet"
-            />
+            <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap" rel="stylesheet" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>tui</title>
-            <script
-                type="module"
-                crossorigin
-                src="{STATIC_ASSETS_URL}/assets/index.js"
-            ></script>
-            <link
-                rel="stylesheet"
-                crossorigin
-                href="{STATIC_ASSETS_URL}/assets/index.css"
-            />
+            <script type="module" crossorigin src="{STATIC_ASSETS_URL}/assets/index.js"></script>
+            <link rel="stylesheet" crossorigin href="{STATIC_ASSETS_URL}/assets/index.css" />
         </head>
         <body>
             <div class="invisible h-0 w-0">{server_side_html}</div>
             <div id="root"></div>
         </body>
     </html>
-        """
-    return prebuild_html
+    """
 
 
 async def get_route_response(
@@ -94,27 +82,27 @@ async def get_route_response(
     return None
 
 
-async def get_matched_route_component(
+async def get_response_for_matched_route(
     request: Request, path: str, routes: list[APIRoute], outlet: Optional[c.AnyComponent] = None
 ) -> Optional[c.AnyComponent]:
     """
-    Finds a route that matches the given path and obtains the corresponding component.
+    Finds a matching route for the given request path and returns the response from that route.
 
     Parameters
     ----------
     request : Request
-        The request object.
+        The current request object.
     path : str
         The path to match against the available routes.
-    routes : list[APIRoute]
-        The list of available routes.
+    routes : List[APIRoute]
+        A list of available API routes.
     outlet : Optional[c.AnyComponent], optional
-        An optional component to pass as an outlet, by default None.
+        An optional component to include in the response, defaults to None.
 
     Returns
     -------
     Optional[c.AnyComponent]
-        The matched component, if a matching route is found; otherwise, None.
+        The component response from the matched route, if found; otherwise, None.
     """
     matched_route = next((route for route in routes if route.path_regex.match(path)), None)
     if matched_route:
@@ -148,13 +136,16 @@ async def render_server_side_html(
     Optional[str]
         The rendered HTML string if a component is successfully resolved; otherwise, None.
     """
-    request_path = root_router_prefix + get_route_path(request.scope)
-    component = await get_matched_route_component(request, request_path, routes)
-    layout_path = request_path + layout_router_suffix
+    loader_path = root_router_prefix + get_route_path(request.scope)
+    component = await get_response_for_matched_route(request, loader_path, routes)
+
+    layout_path = loader_path + layout_router_suffix
+    layout_routes = [r for r in routes if r.path.endswith(layout_router_suffix)]
     while layout_path.startswith(root_router_prefix):
-        component_with_layout = await get_matched_route_component(request, layout_path, routes, component)
-        if component_with_layout:
-            component = component_with_layout
+        layout_component = await get_response_for_matched_route(request, layout_path, layout_routes, component)
+        if layout_component:
+            component = layout_component
+        # Iteratively trim path segments and append layout suffix, e.g., from '/a/b_layout/' to '/a_layout/'
         layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/" + layout_router_suffix
 
     return component.render_to_html() if component else None

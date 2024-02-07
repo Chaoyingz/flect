@@ -2,7 +2,7 @@ import pytest
 from fastapi import FastAPI, Request
 from fastapi.routing import APIRoute
 from tui import components as c
-from tui.render import generate_html, get_matched_route_component, get_route_response, render_server_side_html
+from tui.render import generate_html, get_response_for_matched_route, get_route_response, render_server_side_html
 from tui.routing import LAYOUT_ROUTER_SUFFIX, ROOT_ROUTER_PREFIX
 
 
@@ -39,7 +39,7 @@ async def test_get_route_response(app, route_request):
 
 
 async def test_get_matched_route_component(app, route_request):
-    component = await get_matched_route_component(route_request, "/test", app.routes)
+    component = await get_response_for_matched_route(route_request, "/test", app.routes)
     assert component is not None
 
 

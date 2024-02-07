@@ -10,7 +10,7 @@ dependencies = [
     "uvicorn>=0.25.0",
     "httpx>=0.26.0",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "MIT"}
 
