@@ -67,7 +67,7 @@ const useRoutes = () => {
         : () => fetchJson<ComponentProps[]>(`${ROOT_ROUTER_PREFIX}${route.pathname}`)
 
     return {
-      path: route.index ? '/' : route.segment,
+      path: route.pathname,
       element: <RouteElement />,
       errorElement: <ErrorElement />,
       loader,
@@ -82,6 +82,7 @@ const useRoutes = () => {
       .then((routeProps) => {
         if (isMounted) {
           setRoutes(routeProps.map(convertRoute))
+          console.log(routes)
         }
       })
       .catch(console.error)

@@ -11,7 +11,7 @@ from fastapi.routing import APIRoute
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
 
 from tui import components as c
-from tui.render import render_html, render_server_html
+from tui.render import generate_html, render_server_side_html
 
 ROUTE_INDEX_FILENAME = "page.py"
 ROUTE_LAYOUT_FILENAME = "layout.py"
@@ -55,6 +55,19 @@ Route.model_rebuild()
 
 
 def load_module(file_path: pathlib.Path) -> ModuleType:
+    """
+    Loads a Python module from a given file path.
+
+    Parameters
+    ----------
+    file_path : pathlib.Path
+        The file path of the module to load.
+
+    Returns
+    -------
+    ModuleType
+        The loaded module.
+    """
     module_name = f"module_{file_path.stem}"
     return machinery.SourceFileLoader(module_name, str(file_path)).load_module()
 
@@ -64,6 +77,23 @@ def build_routes_from_folder(
     parent_pathname: str = "/",
     is_root: bool = True,
 ) -> list[Route]:
+    """
+    Builds a list of Route objects from a folder structure.
+
+    Parameters
+    ----------
+    folder : pathlib.Path
+        The folder from which to start building routes.
+    parent_pathname : str, optional
+        The pathname of the parent route, by default "/".
+    is_root : bool, optional
+        Flag indicating if the folder is the root of the routing structure, by default True.
+
+    Returns
+    -------
+    list[Route]
+        A list of Route objects built from the folder structure.
+    """
     routes = []
     segment = "" if is_root else folder.stem
     pathname = f"{parent_pathname}{segment}/" if segment else parent_pathname
@@ -101,6 +131,19 @@ def build_routes_from_folder(
 
 
 def get_routes_router(routes: list[Route]) -> APIRouter:
+    """
+    Creates an APIRouter instance for serving the root routes.
+
+    Parameters
+    ----------
+    routes : list[Route]
+        The list of routes to be served.
+
+    Returns
+    -------
+    APIRouter
+        The APIRouter instance configured with the routes.
+    """
     router = APIRouter(prefix=ROOT_ROUTER_PREFIX)
 
     async def get_root_routes() -> list[Route]:
@@ -111,6 +154,21 @@ def get_routes_router(routes: list[Route]) -> APIRouter:
 
 
 def get_loader_router(routes: list[Route], router: APIRouter = APIRouter(prefix=ROOT_ROUTER_PREFIX)) -> APIRouter:
+    """
+    Configures an APIRouter with endpoints for dynamically loading components based on the routes.
+
+    Parameters
+    ----------
+    routes : list[Route]
+        The list of routes to configure for component loading.
+    router : APIRouter, optional
+        An existing APIRouter instance to configure, by default a new router with ROOT_ROUTER_PREFIX.
+
+    Returns
+    -------
+    APIRouter
+        The configured APIRouter instance.
+    """
     for route in routes:
         path = route.pathname if route.index else route.pathname + LAYOUT_ROUTER_SUFFIX
         router.add_api_route(
@@ -124,20 +182,51 @@ def get_loader_router(routes: list[Route], router: APIRouter = APIRouter(prefix=
     return router
 
 
-def get_pre_render_router(routes: list[APIRoute]) -> APIRouter:
+def get_pre_render_router(loader_routes: list[APIRoute]) -> APIRouter:
+    """
+    Creates an APIRouter for pre-rendering server-side HTML based on the routes.
+
+    Parameters
+    ----------
+    loader_routes : list[APIRoute]
+        The list of loader routes to use for pre-rendering.
+
+    Returns
+    -------
+    APIRouter
+        The APIRouter instance for server-side pre-rendering.
+    """
     router = APIRouter()
 
     async def pre_render(request: Request) -> HTMLResponse:
-        html = await render_server_html(
-            request, [r for r in routes if r.name != "pre_render"], ROOT_ROUTER_PREFIX, LAYOUT_ROUTER_SUFFIX
+        server_side_html = await render_server_side_html(
+            request, loader_routes, ROOT_ROUTER_PREFIX, LAYOUT_ROUTER_SUFFIX
         )
-        return HTMLResponse(render_html(server_html=html or ""))
+        return HTMLResponse(generate_html(server_side_html=server_side_html or ""))
 
     router.add_api_route("/{path:path}", pre_render, methods=["GET"])
     return router
 
 
-def get_tui_router(app: ModuleType) -> APIRouter:
+def get_app_router(app: ModuleType) -> APIRouter:
+    """
+    Constructs the main APIRouter for the TUI application by loading routes from the app module.
+
+    Parameters
+    ----------
+    app : ModuleType
+        The main application module containing the file structure for routes.
+
+    Returns
+    -------
+    APIRouter
+        The main APIRouter for the application, configured with routes and pre-rendering.
+
+    Raises
+    ------
+    RuntimeError
+        If the app module does not have a __file__ attribute, indicating it cannot be used for route loading.
+    """
     if app.__file__ is None:
         raise RuntimeError("The app module must have a __file__ attribute.")
     app_folder = pathlib.Path(app.__file__).parent
@@ -146,6 +235,7 @@ def get_tui_router(app: ModuleType) -> APIRouter:
 
     root_router = APIRouter()
     root_router.include_router(get_routes_router(routes))
-    root_router.include_router(get_loader_router(routes))
-    root_router.include_router(get_pre_render_router(root_router.routes))  # type: ignore
+    loader_router = get_loader_router(routes)
+    root_router.include_router(loader_router)
+    root_router.include_router(get_pre_render_router(loader_router.routes))  # type: ignore
     return root_router
