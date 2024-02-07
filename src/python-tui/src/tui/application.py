@@ -3,7 +3,7 @@ from typing import Any
 
 from fastapi import FastAPI
 
-from tui.routing import get_app_router
+from tui.routing import configure_app_router
 
 
 class Tui(FastAPI):
@@ -18,4 +18,5 @@ class Tui(FastAPI):
         self.setup_tui()
 
     def setup_tui(self) -> None:
-        self.include_router(get_app_router(self.app))
+        app_router = configure_app_router(self.app)
+        self.include_router(app_router)

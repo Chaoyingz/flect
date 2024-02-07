@@ -1,8 +1,8 @@
+import importlib.util
 import pathlib
 from collections.abc import Awaitable
-from importlib import machinery
 from types import ModuleType
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 from fastapi import APIRouter
 from fastapi.requests import Request
@@ -68,8 +68,12 @@ def load_module(file_path: pathlib.Path) -> ModuleType:
     ModuleType
         The loaded module.
     """
-    module_name = f"module_{file_path.stem}"
-    return machinery.SourceFileLoader(module_name, str(file_path)).load_module()
+    spec = importlib.util.spec_from_file_location(file_path.stem, str(file_path))
+    if spec and spec.loader:
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    raise ImportError(f"Could not load module from {file_path}")
 
 
 def build_routes_from_folder(
@@ -96,7 +100,7 @@ def build_routes_from_folder(
     """
     routes = []
     segment = "" if is_root else folder.stem
-    pathname = f"{parent_pathname}{segment}/" if segment else parent_pathname
+    pathname = f"{parent_pathname.rstrip('/')}/{segment}/" if segment else parent_pathname
 
     layout_file = folder / ROUTE_LAYOUT_FILENAME
     page_file = folder / ROUTE_INDEX_FILENAME
@@ -208,9 +212,9 @@ def get_pre_render_router(loader_routes: list[APIRoute]) -> APIRouter:
     return router
 
 
-def get_app_router(app: ModuleType) -> APIRouter:
+def configure_app_router(app: ModuleType) -> APIRouter:
     """
-    Constructs the main APIRouter for the TUI application by loading routes from the app module.
+    Constructs the main APIRouter for the application by loading routes from the app module.
 
     Parameters
     ----------
@@ -227,15 +231,17 @@ def get_app_router(app: ModuleType) -> APIRouter:
     RuntimeError
         If the app module does not have a __file__ attribute, indicating it cannot be used for route loading.
     """
-    if app.__file__ is None:
-        raise RuntimeError("The app module must have a __file__ attribute.")
-    app_folder = pathlib.Path(app.__file__).parent
+    if not hasattr(app, "__file__"):
+        raise RuntimeError("App module missing '__file__' attribute. Ensure it's a proper package or module.")
+    app_folder = pathlib.Path(cast(str, app.__file__)).parent
 
     routes = build_routes_from_folder(app_folder)
 
     root_router = APIRouter()
     root_router.include_router(get_routes_router(routes))
+
     loader_router = get_loader_router(routes)
     root_router.include_router(loader_router)
+
     root_router.include_router(get_pre_render_router(loader_router.routes))  # type: ignore
     return root_router

@@ -150,7 +150,6 @@ async def render_server_side_html(
     """
     request_path = root_router_prefix + get_route_path(request.scope)
     component = await get_matched_route_component(request, request_path, routes)
-
     layout_path = request_path + layout_router_suffix
     while layout_path.startswith(root_router_prefix):
         component_with_layout = await get_matched_route_component(request, layout_path, routes, component)

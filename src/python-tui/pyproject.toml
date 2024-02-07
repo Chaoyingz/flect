@@ -8,6 +8,7 @@ authors = [
 dependencies = [
     "fastapi>=0.108.0",
     "uvicorn>=0.25.0",
+    "httpx>=0.26.0",
 ]
 requires-python = ">=3.9"
 readme = "README.md"
@@ -28,13 +29,4 @@ dev = [
     "coverage>=7.4.1",
     "pytest>=7.4.4",
     "pytest-asyncio>=0.23.4",
-]
-
-[tool.pytest.ini_options]
-asyncio_mode = "auto"
-addopts = "-s -p no:warnings"
-cache_dir = ".pytest_cache/"
-testpaths = [
-    "tests",
-    "src/tui",
 ]
