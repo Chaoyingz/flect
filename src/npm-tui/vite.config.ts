@@ -6,7 +6,7 @@ const serverConfig = {
   host: true,
   port: 3000,
   proxy: {
-    '/api': 'http://localhost:8000',
+    '/tui': 'http://localhost:8000/',
   },
 }
 

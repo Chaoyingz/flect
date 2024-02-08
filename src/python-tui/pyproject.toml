@@ -8,6 +8,7 @@ authors = [
 dependencies = [
     "fastapi>=0.108.0",
     "uvicorn>=0.25.0",
+    "httpx>=0.26.0",
 ]
 requires-python = ">=3.11"
 readme = "README.md"
@@ -25,4 +26,7 @@ package-type = "library"
 dev = [
     "ruff>=0.1.12",
     "pyright>=1.1.347",
+    "coverage>=7.4.1",
+    "pytest>=7.4.4",
+    "pytest-asyncio>=0.23.4",
 ]

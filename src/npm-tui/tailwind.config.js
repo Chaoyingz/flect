@@ -40,6 +40,8 @@ module.exports = {
     },
     'border-b',
     'text-center',
+    'invisible',
+    'absolute',
   ],
   prefix: '',
   theme: {

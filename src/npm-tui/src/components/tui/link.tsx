@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils'
-import { AnyComponents, ComponentProps } from '../any-component'
+import { AnyComponents, ComponentProps } from '@/components/tui/any-component'
+import { Link as RemixLink } from 'react-router-dom'
 
 export interface LinkProps {
   ctype: 'link'
@@ -12,8 +13,8 @@ export interface LinkProps {
 export function Link(props: LinkProps) {
   const { href, children } = props
   return (
-    <a href={href} className={cn('text-primary underline-offset-4 hover:underline', props.className)}>
+    <RemixLink to={href} className={cn('text-primary underline-offset-4 hover:underline', props.className)}>
       <AnyComponents children={children} />
-    </a>
+    </RemixLink>
   )
 }

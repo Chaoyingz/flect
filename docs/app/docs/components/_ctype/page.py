@@ -1,17 +1,12 @@
 from typing import Any, Optional
 
-from fastapi import APIRouter
+import tui.components as c
+from fastapi import Path
 from pydantic import BaseModel
 from pydantic_core._pydantic_core import PydanticUndefined
-from tui import apply_layout
-from tui import components as c
-
-from docs.layouts.docs_layout import docs_layout
-
-components_router = APIRouter(prefix="/components")
 
 
-async def get_component_description_section(
+def get_component_description_section(
     title: str,
     description: str,
 ) -> c.Container:
@@ -35,7 +30,7 @@ class ComponentProps(BaseModel):
     description: Optional[str]
 
 
-async def get_component_preview_literal_component(
+def get_component_preview_literal_component(
     component_type: c.AnyComponent,
     literal_props: list[str],
     dynamic_props: list[str],
@@ -73,7 +68,7 @@ async def get_component_preview_literal_component(
     )
 
 
-async def get_component_preview_section(
+def get_component_preview_section(
     previews: c.AnyComponents,
 ) -> c.AnyComponent:
     return c.Container(
@@ -89,7 +84,7 @@ async def get_component_preview_section(
     )
 
 
-async def get_component_api_reference_section(component: c.AnyComponent) -> c.Container:
+def get_component_api_reference_section(component: c.AnyComponent) -> c.Container:
     props = []
     for field, filed_info in component.model_fields.items():
         if field == "ctype":
@@ -121,29 +116,31 @@ async def get_component_api_reference_section(component: c.AnyComponent) -> c.Co
     )
 
 
-async def get_component_page(
+def get_component_page(
     description_section: c.AnyComponent,
     preview_section: c.AnyComponent,
     api_reference_section: c.AnyComponent,
-) -> c.AnyComponents:
-    return [
-        c.Container(
-            tag="div",
-            class_name="flex gap-12 flex-col",
-            children=[description_section, preview_section, api_reference_section],
-        )
-    ]
+) -> c.AnyComponent:
+    return c.Container(
+        tag="div",
+        class_name="flex gap-12 flex-col",
+        children=[description_section, preview_section, api_reference_section],
+    )
 
 
-@components_router.get("/avatar")
-@apply_layout(docs_layout)
-async def avatar_page() -> c.AnyComponents:
-    return await get_component_page(
-        description_section=await get_component_description_section(
+class TableExampleModel(BaseModel):
+    column1: str
+    column2: str
+    column3: str
+
+
+COMPONENT_DOCS_MAP = {
+    "avatar": get_component_page(
+        description_section=get_component_description_section(
             title="Avatar",
             description="An avatar is a visual representation of a user or a group of users.",
         ),
-        preview_section=await get_component_preview_section(
+        preview_section=get_component_preview_section(
             previews=[
                 c.Container(
                     tag="div",
@@ -161,21 +158,16 @@ async def avatar_page() -> c.AnyComponents:
                 )
             ]
         ),
-        api_reference_section=await get_component_api_reference_section(component=c.Avatar),
-    )
-
-
-@components_router.get("/button")
-@apply_layout(docs_layout)
-async def button_page() -> c.AnyComponents:
-    return await get_component_page(
-        description_section=await get_component_description_section(
+        api_reference_section=get_component_api_reference_section(component=c.Avatar),
+    ),
+    "button": get_component_page(
+        description_section=get_component_description_section(
             title="Button",
             description="A control that triggers an action. Button labels should express what action will occur when the ",
         ),
-        preview_section=await get_component_preview_section(
+        preview_section=get_component_preview_section(
             previews=[
-                await get_component_preview_literal_component(
+                get_component_preview_literal_component(
                     component_type=c.Button,
                     literal_props=["variant", "size"],
                     dynamic_props=["children"],
@@ -183,34 +175,24 @@ async def button_page() -> c.AnyComponents:
                 )
             ]
         ),
-        api_reference_section=await get_component_api_reference_section(component=c.Button),
-    )
-
-
-@components_router.get("/container")
-@apply_layout(docs_layout)
-async def container_page() -> c.AnyComponents:
-    return await get_component_page(
-        description_section=await get_component_description_section(
+        api_reference_section=get_component_api_reference_section(component=c.Button),
+    ),
+    "container": get_component_page(
+        description_section=get_component_description_section(
             title="Container",
             description="A container component.",
         ),
         preview_section=c.Container(
             tag="div",
         ),
-        api_reference_section=await get_component_api_reference_section(component=c.Container),
-    )
-
-
-@components_router.get("/heading")
-@apply_layout(docs_layout)
-async def heading_page() -> c.AnyComponents:
-    return await get_component_page(
-        description_section=await get_component_description_section(
+        api_reference_section=get_component_api_reference_section(component=c.Container),
+    ),
+    "heading": get_component_page(
+        description_section=get_component_description_section(
             title="Heading",
             description="A heading component.",
         ),
-        preview_section=await get_component_preview_section(
+        preview_section=get_component_preview_section(
             previews=[
                 c.Heading(
                     level=2,
@@ -218,19 +200,14 @@ async def heading_page() -> c.AnyComponents:
                 )
             ]
         ),
-        api_reference_section=await get_component_api_reference_section(component=c.Heading),
-    )
-
-
-@components_router.get("/link")
-@apply_layout(docs_layout)
-async def link_page() -> c.AnyComponents:
-    return await get_component_page(
-        description_section=await get_component_description_section(
+        api_reference_section=get_component_api_reference_section(component=c.Heading),
+    ),
+    "link": get_component_page(
+        description_section=get_component_description_section(
             title="Link",
             description="A link component.",
         ),
-        preview_section=await get_component_preview_section(
+        preview_section=get_component_preview_section(
             previews=[
                 c.Link(
                     href="/",
@@ -242,25 +219,14 @@ async def link_page() -> c.AnyComponents:
                 )
             ]
         ),
-        api_reference_section=await get_component_api_reference_section(component=c.Link),
-    )
-
-
-class TableExampleModel(BaseModel):
-    column1: str
-    column2: str
-    column3: str
-
-
-@components_router.get("/table")
-@apply_layout(docs_layout)
-async def table_page() -> c.AnyComponents:
-    return await get_component_page(
-        description_section=await get_component_description_section(
+        api_reference_section=get_component_api_reference_section(component=c.Link),
+    ),
+    "table": get_component_page(
+        description_section=get_component_description_section(
             title="Table",
             description="A table component.",
         ),
-        preview_section=await get_component_preview_section(
+        preview_section=get_component_preview_section(
             previews=[
                 c.Table(
                     datasets=[
@@ -278,24 +244,26 @@ async def table_page() -> c.AnyComponents:
                 )
             ]
         ),
-        api_reference_section=await get_component_api_reference_section(component=c.Table),
-    )
-
-
-@components_router.get("/text")
-@apply_layout(docs_layout)
-async def text_page() -> c.AnyComponents:
-    return await get_component_page(
-        description_section=await get_component_description_section(
+        api_reference_section=get_component_api_reference_section(component=c.Table),
+    ),
+    "text": get_component_page(
+        description_section=get_component_description_section(
             title="Text",
             description="A text component.",
         ),
-        preview_section=await get_component_preview_section(
+        preview_section=get_component_preview_section(
             previews=[
                 c.Text(
                     text="Text",
                 )
             ]
         ),
-        api_reference_section=await get_component_api_reference_section(component=c.Text),
-    )
+        api_reference_section=get_component_api_reference_section(component=c.Text),
+    ),
+}
+
+
+async def page(
+    ctype: str = Path(..., description="The component type to render"),
+) -> c.AnyComponent:
+    return COMPONENT_DOCS_MAP.get(ctype, c.Text(text="Component Not found"))

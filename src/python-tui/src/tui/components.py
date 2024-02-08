@@ -1,123 +1,189 @@
-import typing as _t
+from html import escape
+from typing import Annotated, Literal, Optional, Self, Union
 
-import pydantic as _p
+from pydantic import BaseModel, ConfigDict, Field, SerializeAsAny, model_validator
 
 
-class _BaseComponent(_p.BaseModel):
-    model_config = _p.ConfigDict(extra="forbid")
+class BaseComponent(BaseModel):
+    model_config = ConfigDict(extra="forbid")
 
-    class_name: _t.Optional[str] = _p.Field(
+    class_name: Optional[str] = Field(
         None, description="The tailwind class names of the component.", serialization_alias="className"
     )
 
+    def render_to_html(self) -> str:
+        return ""
 
-class _BaseContainerComponent(_BaseComponent):
-    children: _t.Optional[list["AnyComponent"]] = _p.Field(
+
+class BaseContainerComponent(BaseComponent):
+    children: Optional[list["AnyComponent"]] = Field(
         None,
         description="The children of the component.",
     )
 
 
-class Avatar(_BaseComponent):
-    ctype: _t.Literal["avatar"] = "avatar"
+class Avatar(BaseComponent):
+    ctype: Literal["avatar"] = "avatar"
 
-    src: _t.Optional[str] = _p.Field(
+    src: Optional[str] = Field(
         None,
         description="The source of the avatar.",
     )
-    alt: _t.Optional[str] = _p.Field(
+    alt: Optional[str] = Field(
         None,
         description="The alternative text of the avatar.",
     )
-    fallback: str = _p.Field(
+    fallback: str = Field(
         ...,
         description="The fallback text of the avatar.",
     )
 
+    def render_to_html(self) -> str:
+        return f"""\
+        <img
+            src="{escape(self.src or "")}"
+            alt="{escape(self.alt or "")}"
+        />
+        <span>{escape(self.fallback)}</span>
+        """
 
-class Button(_BaseComponent):
-    ctype: _t.Literal["button"] = "button"
 
-    variant: _t.Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = _p.Field(
+class Button(BaseComponent):
+    ctype: Literal["button"] = "button"
+
+    variant: Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = Field(
         "default",
         description="The variant of the button.",
     )
-    size: _t.Literal["default", "sm", "lg", "icon"] = _p.Field(
+    size: Literal["default", "sm", "lg", "icon"] = Field(
         "default",
         description="The size of the button.",
     )
     children: str
 
+    def render_to_html(self) -> str:
+        return f"""\
+        <button>
+            {escape(self.children)}
+        </button>
+        """
 
-class Container(_BaseContainerComponent):
-    ctype: _t.Literal["container"] = "container"
 
-    tag: _t.Optional[_t.Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
+class Container(BaseContainerComponent):
+    ctype: Literal["container"] = "container"
+
+    tag: Literal["div", "section", "header", "footer", "main", "nav", "aside"] = Field(
+        "div",
+        description="The tag of the container.",
+    )
+
+    def render_to_html(self) -> str:
+        return f"""\
+        <{self.tag}>
+            {"".join(component.render_to_html() for component in self.children) if self.children else ""}
+        </{self.tag}>
+        """
 
 
-class Heading(_BaseComponent):
-    ctype: _t.Literal["heading"] = "heading"
+class Heading(BaseComponent):
+    ctype: Literal["heading"] = "heading"
 
-    level: _t.Literal[1, 2, 3, 4, 5, 6] = _p.Field(
+    level: Literal[1, 2, 3, 4, 5, 6] = Field(
         ...,
         description="The level of the heading.",
     )
-    text: str = _p.Field(
+    text: str = Field(
         ...,
         description="The text of the heading.",
     )
-    id: _t.Optional[str] = _p.Field(
+    id: Optional[str] = Field(
         None,
         description="The id of the heading.",
     )
 
+    def render_to_html(self) -> str:
+        return f"""\
+        <h{self.level}>
+            {escape(self.text)}
+        </h{self.level}>
+        """
 
-class Link(_BaseContainerComponent):
-    ctype: _t.Literal["link"] = "link"
 
-    href: str = _p.Field(
+class Link(BaseContainerComponent):
+    ctype: Literal["link"] = "link"
+
+    href: str = Field(
         ...,
         description="The href of the link.",
     )
 
+    def render_to_html(self) -> str:
+        return f"""\
+        <a href="{escape(self.href)}">
+            {"".join(component.render_to_html() for component in self.children) if self.children else ""}
+        </a>
+        """
 
-class Table(_BaseComponent):
-    ctype: _t.Literal["table"] = "table"
 
-    labels: list[str] = _p.Field(
+class Outlet(BaseComponent):
+    ctype: Literal["outlet"] = "outlet"
+
+
+class Table(BaseComponent):
+    ctype: Literal["table"] = "table"
+
+    labels: list[str] = Field(
         [],
         description="The labels of the table, defaults to the keys of the dataset.",
     )
-    datasets: list[_p.SerializeAsAny[_p.BaseModel]] = _p.Field(
+    datasets: list[SerializeAsAny[BaseModel]] = Field(
         ...,
         description="The datasets of the table.",
     )
 
-    @_p.model_validator(mode="before")
-    @classmethod
-    def set_default_labels(cls, values: _t.Any) -> _t.Any:
-        if not values.get("labels"):
-            values["labels"] = list(values["datasets"][0].model_fields.keys())
-        return values
+    @model_validator(mode="after")
+    def set_default_labels(self) -> Self:
+        if not self.labels:
+            self.labels = list(self.datasets[0].model_fields.keys())
+        return self
+
+    def render_to_html(self) -> str:
+        return f"""\
+        <table>
+            <thead>
+                <tr>
+                    {"".join(f"<th>{escape(label)}</th>" for label in self.labels)}
+                </tr>
+            </thead>
+            <tbody>
+                {"".join(f"<tr>{''.join(f'<td>{escape(getattr(dataset, label))}</td>' for label in self.labels)}</tr>" for dataset in self.datasets)}
+            </tbody>
+        </table>
+        """
 
 
-class Text(_BaseComponent):
-    ctype: _t.Literal["text"] = "text"
+class Text(BaseComponent):
+    ctype: Literal["text"] = "text"
 
-    text: str = _p.Field(
+    text: str = Field(
         ...,
         description="The text of the text.",
     )
 
+    def render_to_html(self) -> str:
+        return f"""\
+        <p>{escape(self.text)}</p>
+        """
 
-AnyComponent = _t.Annotated[
-    _t.Union[Avatar, Button, Container, Heading, Link, Table, Text],
-    _p.Field(discriminator="ctype"),
+
+AnyComponent = Annotated[
+    Union[Avatar, Button, Container, Heading, Link, Outlet, Table, Text],
+    Field(discriminator="ctype"),
 ]
 AnyComponents = list[AnyComponent]
 
 # Rebuild forward ref models
-for container_component in _BaseContainerComponent.__subclasses__():
+for container_component in BaseContainerComponent.__subclasses__():
     container_component.model_rebuild()
 
 
@@ -127,6 +193,8 @@ __all__ = (
     "Container",
     "Heading",
     "Link",
+    "Outlet",
+    "Table",
     "Text",
     "AnyComponent",
     "AnyComponents",
