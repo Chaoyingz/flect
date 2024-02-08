@@ -2,7 +2,7 @@ from contextlib import AsyncExitStack
 from typing import Optional
 
 from fastapi import Request
-from fastapi.dependencies.utils import solve_dependencies
+from fastapi.dependencies.utils import request_params_to_args, solve_dependencies
 from fastapi.routing import APIRoute
 from starlette._utils import get_route_path
 
@@ -75,6 +75,14 @@ async def get_route_response(
             dependant=route.dependant,
             async_exit_stack=async_exit_stack,
         )
+        path_values, path_errors = request_params_to_args(route.dependant.path_params, request.path_params)
+        query_values, query_errors = request_params_to_args(route.dependant.query_params, request.query_params)
+        header_values, header_errors = request_params_to_args(route.dependant.header_params, request.headers)
+        cookie_values, cookie_errors = request_params_to_args(route.dependant.cookie_params, request.cookies)
+        values.update(path_values)
+        values.update(query_values)
+        values.update(header_values)
+        values.update(cookie_values)
         if outlet is not None:
             values["outlet"] = outlet
         if route.dependant.call:
@@ -104,9 +112,14 @@ async def get_response_for_matched_route(
     Optional[c.AnyComponent]
         The component response from the matched route, if found; otherwise, None.
     """
-    matched_route = next((route for route in routes if route.path_regex.match(path)), None)
-    if matched_route:
-        return await get_route_response(request, matched_route, outlet)
+    for route in routes:
+        match = route.path_regex.match(path)
+        if match:
+            matched_params = match.groupdict()
+            for key, value in matched_params.items():
+                matched_params[key] = route.param_convertors[key].convert(value)
+            request.scope["path_params"].update(matched_params)
+            return await get_route_response(request, route, outlet)
     return None
 
 

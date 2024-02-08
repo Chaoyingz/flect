@@ -4,11 +4,14 @@ import {
   RouterProvider,
   useLoaderData,
   useRouteError,
+  LoaderFunctionArgs,
+  useNavigate,
   RouteProps as RemixRouteProps,
 } from 'react-router-dom'
 import { useCallback, useEffect, useState } from 'react'
 import { AnyComponent, ComponentProps } from '@/components/tui/any-component'
 import React from 'react'
+import { Button } from './components/ui/button'
 
 const LAYOUT_ENDPOINT_NAME = 'layout'
 
@@ -30,6 +33,7 @@ const RouteElement = React.memo(() => {
 
 const ErrorElement = React.memo(() => {
   const error = useRouteError() as { statusText?: string; message?: string }
+  const navigate = useNavigate()
   console.error(error)
 
   return (
@@ -40,6 +44,9 @@ const ErrorElement = React.memo(() => {
         <p>
           <i>{error.statusText || error.message}</i>
         </p>
+        <Button size={'sm'} className="mt-6" onClick={() => navigate(-1)}>
+          Go Back
+        </Button>
       </div>
     </div>
   )
@@ -61,13 +68,25 @@ const useRoutes = () => {
   const [routes, setRoutes] = useState<RouteObject[] | undefined>()
 
   const convertRoute = useCallback((route: RouteProps): RouteObject => {
-    const loader =
-      route.endpoint === LAYOUT_ENDPOINT_NAME
-        ? () => fetchJson<ComponentProps[]>(`${ROOT_ROUTER_PREFIX}${route.pathname}${LAYOUT_ROUTER_SUFFIX}`)
-        : () => fetchJson<ComponentProps[]>(`${ROOT_ROUTER_PREFIX}${route.pathname}`)
+    const path = route.pathname.replace(/{(.*?)}/g, ':$1')
+    const loader = async ({ params }: LoaderFunctionArgs) => {
+      let endpointPath = `${ROOT_ROUTER_PREFIX}${path}`
+      if (route.endpoint === LAYOUT_ENDPOINT_NAME) {
+        endpointPath += LAYOUT_ROUTER_SUFFIX
+      }
+
+      Object.keys(params).forEach((key) => {
+        const value = params[key]
+        if (value) {
+          endpointPath = endpointPath.replace(`:${key}`, value)
+        }
+      })
+
+      return fetchJson<ComponentProps[]>(endpointPath)
+    }
 
     return {
-      path: route.pathname,
+      path: path,
       element: <RouteElement />,
       errorElement: <ErrorElement />,
       loader,

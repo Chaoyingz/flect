@@ -22,7 +22,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> c.AnyComponent:
                                 tag="nav",
                                 children=[
                                     c.Link(
-                                        href="/docs",
+                                        href="/docs/",
                                         children=[
                                             c.Text(
                                                 text="Introduction",
@@ -46,7 +46,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> c.AnyComponent:
                                 class_name="flex flex-col gap-2",
                                 children=[
                                     c.Link(
-                                        href="/components/avatar",
+                                        href="/docs/components/avatar/",
                                         children=[
                                             c.Text(
                                                 text="Avatar",
@@ -54,7 +54,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> c.AnyComponent:
                                         ],
                                     ),
                                     c.Link(
-                                        href="/components/button",
+                                        href="/docs/components/button/",
                                         children=[
                                             c.Text(
                                                 text="Button",
@@ -62,7 +62,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> c.AnyComponent:
                                         ],
                                     ),
                                     c.Link(
-                                        href="/components/container",
+                                        href="/docs/components/container/",
                                         children=[
                                             c.Text(
                                                 text="Container",
@@ -70,7 +70,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> c.AnyComponent:
                                         ],
                                     ),
                                     c.Link(
-                                        href="/components/heading",
+                                        href="/docs/components/heading/",
                                         children=[
                                             c.Text(
                                                 text="Heading",
@@ -78,7 +78,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> c.AnyComponent:
                                         ],
                                     ),
                                     c.Link(
-                                        href="/components/link",
+                                        href="/docs/components/link/",
                                         children=[
                                             c.Text(
                                                 text="Link",
@@ -86,7 +86,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> c.AnyComponent:
                                         ],
                                     ),
                                     c.Link(
-                                        href="/components/table",
+                                        href="/docs/components/table/",
                                         children=[
                                             c.Text(
                                                 text="Table",
@@ -94,7 +94,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> c.AnyComponent:
                                         ],
                                     ),
                                     c.Link(
-                                        href="/components/text",
+                                        href="/docs/components/text/",
                                         children=[
                                             c.Text(
                                                 text="Text",

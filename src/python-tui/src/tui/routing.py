@@ -16,9 +16,12 @@ from tui.render import generate_html, render_server_side_html
 ROUTE_INDEX_FILENAME = "page.py"
 ROUTE_LAYOUT_FILENAME = "layout.py"
 
+EXCLUDED_FOLDER_NAMES = ["__pycache__"]
 ROOT_ROUTER_PREFIX = "/tui"
 ROUTE_ROUTER_PATH = "/_route/"
 LAYOUT_ROUTER_SUFFIX = "_layout/"
+
+PATH_PARAMETER_PREFIX = "_"
 
 
 class Route(BaseModel):
@@ -49,10 +52,6 @@ class Route(BaseModel):
     @field_serializer("endpoint")
     def serialize_endpoint(self, value: Callable[[Request], Awaitable[c.AnyComponents]]) -> str:
         return value.__name__
-
-    # @property
-    # def is_layout(self) -> bool:
-    #     return self.pathname.endswith(LAYOUT_ROUTER_SUFFIX)
 
 
 Route.model_rebuild()
@@ -104,8 +103,10 @@ def build_routes_from_folder(
     """
     routes = []
     segment = "" if is_root else folder.stem
-    pathname = f"{parent_pathname.rstrip('/')}/{segment}/" if segment else parent_pathname
+    if segment.startswith(PATH_PARAMETER_PREFIX):
+        segment = "{" + segment[len(PATH_PARAMETER_PREFIX) :] + "}"
 
+    pathname = f"{parent_pathname.rstrip('/')}/{segment}/" if segment else parent_pathname
     layout_file = folder / ROUTE_LAYOUT_FILENAME
     page_file = folder / ROUTE_INDEX_FILENAME
 
@@ -121,7 +122,7 @@ def build_routes_from_folder(
         )
 
     for child_folder in folder.iterdir():
-        if child_folder.is_dir():
+        if child_folder.is_dir() and child_folder.name not in EXCLUDED_FOLDER_NAMES:
             routes.extend(build_routes_from_folder(child_folder, pathname, False))
 
     if layout_file.is_file():
