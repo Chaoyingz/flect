@@ -2,10 +2,8 @@
 
 Turning ideas into web app fast.
 
-## Documentation
-
-https://tui.celerforge.com/
-
+---
+#### Documentation: https://tui.celerforge.com/
 ---
 
 Use Pydantic models in the backend that correspond to the properties of React components in the frontend. This enables you to quickly develop interactive and beautiful UIs using Python.
