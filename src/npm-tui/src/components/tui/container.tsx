@@ -4,7 +4,7 @@ export interface ContainerProps {
   ctype: 'container'
   className?: string
   children?: ComponentProps[]
-  tag?: 'div' | 'section' | 'header' | 'footer' | 'main' | 'nav' | 'aside'
+  tag: 'div' | 'section' | 'header' | 'footer' | 'main' | 'nav' | 'aside'
 }
 
 export function Container(props: ContainerProps) {
