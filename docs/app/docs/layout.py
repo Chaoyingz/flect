@@ -3,7 +3,7 @@ from tui import components as c
 
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> c.AnyComponent:
     return c.Container(
-        tag="main",
+        tag="div",
         class_name="flex",
         children=[
             c.Container(

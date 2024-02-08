@@ -152,6 +152,9 @@ class Table(BaseComponent):
                     {"".join(f"<th>{escape(label)}</th>" for label in self.labels)}
                 </tr>
             </thead>
+            <tbody>
+                {"".join(f"<tr>{''.join(f'<td>{escape(getattr(dataset, label))}</td>' for label in self.labels)}</tr>" for dataset in self.datasets)}
+            </tbody>
         </table>
         """
 
