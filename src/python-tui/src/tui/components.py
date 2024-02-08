@@ -72,7 +72,10 @@ class Button(BaseComponent):
 class Container(BaseContainerComponent):
     ctype: Literal["container"] = "container"
 
-    tag: Optional[Literal["div", "section", "header", "footer", "main", "nav", "aside"]] = None
+    tag: Literal["div", "section", "header", "footer", "main", "nav", "aside"] = Field(
+        "div",
+        description="The tag of the container.",
+    )
 
     def render_to_html(self) -> str:
         return f"""\
