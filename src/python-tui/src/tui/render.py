@@ -8,9 +8,6 @@ from starlette._utils import get_route_path
 
 from tui import components as c
 
-STATIC_ASSETS_URL = "https://cdn.jsdelivr.net/npm/@chaoying/npm-tui@0.1.6/dist"
-# STATIC_ASSETS_URL = "http://localhost:7777/dist"
-
 
 def generate_html(
     server_side_html: str = "",
@@ -39,8 +36,8 @@ def generate_html(
             <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap" rel="stylesheet" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>tui</title>
-            <script type="module" crossorigin src="{STATIC_ASSETS_URL}/assets/index.js"></script>
-            <link rel="stylesheet" crossorigin href="{STATIC_ASSETS_URL}/assets/index.css" />
+            <script type="module" src="/dist/assets/index.js"></script>
+            <link rel="stylesheet" href="/dist/assets/index.css" />
         </head>
         <body>
             <div class="absolute invisible h-0 w-0">{server_side_html}</div>
