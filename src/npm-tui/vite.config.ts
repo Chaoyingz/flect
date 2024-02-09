@@ -27,5 +27,6 @@ export default defineConfig({
         assetFileNames: `assets/[name].[ext]`,
       },
     },
+    outDir: '../python-tui/src/static',
   },
 })

@@ -1,7 +1,8 @@
 from html import escape
-from typing import Annotated, Literal, Optional, Self, Union
+from typing import Annotated, Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, SerializeAsAny, model_validator
+from typing_extensions import Self
 
 
 class BaseComponent(BaseModel):

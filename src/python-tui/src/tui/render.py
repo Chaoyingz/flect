@@ -36,8 +36,8 @@ def generate_html(
             <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap" rel="stylesheet" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>tui</title>
-            <script type="module" src="/dist/assets/index.js"></script>
-            <link rel="stylesheet" href="/dist/assets/index.css" />
+            <script type="module" src="/static/assets/index.js"></script>
+            <link rel="stylesheet" href="/static/assets/index.css" />
         </head>
         <body>
             <div class="absolute invisible h-0 w-0">{server_side_html}</div>

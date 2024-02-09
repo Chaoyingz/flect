@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 
 from tui.routing import configure_app_router
 
-DIST_PATH = pathlib.Path(__file__).parent.parent.parent.parent / "npm-tui" / "dist"
+STATIC_FILE_PATH = pathlib.Path(__file__).parent.parent / "static"
 
 
 class Tui(FastAPI):
@@ -23,5 +23,5 @@ class Tui(FastAPI):
 
     def setup_tui(self) -> None:
         app_router = configure_app_router(self.app)
-        self.mount("/dist", StaticFiles(directory=DIST_PATH), name="dist")
+        self.mount("/static", StaticFiles(directory=STATIC_FILE_PATH), name="static")
         self.include_router(app_router)

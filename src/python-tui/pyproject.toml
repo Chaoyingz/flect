@@ -1,6 +1,5 @@
 [project]
-name = "tui"
-version = "0.1.1"
+name = "tuilib"
 description = "Default template for PDM package"
 authors = [
     {name = "Chaoying", email = "chaunceywe@gmail.com"},
@@ -10,17 +9,24 @@ dependencies = [
     "uvicorn>=0.25.0",
     "httpx>=0.26.0",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.9"
 readme = "README.md"
 license = {text = "MIT"}
+dynamic = ["version"]
 
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
-
 [tool.pdm]
 package-type = "library"
+
+[tool.pdm.version]
+source = "file"
+path = "src/tui/__init__.py"
+
+[tool.pdm.build]
+includes = ["src/tui", "src/static"]
 
 [tool.pdm.dev-dependencies]
 dev = [
