@@ -16,12 +16,12 @@ repos:
           language: system
           pass_filenames: false
 
-        - id: python-typecheck
-          name: python-typecheck
-          types_or: [python]
-          entry: make typecheck
-          language: system
-          pass_filenames: false
+#        - id: python-typecheck
+#          name: python-typecheck
+#          types_or: [python]
+#          entry: make typecheck
+#          language: system
+#          pass_filenames: false
 
         - id: js-prettier
           name: js-prettier

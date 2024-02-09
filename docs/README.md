@@ -1,9 +1,5 @@
-# docs
+# tui docs
 
-## Install
+## Deploy Your Own
 
-`pip install -r docs/requirements.txt`
-
-## Run
-
-`uvicorn docs_src.main:app`
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Chaoyingz/tui/tree/main/docs)

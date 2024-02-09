@@ -1,16 +1,59 @@
+[project]
+name = "tuilib"
+description = "Turning ideas into web app fast."
+authors = [
+    {name = "Chaoying", email = "chaunceywe@gmail.com"},
+]
+dependencies = [
+    "fastapi>=0.108.0",
+    "uvicorn>=0.25.0",
+    "httpx>=0.26.0",
+]
+requires-python = ">=3.9"
+readme = "README.md"
+license = {text = "MIT"}
+dynamic = ["version"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pdm]
+package-type = "library"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "ruff>=0.1.12",
+    "pyright>=1.1.347",
+    "coverage>=7.4.1",
+    "pytest>=7.4.4",
+    "pytest-asyncio>=0.23.4",
+]
+
+[tool.hatch.version]
+path = "src/python-tui/src/tui/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+only-include = ["src/python-tui/src/static", "src/python-tui/src/tui"]
+packages = ["src/python-tui/src/tui"]
+
+[tool.hatch.build.targets.wheel]
+only-include = ["src/python-tui/src/static", "src/python-tui/src/tui"]
+packages = ["src/python-tui/src/tui"]
+
 [tool.ruff]
 line-length = 120
 extend-select = ["Q", "RUF100", "UP", "I"]
 target-version = "py39"
 
 [tool.pyright]
-include = ["src/python-tui/src/tui"]
+include = ["src/python-tui/src"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 addopts = "-s -p no:warnings"
 cache_dir = ".pytest_cache/"
 testpaths = [
-    "tests",
-    "src/tui",
+    "src/python-tui/tests",
+    "src/python-tui/src/tui",
 ]

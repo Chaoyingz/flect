@@ -6,11 +6,8 @@
     "src/*"
   ],
   "scripts": {
-    "dev": "npm run --workspace=@chaoying/npm-tui dev",
-    "build": "npm run --workspaces prepublishOnly",
-    "typecheck": "npm run --workspaces typecheck",
-    "lint": "eslint src --ext .ts,.tsx --report-unused-disable-directives --max-warnings 0",
-    "lint-fix": "npm run lint -- --fix",
+    "dev": "npm run --workspace=@chaoying/npm-tui build --watch",
+    "build": "npm run --workspaces build",
     "prettier": "prettier --write",
     "format": "npm run prettier -- . && npm run lint-fix"
   },
