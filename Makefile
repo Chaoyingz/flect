@@ -1,9 +1,11 @@
 path = src/python-tui/
+docs_path = docs/src
 
 .PHONY: install
 install:
 	pip install -U pip pre-commit pdm
-	pdm install -p $(path)
+	pdm install
+	pip install -e .
 	pre-commit install
 
 .PHONY: format
@@ -32,4 +34,4 @@ testcov: test
 
 .PHONY: dev
 dev:
-	uvicorn docs.main:app --reload --reload-dir .
+	export PYTHONPATH=$(docs_path) && uvicorn docs.src.document.main:app --reload --reload-dir .

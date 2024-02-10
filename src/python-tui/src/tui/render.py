@@ -116,7 +116,7 @@ async def get_response_for_matched_route(
             matched_params = match.groupdict()
             for key, value in matched_params.items():
                 matched_params[key] = route.param_convertors[key].convert(value)
-            request.scope["path_params"].update(matched_params)
+            request.scope.get("path_params", {}).update(matched_params)
             return await get_route_response(request, route, outlet)
     return None
 

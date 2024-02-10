@@ -1,15 +1,15 @@
 {
-  "devCommand": "uvicorn docs_src.main:app",
+  "devCommand": "uvicorn src.document:app --reload --reload-dir .",
   "builds": [
     {
-      "src": "docs_src/main.py",
+      "src": "src/document/main.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "docs_src/main.py"
+      "dest": "src/document/main.py"
     }
   ]
 }

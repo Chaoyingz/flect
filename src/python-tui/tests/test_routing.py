@@ -10,7 +10,7 @@ from tui.routing import (
     load_module,
 )
 
-from docs import app
+from docs.src.document import app
 
 
 def test_load_module_success():

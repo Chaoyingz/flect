@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Annotated, Any, Optional
 
 import tui.components as c
 from fastapi import Path
@@ -264,6 +264,6 @@ COMPONENT_DOCS_MAP = {
 
 
 async def page(
-    ctype: str = Path(..., description="The component type to render"),
+    ctype: Annotated[str, Path(..., description="The component type to render")],
 ) -> c.AnyComponent:
     return COMPONENT_DOCS_MAP.get(ctype, c.Text(text="Component Not found"))
