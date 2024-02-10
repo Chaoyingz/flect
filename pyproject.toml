@@ -48,6 +48,7 @@ target-version = "py39"
 
 [tool.pyright]
 include = ["src/python-tui/src"]
+extraPaths = ["src/python-tui/src"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
