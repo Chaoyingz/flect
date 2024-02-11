@@ -69,7 +69,7 @@ def get_component_preview_literal_component(
 
 
 def get_component_preview_section(
-    previews: c.AnyComponents,
+    preview: c.AnyComponent,
 ) -> c.AnyComponent:
     return c.Container(
         tag="section",
@@ -79,7 +79,7 @@ def get_component_preview_section(
                 text="Preview",
                 class_name="text-2xl mb-6 border-b pb-2",
             ),
-            *previews,
+            preview,
         ],
     )
 
@@ -141,22 +141,20 @@ COMPONENT_DOCS_MAP = {
             description="An avatar is a visual representation of a user or a group of users.",
         ),
         preview_section=get_component_preview_section(
-            previews=[
-                c.Container(
-                    tag="div",
-                    class_name="flex gap-3",
-                    children=[
-                        c.Avatar(
-                            src="https://github.com/shadcn.png",
-                            alt="@shadcn",
-                            fallback="CN",
-                        ),
-                        c.Avatar(
-                            fallback="CN",
-                        ),
-                    ],
-                )
-            ]
+            preview=c.Container(
+                tag="div",
+                class_name="flex gap-3",
+                children=[
+                    c.Avatar(
+                        src="https://github.com/shadcn.png",
+                        alt="@shadcn",
+                        fallback="CN",
+                    ),
+                    c.Avatar(
+                        fallback="CN",
+                    ),
+                ],
+            )
         ),
         api_reference_section=get_component_api_reference_section(component=c.Avatar),
     ),
@@ -166,14 +164,12 @@ COMPONENT_DOCS_MAP = {
             description="A control that triggers an action. Button labels should express what action will occur when the ",
         ),
         preview_section=get_component_preview_section(
-            previews=[
-                get_component_preview_literal_component(
-                    component_type=c.Button,
-                    literal_props=["variant", "size"],
-                    dynamic_props=["children"],
-                    default_props_values={},
-                )
-            ]
+            preview=get_component_preview_literal_component(
+                component_type=c.Button,
+                literal_props=["variant", "size"],
+                dynamic_props=["children"],
+                default_props_values={},
+            )
         ),
         api_reference_section=get_component_api_reference_section(component=c.Button),
     ),
@@ -193,12 +189,10 @@ COMPONENT_DOCS_MAP = {
             description="A heading component.",
         ),
         preview_section=get_component_preview_section(
-            previews=[
-                c.Heading(
-                    level=2,
-                    text="Heading",
-                )
-            ]
+            preview=c.Heading(
+                level=2,
+                text="Heading",
+            )
         ),
         api_reference_section=get_component_api_reference_section(component=c.Heading),
     ),
@@ -208,16 +202,14 @@ COMPONENT_DOCS_MAP = {
             description="A link component.",
         ),
         preview_section=get_component_preview_section(
-            previews=[
-                c.Link(
-                    href="/",
-                    children=[
-                        c.Text(
-                            text="Link",
-                        )
-                    ],
-                )
-            ]
+            preview=c.Link(
+                href="/",
+                children=[
+                    c.Text(
+                        text="Link",
+                    )
+                ],
+            )
         ),
         api_reference_section=get_component_api_reference_section(component=c.Link),
     ),
@@ -227,22 +219,20 @@ COMPONENT_DOCS_MAP = {
             description="A table component.",
         ),
         preview_section=get_component_preview_section(
-            previews=[
-                c.Table(
-                    datasets=[
-                        TableExampleModel(
-                            column1="Value 1",
-                            column2="Value 2",
-                            column3="Value 3",
-                        ),
-                        TableExampleModel(
-                            column1="Value 4",
-                            column2="Value 5",
-                            column3="Value 6",
-                        ),
-                    ]
-                )
-            ]
+            preview=c.Table(
+                datasets=[
+                    TableExampleModel(
+                        column1="Value 1",
+                        column2="Value 2",
+                        column3="Value 3",
+                    ),
+                    TableExampleModel(
+                        column1="Value 4",
+                        column2="Value 5",
+                        column3="Value 6",
+                    ),
+                ]
+            )
         ),
         api_reference_section=get_component_api_reference_section(component=c.Table),
     ),
@@ -252,11 +242,9 @@ COMPONENT_DOCS_MAP = {
             description="A text component.",
         ),
         preview_section=get_component_preview_section(
-            previews=[
-                c.Text(
-                    text="Text",
-                )
-            ]
+            preview=c.Text(
+                text="Text",
+            )
         ),
         api_reference_section=get_component_api_reference_section(component=c.Text),
     ),
