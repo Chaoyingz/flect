@@ -101,7 +101,6 @@ const useRoutes = () => {
       .then((routeProps) => {
         if (isMounted) {
           setRoutes(routeProps.map(convertRoute))
-          console.log(routes)
         }
       })
       .catch(console.error)

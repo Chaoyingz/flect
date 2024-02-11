@@ -50,7 +50,7 @@ class Route(BaseModel):
     )
 
     @field_serializer("endpoint")
-    def serialize_endpoint(self, value: Callable[[Request], Awaitable[c.AnyComponents]]) -> str:
+    def serialize_endpoint(self, value: Callable[[Request], Awaitable[c.AnyComponent]]) -> str:
         return value.__name__
 
 
@@ -248,5 +248,5 @@ def configure_app_router(app: ModuleType) -> APIRouter:
     loader_router = get_loader_router(routes)
     root_router.include_router(loader_router)
 
-    root_router.include_router(get_pre_render_router(loader_router.routes))  # type: ignore
+    root_router.include_router(get_pre_render_router(cast(list[APIRoute], loader_router.routes)))
     return root_router

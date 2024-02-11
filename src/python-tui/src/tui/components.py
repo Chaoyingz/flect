@@ -181,7 +181,6 @@ AnyComponent = Annotated[
     Union[Avatar, Button, Container, Heading, Link, Outlet, Table, Text],
     Field(discriminator="ctype"),
 ]
-AnyComponents = list[AnyComponent]
 
 # Rebuild forward ref models
 for container_component in BaseContainerComponent.__subclasses__():
@@ -198,5 +197,4 @@ __all__ = (
     "Table",
     "Text",
     "AnyComponent",
-    "AnyComponents",
 )
