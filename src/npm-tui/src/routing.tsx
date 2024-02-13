@@ -26,9 +26,20 @@ export type RouteProps = RemixRouteProps & {
   endpoint: 'layout' | 'page'
 }
 
+type Meta = {
+  title?: string
+  description?: string
+  keywords?: string
+}
+
+type Response = {
+  meta?: Meta
+  element: ComponentProps
+}
+
 const RouteElement = React.memo(() => {
-  const component = useLoaderData() as ComponentProps
-  return <AnyComponent {...component} />
+  const response = useLoaderData() as Response
+  return <AnyComponent {...response.element} />
 })
 
 const ErrorElement = React.memo(() => {

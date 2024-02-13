@@ -84,7 +84,7 @@ async def get_route_response(
         if outlet is not None:
             values["outlet"] = outlet
         if route.dependant.call:
-            return await route.dependant.call(**values)
+            return (await route.dependant.call(**values)).element
     return None
 
 
