@@ -95,6 +95,7 @@ async def resolve_route_response(
     path: str,
     layout_router_suffix: str,
     is_layout: bool = False,
+    outlet: Optional[c.AnyComponent] = None,
 ) -> tuple[Optional[c.AnyComponent], Optional[Meta]]:
     for route in routes:
         if is_layout != route.path.endswith(layout_router_suffix):
@@ -105,7 +106,7 @@ async def resolve_route_response(
                 key: route.param_convertors[key].convert(value) for key, value in match.groupdict().items()
             }
             request.scope.get("path_params", {}).update(matched_params)
-            response = await get_route_response(request, route)
+            response = await get_route_response(request, route, outlet)
             return response.element, response.meta
     return None, None
 
@@ -141,7 +142,7 @@ async def render_server_side_html(
     path += layout_router_suffix
     while path.startswith(root_router_prefix):
         layout_element, layout_meta = await resolve_route_response(
-            request, routes, path, layout_router_suffix, is_layout=True
+            request, routes, path, layout_router_suffix, is_layout=True, outlet=element
         )
         element = layout_element or element
         meta = merge_meta(meta, layout_meta)
