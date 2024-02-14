@@ -7,7 +7,7 @@ from fastapi.routing import APIRoute
 from starlette._utils import get_route_path
 
 from tui import components as c
-from tui.response import Response
+from tui.response import Meta, Response, merge_meta
 
 
 def generate_html(
@@ -15,12 +15,14 @@ def generate_html(
     element_html: str = "",
 ) -> str:
     """
-    Generates an HTML template with server-rendered HTML embedded within it.
+    Generates an HTML template with provided meta and element HTML embedded within it.
 
     Parameters
     ----------
-    server_side_html : str, optional
-        The server-rendered HTML to be embedded in the template, by default an empty string.
+    meta_html : str, optional
+        The meta HTML to be included in the <head> section of the document.
+    element_html : str, optional
+        The server-rendered HTML to be embedded in the template.
 
     Returns
     -------
@@ -49,9 +51,7 @@ def generate_html(
     """
 
 
-async def get_route_response(
-    request: Request, route: APIRoute, outlet: Optional[c.AnyComponent] = None
-) -> Optional[Response]:
+async def get_route_response(request: Request, route: APIRoute, outlet: Optional[c.AnyComponent] = None) -> Response:
     """
     Obtains a response from a route given a request and optional outlet component.
 
@@ -71,23 +71,43 @@ async def get_route_response(
     """
     async with AsyncExitStack() as async_exit_stack:
         values, *_ = await solve_dependencies(
-            request=request,
-            dependant=route.dependant,
-            async_exit_stack=async_exit_stack,
+            request=request, dependant=route.dependant, async_exit_stack=async_exit_stack
         )
-        path_values, path_errors = request_params_to_args(route.dependant.path_params, request.path_params)
-        query_values, query_errors = request_params_to_args(route.dependant.query_params, request.query_params)
-        header_values, header_errors = request_params_to_args(route.dependant.header_params, request.headers)
-        cookie_values, cookie_errors = request_params_to_args(route.dependant.cookie_params, request.cookies)
-        values.update(path_values)
-        values.update(query_values)
-        values.update(header_values)
-        values.update(cookie_values)
+        param_types = ["path_params", "query_params", "header_params", "cookie_params"]
+        for param_type in param_types:
+            values_update, errors_update = request_params_to_args(
+                getattr(route.dependant, param_type), getattr(request, param_type, {})
+            )
+            values.update(values_update)
         if outlet is not None:
             values["outlet"] = outlet
-        if route.dependant.call:
-            return await route.dependant.call(**values)
-    return None
+        assert route.dependant.call, "Route is not callable"
+        response = await route.dependant.call(**values)
+        if not isinstance(response, Response):
+            raise ValueError("Route expected a Response object")
+        return response
+    raise ValueError("Route is not returning a Response")
+
+
+async def resolve_route_response(
+    request: Request,
+    routes: list[APIRoute],
+    path: str,
+    layout_router_suffix: str,
+    is_layout: bool = False,
+) -> tuple[Optional[c.AnyComponent], Optional[Meta]]:
+    for route in routes:
+        if is_layout != route.path.endswith(layout_router_suffix):
+            continue
+        match = route.path_regex.match(path)
+        if match:
+            matched_params = {
+                key: route.param_convertors[key].convert(value) for key, value in match.groupdict().items()
+            }
+            request.scope.get("path_params", {}).update(matched_params)
+            response = await get_route_response(request, route)
+            return response.element, response.meta
+    return None, None
 
 
 async def render_server_side_html(
@@ -115,47 +135,16 @@ async def render_server_side_html(
     -------
     Optional[str]
     """
-    loader_path = root_router_prefix + get_route_path(request.scope)
+    path = root_router_prefix + get_route_path(request.scope)
+    element, meta = await resolve_route_response(request, routes, path, layout_router_suffix)
 
-    response = None
+    path += layout_router_suffix
+    while path.startswith(root_router_prefix):
+        layout_element, layout_meta = await resolve_route_response(
+            request, routes, path, layout_router_suffix, is_layout=True
+        )
+        element = layout_element or element
+        meta = merge_meta(meta, layout_meta)
 
-    for route in routes:
-        match = route.path_regex.match(loader_path)
-        if match:
-            matched_params = match.groupdict()
-            for key, value in matched_params.items():
-                matched_params[key] = route.param_convertors[key].convert(value)
-            request.scope.get("path_params", {}).update(matched_params)
-            response = await get_route_response(request, route)
-
-    element = response.element
-    meta = response.meta
-
-    layout_path = loader_path + layout_router_suffix
-    layout_routes = [r for r in routes if r.path.endswith(layout_router_suffix)]
-
-    while layout_path.startswith(root_router_prefix):
-        for layout_route in layout_routes:
-            match = layout_route.path_regex.match(layout_path)
-            if match:
-                matched_params = match.groupdict()
-                for key, value in matched_params.items():
-                    matched_params[key] = layout_route.param_convertors[key].convert(value)
-                request.scope.get("path_params", {}).update(matched_params)
-                layout_response = await get_route_response(request, layout_route, element)
-                if layout_response:
-                    element = layout_response.element
-                    if layout_response.meta:
-                        if meta is None:
-                            meta = layout_response.meta
-                            continue
-                        if meta.title and not meta.title.absolute:
-                            meta.title.apply_parent_title(layout_response.meta.title)
-                        if meta.description is None:
-                            meta.description = layout_response.meta.description
-                        if meta.keywords is None:
-                            meta.keywords = layout_response.meta.keywords
-        # Iteratively trim path segments and append layout suffix, e.g., from '/a/b_layout/' to '/a_layout/'
-        layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/" + layout_router_suffix
-
+        path = "/".join(path.rsplit("/", 3)[:-3]) + "/" + layout_router_suffix
     return meta.render_to_html() if meta else "", element.render_to_html() if element else ""

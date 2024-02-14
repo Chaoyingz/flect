@@ -26,8 +26,14 @@ export type RouteProps = RemixRouteProps & {
   endpoint: 'layout' | 'page'
 }
 
+type MetaTitleTemplate = {
+  template?: string
+  default: string
+  absolute?: boolean
+}
+
 type Meta = {
-  title?: string
+  title?: MetaTitleTemplate
   description?: string
   keywords?: string
 }

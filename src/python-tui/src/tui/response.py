@@ -16,14 +16,20 @@ class TitleTemplate(BaseModel):
             return
 
         if isinstance(parent_title, str):
-            parent_title = TitleTemplate(default=parent_title)
-
-        if parent_title.template:
-            self.default = parent_title.template.format(title=self.default)
+            parent_title_template = TitleTemplate(
+                template=None,
+                default=parent_title,
+                absolute=False,
+            )
         else:
-            self.default = f"{self.default} - {parent_title.default}"
+            parent_title_template = parent_title
 
-        self.absolute = parent_title.absolute
+        if parent_title_template.template:
+            self.default = parent_title_template.template.format(title=self.default)
+        else:
+            self.default = f"{self.default} - {parent_title_template.default}"
+
+        self.absolute = parent_title_template.absolute
 
 
 class Meta(BaseModel):
@@ -34,13 +40,14 @@ class Meta(BaseModel):
     @field_validator("title")
     def validate_title(cls, value: Union[str, TitleTemplate, None]) -> Union[TitleTemplate, None]:
         if isinstance(value, str):
-            return TitleTemplate(default=value)
+            return TitleTemplate(template=None, default=value, absolute=False)
         return value
 
     def render_to_html(self) -> str:
         html = ""
 
         if self.title is not None:
+            assert isinstance(self.title, TitleTemplate)
             html += f"<title>{self.title.default}</title>"
 
         if self.description is not None:
@@ -50,6 +57,21 @@ class Meta(BaseModel):
             html += f'<meta name="keywords" content="{self.keywords}">'
 
         return html
+
+
+def merge_meta(meta: Optional[Meta], other: Optional[Meta]) -> Optional[Meta]:
+    if meta is None:
+        return other
+    if other is None:
+        return meta
+    assert isinstance(meta.title, TitleTemplate)
+    assert isinstance(other.title, TitleTemplate)
+    meta.title = meta.title or other.title
+    meta.description = meta.description or other.description
+    meta.keywords = meta.keywords or other.keywords
+    if meta.title and not meta.title.absolute:
+        meta.title.apply_parent_title(other.title)
+    return meta
 
 
 class Response(BaseModel):

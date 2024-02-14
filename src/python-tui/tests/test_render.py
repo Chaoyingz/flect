@@ -1,8 +1,9 @@
 import pytest
 from fastapi import FastAPI, Request
 from fastapi.routing import APIRoute
+from tui import Response
 from tui import components as c
-from tui.render import generate_html, get_response_for_matched_route, get_route_response, render_server_side_html
+from tui.render import generate_html, get_route_response, render_server_side_html
 from tui.routing import LAYOUT_ROUTER_SUFFIX, ROOT_ROUTER_PREFIX
 
 
@@ -15,8 +16,8 @@ def test_generate_html():
 
 @pytest.fixture()
 async def endpoint():
-    async def route_endpoint() -> c.AnyComponent:
-        return c.Button(children="Hello tui!")
+    async def route_endpoint() -> Response:
+        return Response(element=c.Button(children="Hello tui!"))
 
     return route_endpoint
 
@@ -38,9 +39,9 @@ async def test_get_route_response(app, route_request):
     assert response is not None
 
 
-async def test_get_matched_route_component(app, route_request):
-    component = await get_response_for_matched_route(route_request, "/test", app.routes)
-    assert component is not None
+async def test_resolve_route_response(app, route_request):
+    response = await render_server_side_html(route_request, app.routes, ROOT_ROUTER_PREFIX, LAYOUT_ROUTER_SUFFIX)
+    assert response is not None
 
 
 async def test_render_server_side_html(endpoint, route_request):
