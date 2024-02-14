@@ -1,10 +1,10 @@
-from tui import Meta, MetaTitleTemplate, Response
+from tui import Meta, Response, TitleTemplate
 from tui import components as c
 
 
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> Response:
     return Response(
-        meta=Meta(title=MetaTitleTemplate(template="%t% - tui", default="tui")),
+        meta=Meta(title=TitleTemplate(template="{title} - tui", default="tui")),
         element=c.Container(
             tag="div",
             children=[

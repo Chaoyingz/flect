@@ -208,10 +208,10 @@ def get_pre_render_router(loader_routes: list[APIRoute]) -> APIRouter:
     router = APIRouter()
 
     async def pre_render(request: Request) -> HTMLResponse:
-        server_side_html = await render_server_side_html(
+        meta_html, element_html = await render_server_side_html(
             request, loader_routes, ROOT_ROUTER_PREFIX, LAYOUT_ROUTER_SUFFIX
         )
-        return HTMLResponse(generate_html(server_side_html=server_side_html or ""))
+        return HTMLResponse(generate_html(meta_html, element_html))
 
     router.add_api_route("/{path:path}", pre_render, methods=["GET"])
     return router

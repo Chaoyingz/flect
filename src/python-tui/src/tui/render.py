@@ -7,10 +7,12 @@ from fastapi.routing import APIRoute
 from starlette._utils import get_route_path
 
 from tui import components as c
+from tui.response import Response
 
 
 def generate_html(
-    server_side_html: str = "",
+    meta_html: str = "",
+    element_html: str = "",
 ) -> str:
     """
     Generates an HTML template with server-rendered HTML embedded within it.
@@ -35,12 +37,12 @@ def generate_html(
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
             <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap" rel="stylesheet" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>tui</title>
             <script type="module" src="/static/assets/index.js"></script>
             <link rel="stylesheet" href="/static/assets/index.css" />
+            {meta_html}
         </head>
         <body>
-            <div class="absolute invisible h-0 w-0">{server_side_html}</div>
+            <div class="absolute invisible h-0 w-0">{element_html}</div>
             <div id="root"></div>
         </body>
     </html>
@@ -49,7 +51,7 @@ def generate_html(
 
 async def get_route_response(
     request: Request, route: APIRoute, outlet: Optional[c.AnyComponent] = None
-) -> Optional[c.AnyComponent]:
+) -> Optional[Response]:
     """
     Obtains a response from a route given a request and optional outlet component.
 
@@ -84,40 +86,7 @@ async def get_route_response(
         if outlet is not None:
             values["outlet"] = outlet
         if route.dependant.call:
-            return (await route.dependant.call(**values)).element
-    return None
-
-
-async def get_response_for_matched_route(
-    request: Request, path: str, routes: list[APIRoute], outlet: Optional[c.AnyComponent] = None
-) -> Optional[c.AnyComponent]:
-    """
-    Finds a matching route for the given request path and returns the response from that route.
-
-    Parameters
-    ----------
-    request : Request
-        The current request object.
-    path : str
-        The path to match against the available routes.
-    routes : List[APIRoute]
-        A list of available API routes.
-    outlet : Optional[c.AnyComponent], optional
-        An optional component to include in the response, defaults to None.
-
-    Returns
-    -------
-    Optional[c.AnyComponent]
-        The component response from the matched route, if found; otherwise, None.
-    """
-    for route in routes:
-        match = route.path_regex.match(path)
-        if match:
-            matched_params = match.groupdict()
-            for key, value in matched_params.items():
-                matched_params[key] = route.param_convertors[key].convert(value)
-            request.scope.get("path_params", {}).update(matched_params)
-            return await get_route_response(request, route, outlet)
+            return await route.dependant.call(**values)
     return None
 
 
@@ -126,7 +95,7 @@ async def render_server_side_html(
     routes: list[APIRoute],
     root_router_prefix: str,
     layout_router_suffix: str,
-) -> Optional[str]:
+) -> tuple[str, str]:
     """
     Renders the server-side HTML for a request by resolving the appropriate
     component based on the request's path, including handling layouts.
@@ -145,18 +114,48 @@ async def render_server_side_html(
     Returns
     -------
     Optional[str]
-        The rendered HTML string if a component is successfully resolved; otherwise, None.
     """
     loader_path = root_router_prefix + get_route_path(request.scope)
-    component = await get_response_for_matched_route(request, loader_path, routes)
+
+    response = None
+
+    for route in routes:
+        match = route.path_regex.match(loader_path)
+        if match:
+            matched_params = match.groupdict()
+            for key, value in matched_params.items():
+                matched_params[key] = route.param_convertors[key].convert(value)
+            request.scope.get("path_params", {}).update(matched_params)
+            response = await get_route_response(request, route)
+
+    element = response.element
+    meta = response.meta
 
     layout_path = loader_path + layout_router_suffix
     layout_routes = [r for r in routes if r.path.endswith(layout_router_suffix)]
+
     while layout_path.startswith(root_router_prefix):
-        layout_component = await get_response_for_matched_route(request, layout_path, layout_routes, component)
-        if layout_component:
-            component = layout_component
+        for layout_route in layout_routes:
+            match = layout_route.path_regex.match(layout_path)
+            if match:
+                matched_params = match.groupdict()
+                for key, value in matched_params.items():
+                    matched_params[key] = layout_route.param_convertors[key].convert(value)
+                request.scope.get("path_params", {}).update(matched_params)
+                layout_response = await get_route_response(request, layout_route, element)
+                if layout_response:
+                    element = layout_response.element
+                    if layout_response.meta:
+                        if meta is None:
+                            meta = layout_response.meta
+                            continue
+                        if meta.title and not meta.title.absolute:
+                            meta.title.apply_parent_title(layout_response.meta.title)
+                        if meta.description is None:
+                            meta.description = layout_response.meta.description
+                        if meta.keywords is None:
+                            meta.keywords = layout_response.meta.keywords
         # Iteratively trim path segments and append layout suffix, e.g., from '/a/b_layout/' to '/a_layout/'
         layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/" + layout_router_suffix
 
-    return component.render_to_html() if component else None
+    return meta.render_to_html() if meta else "", element.render_to_html() if element else ""

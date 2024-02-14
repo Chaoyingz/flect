@@ -4,7 +4,7 @@ import tui.components as c
 from fastapi import Path
 from pydantic import BaseModel
 from pydantic_core._pydantic_core import PydanticUndefined
-from tui import Meta, MetaTitleTemplate, Response
+from tui import Meta, Response
 
 
 def get_component_description_section(
@@ -257,7 +257,7 @@ async def page(
 ) -> Response:
     return Response(
         meta=Meta(
-            title=MetaTitleTemplate(template="%t% - tui components", default="tui components"),
+            title=f"{ctype} component",
             description=f"{ctype} component",
         ),
         element=COMPONENT_DOCS_MAP.get(ctype, c.Text(text="Component Not found")),
