@@ -1,7 +1,7 @@
 from html import escape
 from typing import Annotated, Literal, Optional, Union
 
-from pydantic import BaseModel, ConfigDict, Field, SerializeAsAny, model_validator
+from pydantic import BaseModel, ConfigDict, Field, SerializeAsAny, field_serializer, model_validator
 from typing_extensions import Self
 
 
@@ -84,6 +84,18 @@ class Container(BaseContainerComponent):
             {"".join(component.render_to_html() for component in self.children) if self.children else ""}
         </{self.tag}>
         """
+
+
+class Form(BaseComponent):
+    ctype: Literal["form"] = "form"
+    model: type[BaseModel] = Field(
+        ...,
+        description="The model of the form.",
+    )
+
+    @field_serializer("model")
+    def serialize_model(self, model: type[BaseModel]) -> dict:
+        return model.model_json_schema()
 
 
 class Heading(BaseComponent):
@@ -178,7 +190,7 @@ class Text(BaseComponent):
 
 
 AnyComponent = Annotated[
-    Union[Avatar, Button, Container, Heading, Link, Outlet, Table, Text],
+    Union[Avatar, Button, Container, Form, Heading, Link, Outlet, Table, Text],
     Field(discriminator="ctype"),
 ]
 
@@ -191,6 +203,7 @@ __all__ = (
     "Avatar",
     "Button",
     "Container",
+    "Form",
     "Heading",
     "Link",
     "Outlet",

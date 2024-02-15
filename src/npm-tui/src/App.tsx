@@ -1,7 +1,7 @@
-import { Tui } from './tui'
+import { Router } from './routing'
 
 function App() {
-  return <Tui />
+  return <Router />
 }
 
 export default App

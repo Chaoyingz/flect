@@ -2,7 +2,7 @@ from typing import Annotated, Any, Optional
 
 import tui.components as c
 from fastapi import Path
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pydantic_core._pydantic_core import PydanticUndefined
 from tui import Meta, Response
 
@@ -135,6 +135,10 @@ class TableExampleModel(BaseModel):
     column3: str
 
 
+class FormExampleModel(BaseModel):
+    username: str = Field(..., max_length=12, pattern=r"^[a-zA-Z0-9]+$")
+
+
 COMPONENT_DOCS_MAP = {
     "avatar": get_component_page(
         description_section=get_component_description_section(
@@ -183,6 +187,16 @@ COMPONENT_DOCS_MAP = {
             tag="div",
         ),
         api_reference_section=get_component_api_reference_section(component=c.Container),
+    ),
+    "form": get_component_page(
+        description_section=get_component_description_section(
+            title="Form",
+            description="A form component.",
+        ),
+        preview_section=get_component_preview_section(
+            preview=c.Form(model=FormExampleModel),
+        ),
+        api_reference_section=get_component_api_reference_section(component=c.Form),
     ),
     "heading": get_component_page(
         description_section=get_component_description_section(

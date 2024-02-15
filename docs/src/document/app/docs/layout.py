@@ -73,6 +73,14 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> Response:
                                             ],
                                         ),
                                         c.Link(
+                                            href="/docs/components/form/",
+                                            children=[
+                                                c.Text(
+                                                    text="Form",
+                                                )
+                                            ],
+                                        ),
+                                        c.Link(
                                             href="/docs/components/heading/",
                                             children=[
                                                 c.Text(
