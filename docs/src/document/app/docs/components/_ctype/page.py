@@ -1,4 +1,4 @@
-from typing import Annotated, Any, Optional
+from typing import Annotated, Any, Literal, Optional
 
 import tui.components as c
 from fastapi import Path
@@ -136,7 +136,9 @@ class TableExampleModel(BaseModel):
 
 
 class FormExampleModel(BaseModel):
-    username: str = Field(..., max_length=12, pattern=r"^[a-zA-Z0-9]+$")
+    username: str = Field(pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10)
+    gender: Literal["male", "female"]
+    password: str
 
 
 COMPONENT_DOCS_MAP = {
