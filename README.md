@@ -2,8 +2,12 @@
 
 Turning ideas into web app fast.
 
+**Read this in other languages**: [简体中文](README_CN.md)
+
 ---
+
 #### Documentation: https://tui.celerforge.com/
+
 ---
 
 Use Pydantic models in the backend that correspond to the properties of React components in the frontend. This enables you to quickly develop interactive and beautiful UIs using Python.
@@ -14,6 +18,7 @@ The key features are:
 - **SEO Friendly**: Supports server-side rendering for better search engine visibility.
 - **Client-Side Routing**: Fast, smooth page transitions without reloads.
 - **Folder-Based Routing**: Easy route management through folder structure.
+- **Easy Form Validation**: Define a single Pydantic model for seamless and consistent form validation across your app, enhancing development speed and reducing potential errors.
 
 ## Demo
 
