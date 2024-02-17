@@ -5,6 +5,7 @@ from fastapi import Path
 from pydantic import BaseModel, Field
 from pydantic_core._pydantic_core import PydanticUndefined
 from tui import Meta, Response
+from tui.form import Checkbox, Input, Select, Textarea
 
 
 def get_component_description_section(
@@ -136,9 +137,19 @@ class TableExampleModel(BaseModel):
 
 
 class FormExampleModel(BaseModel):
-    username: str = Field(pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10)
-    gender: Literal["male", "female"]
-    password: str
+    username: Annotated[str, Input(placeholder="Enter your username")] = Field(
+        pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10
+    )
+    gender: Annotated[Literal["male", "female"], Select()] = Field(
+        default="male", description="The gender of the user."
+    )
+    password: Annotated[str, Input(type="password", placeholder="Enter your password")]
+    hobby: Annotated[Optional[str], Textarea(placeholder="Type your hobby")] = Field(
+        None, description="The hobby of the user."
+    )
+    terms_accepted: Annotated[bool, Checkbox(class_name="ml-3")] = Field(
+        default=False, description="The terms accepted by the user."
+    )
 
 
 COMPONENT_DOCS_MAP = {
@@ -193,7 +204,8 @@ COMPONENT_DOCS_MAP = {
     "form": get_component_page(
         description_section=get_component_description_section(
             title="Form",
-            description="A form component.",
+            description="A form component serves as a container for collecting user inputs through various form "
+            "elements like input fields, checkboxes, radio buttons, and dropdowns. ",
         ),
         preview_section=get_component_preview_section(
             preview=c.Form(model=FormExampleModel),
@@ -233,7 +245,8 @@ COMPONENT_DOCS_MAP = {
     "table": get_component_page(
         description_section=get_component_description_section(
             title="Table",
-            description="A table component.",
+            description="A table component is used to display data in a structured, grid-like format consisting of rows"
+            " and columns.",
         ),
         preview_section=get_component_preview_section(
             preview=c.Table(
