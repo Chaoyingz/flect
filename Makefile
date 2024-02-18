@@ -34,4 +34,4 @@ testcov: test
 
 .PHONY: dev
 dev:
-	export PYTHONPATH=$(docs_path) && uvicorn docs.src.document.main:app --reload --reload-dir .
+	export PYTHONPATH=$(docs_path) && uvicorn docs.src.documentation.main:app --reload --reload-dir .
