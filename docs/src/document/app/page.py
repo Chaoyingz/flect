@@ -1,9 +1,9 @@
-from tui import Response
+from tui import PageResponse
 from tui import components as c
 
 
-async def page() -> Response:
-    return Response(
+async def page() -> PageResponse:
+    return PageResponse(
         element=c.Container(
             tag="section",
             class_name="container",

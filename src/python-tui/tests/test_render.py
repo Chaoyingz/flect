@@ -1,7 +1,7 @@
 import pytest
 from fastapi import FastAPI, Request
 from fastapi.routing import APIRoute
-from tui import Response
+from tui import PageResponse
 from tui import components as c
 from tui.render import generate_html, get_route_response, render_server_side_html
 from tui.routing import LAYOUT_ROUTER_SUFFIX, ROOT_ROUTER_PREFIX
@@ -16,8 +16,8 @@ def test_generate_html():
 
 @pytest.fixture()
 async def endpoint():
-    async def route_endpoint() -> Response:
-        return Response(element=c.Button(children="Hello tui!"))
+    async def route_endpoint() -> PageResponse:
+        return PageResponse(element=c.Button(children="Hello tui!"))
 
     return route_endpoint
 

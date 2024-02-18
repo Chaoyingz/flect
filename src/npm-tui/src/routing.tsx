@@ -38,13 +38,13 @@ type Meta = {
   keywords?: string
 }
 
-type Response = {
+type PageResponse = {
   meta?: Meta
   element: ComponentProps
 }
 
 const RouteElement = React.memo(() => {
-  const response = useLoaderData() as Response
+  const response = useLoaderData() as PageResponse
   return <AnyComponent {...response.element} />
 })
 
@@ -69,11 +69,11 @@ const ErrorElement = React.memo(() => {
   )
 })
 
-interface DefaultResponse {
+interface DefaultPageResponse {
   [key: string]: unknown
 }
 
-const fetchJson = async <T = DefaultResponse,>(input: RequestInfo, init?: RequestInit): Promise<T> => {
+const fetchJson = async <T = DefaultPageResponse,>(input: RequestInfo, init?: RequestInit): Promise<T> => {
   const response = await fetch(input, init)
   if (!response.ok) {
     throw new Error(response.statusText)

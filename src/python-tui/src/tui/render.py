@@ -7,7 +7,7 @@ from fastapi.routing import APIRoute
 from starlette._utils import get_route_path
 
 from tui import components as c
-from tui.response import Meta, Response, merge_meta
+from tui.response import Meta, PageResponse, merge_meta
 
 
 def generate_html(
@@ -51,7 +51,9 @@ def generate_html(
     """
 
 
-async def get_route_response(request: Request, route: APIRoute, outlet: Optional[c.AnyComponent] = None) -> Response:
+async def get_route_response(
+    request: Request, route: APIRoute, outlet: Optional[c.AnyComponent] = None
+) -> PageResponse:
     """
     Obtains a response from a route given a request and optional outlet component.
 
@@ -83,10 +85,10 @@ async def get_route_response(request: Request, route: APIRoute, outlet: Optional
             values["outlet"] = outlet
         assert route.dependant.call, "Route is not callable"
         response = await route.dependant.call(**values)
-        if not isinstance(response, Response):
-            raise ValueError("Route expected a Response object")
+        if not isinstance(response, PageResponse):
+            raise ValueError("Route expected a PageResponse object")
         return response
-    raise ValueError("Route is not returning a Response")
+    raise ValueError("Route is not returning a PageResponse")
 
 
 async def resolve_route_response(

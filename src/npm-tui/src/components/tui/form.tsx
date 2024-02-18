@@ -62,7 +62,6 @@ function getDefaultValues(schema: Model): FieldValues {
 }
 
 export function Form(props: FormProps) {
-  console.log('props', props)
   const form = useForm({
     resolver: ajvResolver(props.model),
     defaultValues: getDefaultValues(props.model),

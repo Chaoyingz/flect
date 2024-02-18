@@ -74,6 +74,6 @@ def merge_meta(meta: Optional[Meta], other: Optional[Meta]) -> Optional[Meta]:
     return meta
 
 
-class Response(BaseModel):
+class PageResponse(BaseModel):
     meta: Optional[Meta] = Field(None, description="The metadata of the response.")
     element: Optional[AnyComponent] = Field(None, description="The components of the response.")

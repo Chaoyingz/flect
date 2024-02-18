@@ -4,7 +4,7 @@ import tui.components as c
 from fastapi import Path
 from pydantic import BaseModel, Field
 from pydantic_core._pydantic_core import PydanticUndefined
-from tui import Meta, Response
+from tui import Meta, PageResponse
 from tui.form import Checkbox, Input, Select, Textarea
 
 
@@ -283,8 +283,8 @@ COMPONENT_DOCS_MAP = {
 
 async def page(
     ctype: Annotated[str, Path(..., description="The component type to render")],
-) -> Response:
-    return Response(
+) -> PageResponse:
+    return PageResponse(
         meta=Meta(
             title=f"{ctype} component",
             description=f"{ctype} component",

@@ -11,7 +11,7 @@ from fastapi.routing import APIRoute
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
 
 from tui.render import generate_html, render_server_side_html
-from tui.response import Response
+from tui.response import PageResponse
 
 ROUTE_INDEX_FILENAME = "page.py"
 ROUTE_LAYOUT_FILENAME = "layout.py"
@@ -40,7 +40,7 @@ class Route(BaseModel):
         description="Determines if the route is an index route."
         "Index routes render into their parent's Outlet at their parent's URL.",
     )
-    endpoint: Callable[[Any], Awaitable[Response]] = Field(
+    endpoint: Callable[[Any], Awaitable[PageResponse]] = Field(
         ...,
         description="The endpoint of the route.",
     )
@@ -50,7 +50,7 @@ class Route(BaseModel):
     )
 
     @field_serializer("endpoint")
-    def serialize_endpoint(self, value: Callable[[Request], Awaitable[Response]]) -> str:
+    def serialize_endpoint(self, value: Callable[[Request], Awaitable[PageResponse]]) -> str:
         return value.__name__
 
 
@@ -183,7 +183,7 @@ def get_loader_router(routes: list[Route], router: APIRouter = APIRouter(prefix=
         router.add_api_route(
             path,
             route.endpoint,
-            response_model=Response,
+            response_model=PageResponse,
             methods=["GET"],
         )
         if route.children:
