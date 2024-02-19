@@ -92,6 +92,14 @@ class Form(BaseComponent):
         ...,
         description="The model of the form.",
     )
+    submit_method: Literal["POST", "PUT", "PATCH"] = Field(
+        "POST",
+        description="The submit method of the form.",
+    )
+    submit_url: str = Field(
+        ...,
+        description="The submit url of the form.",
+    )
 
     @field_serializer("model")
     def serialize_model(self, model: type[BaseModel]) -> dict:

@@ -3,6 +3,7 @@ from typing import Optional, Union
 from pydantic import BaseModel, Field, field_validator
 from typing_extensions import Self
 
+from tui.actions import AnyAction
 from tui.components import AnyComponent
 
 
@@ -77,3 +78,7 @@ def merge_meta(meta: Optional[Meta], other: Optional[Meta]) -> Optional[Meta]:
 class PageResponse(BaseModel):
     meta: Optional[Meta] = Field(None, description="The metadata of the response.")
     element: Optional[AnyComponent] = Field(None, description="The components of the response.")
+
+
+class ActionResponse(BaseModel):
+    action: AnyAction

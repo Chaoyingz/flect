@@ -2,19 +2,25 @@ import pathlib
 
 import pytest
 from tui.routing import (
-    build_routes_from_folder,
     configure_app_router,
-    get_loader_router,
-    get_pre_render_router,
-    get_routes_router,
+    get_client_loader_router,
+    get_client_route_objs,
+    get_client_routes_router,
+    get_server_api_router,
+    get_server_pre_render_router,
     load_module,
 )
 
 from docs.src.documentation import app
 
 
-def test_load_module_success():
-    module = load_module(pathlib.Path(app.__file__))
+@pytest.fixture()
+def app_folder():
+    return pathlib.Path(app.__file__).parent
+
+
+def test_load_module_success(app_folder):
+    module = load_module(app_folder / "page.py")
     assert module is not None
 
 
@@ -23,30 +29,35 @@ def test_load_module_failure(tmp_path):
         load_module(tmp_path)
 
 
-def test_build_routes_from_folder():
-    routes = build_routes_from_folder(pathlib.Path(app.__file__).parent)
+def test_get_client_route_objs(app_folder):
+    routes = get_client_route_objs(app_folder)
     assert routes
 
 
 @pytest.fixture()
 def routes():
-    routes = build_routes_from_folder(pathlib.Path(app.__file__).parent)
+    routes = get_client_route_objs(pathlib.Path(app.__file__).parent)
     return routes
 
 
-def test_get_routes_router(routes):
-    router = get_routes_router(routes)
-    assert router
+def test_get_client_routes_router(routes):
+    router = get_client_routes_router(routes)
+    assert router.routes
 
 
-def test_get_loader_router(routes):
-    router = get_loader_router(routes)
-    assert router
+def test_get_client_loader_router(routes):
+    router = get_client_loader_router(routes)
+    assert router.routes
 
 
-def test_get_pre_render_router(routes):
-    router = get_pre_render_router(routes)
-    assert router
+def test_get_server_api_router(app_folder):
+    router = get_server_api_router(app_folder)
+    assert router.routes
+
+
+def test_get_server_pre_render_router(routes):
+    router = get_server_pre_render_router(routes)
+    assert router.routes
 
 
 def test_configure_app_router(routes):

@@ -17,6 +17,7 @@ import { ajvResolver } from '@/lib/ajv-resolver'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import React from 'react'
+import { toast } from 'sonner'
 
 interface InputAttrs {
   type: 'text' | 'password' | 'email'
@@ -48,6 +49,7 @@ interface Model extends JSONSchema7 {
 export interface FormProps {
   ctype: 'form'
   model: Model
+  submit_url: string
 }
 
 function getDefaultValues(schema: Model): FieldValues {
@@ -61,13 +63,35 @@ function getDefaultValues(schema: Model): FieldValues {
   return defaults
 }
 
+type Action = {
+  title: string
+}
+
+type ActionResponse = {
+  action: Action
+}
+
 export function Form(props: FormProps) {
   const form = useForm({
     resolver: ajvResolver(props.model),
     defaultValues: getDefaultValues(props.model),
   })
-  function onSubmit(values: FieldValues) {
+  async function onSubmit(values: FieldValues) {
     console.log('values', values)
+    const response = await fetch(props.submit_url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    })
+    if (!response.ok) {
+      throw new Error(response.statusText)
+    }
+    const action = (await response.json()) as ActionResponse
+    console.log('action', action)
+    console.log(action['action']['title'])
+    toast(action['action']['title'])
   }
   return (
     <FormUI {...form}>
