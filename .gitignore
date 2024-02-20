@@ -162,6 +162,8 @@ cython_debug/
 .idea/
 .ruff_cache/
 
+.DS_Store
+
 node_modules/
 .vercel
 static/
