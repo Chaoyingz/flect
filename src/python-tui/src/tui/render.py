@@ -6,6 +6,7 @@ from fastapi.dependencies.utils import request_params_to_args, solve_dependencie
 from fastapi.routing import APIRoute
 from starlette._utils import get_route_path
 
+from tui import __version__
 from tui import components as c
 from tui.response import Meta, PageResponse, merge_meta
 
@@ -39,8 +40,8 @@ def generate_html(
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
             <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap" rel="stylesheet" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <script type="module" src="/static/assets/index.js"></script>
-            <link rel="stylesheet" href="/static/assets/index.css" />
+            <script type="module" src="/static/assets/index-{__version__}.js"></script>
+            <link rel="stylesheet" href="/static/assets/index-{__version__}.css" />
             {meta_html}
         </head>
         <body>

@@ -2,6 +2,8 @@ import path from 'path'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
+const version = process.env.npm_package_version
+
 const serverConfig = {
   host: true,
   port: 3000,
@@ -22,11 +24,11 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: `assets/[name].js`,
-        chunkFileNames: `assets/[name].js`,
-        assetFileNames: `assets/[name].[ext]`,
+        entryFileNames: `assets/[name]-${version}.js`,
+        chunkFileNames: `assets/[name]-${version}.js`,
+        assetFileNames: `assets/[name]-${version}.[ext]`,
       },
     },
-    outDir: '../python-tui/src/static',
+    outDir: '../python-tui/src/static/',
   },
 })

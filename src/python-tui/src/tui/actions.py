@@ -1,9 +1,12 @@
 from typing import Annotated, Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import AliasGenerator, BaseModel, ConfigDict, Field
+from pydantic.alias_generators import to_camel
 
 
 class Notify(BaseModel):
+    model_config = ConfigDict(extra="forbid", alias_generator=AliasGenerator(serialization_alias=to_camel))
+
     action_type: Literal["notify"] = "notify"
 
     title: str = Field(..., description="The title of the notification.")
