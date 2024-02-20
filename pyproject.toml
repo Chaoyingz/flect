@@ -32,7 +32,7 @@ dev = [
 ]
 
 [tool.hatch.version]
-path = "src/python-tui/src/tui/__init__.py"
+path = "src/python-tui/src/tui/version.py"
 
 [tool.hatch.build]
 only-include = ["src/python-tui/src/static", "src/python-tui/src/tui"]
