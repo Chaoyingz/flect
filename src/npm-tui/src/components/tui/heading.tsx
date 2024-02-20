@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 
 export interface HeadingProps {
-  ctype: 'heading'
+  componentType: 'heading'
   className?: string
   level: 1 | 2 | 3 | 4 | 5 | 6
   text: string

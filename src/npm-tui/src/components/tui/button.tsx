@@ -1,7 +1,7 @@
 import { Button as ButtonUI, ButtonProps as ButtonPropsUI } from '@/components/ui/button'
 
 export interface ButtonProps extends ButtonPropsUI {
-  ctype: 'button'
+  componentType: 'button'
   className?: string
 }
 

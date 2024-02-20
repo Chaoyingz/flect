@@ -1,7 +1,7 @@
 import { AvatarFallback, AvatarImage, Avatar as AvatarUI } from '@/components/ui/avatar'
 
 export interface AvatarProps {
-  ctype: 'avatar'
+  componentType: 'avatar'
   className?: string
   src?: string
   alt?: string

@@ -4,7 +4,7 @@ from fastapi.routing import APIRoute
 from tui import PageResponse
 from tui import components as c
 from tui.render import generate_html, get_route_response, render_server_side_html
-from tui.routing import LAYOUT_ROUTER_SUFFIX, ROOT_ROUTER_PREFIX
+from tui.routing import CLIENT_LAYOUT_ROUTER_SUFFIX, CLIENT_ROOT_ROUTER_PREFIX
 
 
 def test_generate_html():
@@ -40,11 +40,15 @@ async def test_get_route_response(app, route_request):
 
 
 async def test_resolve_route_response(app, route_request):
-    response = await render_server_side_html(route_request, app.routes, ROOT_ROUTER_PREFIX, LAYOUT_ROUTER_SUFFIX)
+    response = await render_server_side_html(
+        route_request, app.routes, CLIENT_ROOT_ROUTER_PREFIX, CLIENT_LAYOUT_ROUTER_SUFFIX
+    )
     assert response is not None
 
 
 async def test_render_server_side_html(endpoint, route_request):
     routes = [APIRoute("/tui/test", endpoint, methods=["GET"])]
-    response = await render_server_side_html(route_request, routes, ROOT_ROUTER_PREFIX, LAYOUT_ROUTER_SUFFIX)
+    response = await render_server_side_html(
+        route_request, routes, CLIENT_ROOT_ROUTER_PREFIX, CLIENT_LAYOUT_ROUTER_SUFFIX
+    )
     assert response is not None

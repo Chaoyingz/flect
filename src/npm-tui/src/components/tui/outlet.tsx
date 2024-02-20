@@ -1,7 +1,7 @@
 import { Outlet as RemixOutlet } from 'react-router-dom'
 
 export interface OutletProps {
-  ctype: 'outlet'
+  componentType: 'outlet'
 }
 
 export function Outlet() {

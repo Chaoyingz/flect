@@ -20,8 +20,8 @@ export type ComponentProps =
   | TextProps
 
 export function AnyComponent(props: ComponentProps) {
-  const { ctype } = props
-  switch (ctype) {
+  const { componentType } = props
+  switch (componentType) {
     case 'avatar':
       return <Avatar {...props} />
     case 'button':

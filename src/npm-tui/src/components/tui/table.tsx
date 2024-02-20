@@ -6,7 +6,7 @@ export interface Dataset {
 }
 
 export interface TableProps {
-  ctype: 'table'
+  componentType: 'table'
   className?: string
 
   labels: string[]

@@ -89,7 +89,7 @@ def get_component_preview_section(
 def get_component_api_reference_section(component: c.AnyComponent) -> c.Container:
     props = []
     for field, filed_info in component.model_fields.items():
-        if field == "ctype":
+        if field == "component_type":
             continue
         if field == "children":
             filed_info.annotation = "tui.components.AnyComponents"
@@ -282,12 +282,12 @@ COMPONENT_DOCS_MAP = {
 
 
 async def page(
-    ctype: Annotated[str, Path(..., description="The component type to render")],
+    component_type: Annotated[str, Path(..., description="The component type to render")],
 ) -> PageResponse:
     return PageResponse(
         meta=Meta(
-            title=f"{ctype} component",
-            description=f"{ctype} component",
+            title=f"{component_type} component",
+            description=f"{component_type} component",
         ),
-        element=COMPONENT_DOCS_MAP.get(ctype, c.Text(text="Component Not found")),
+        element=COMPONENT_DOCS_MAP.get(component_type, c.Text(text="Component Not found")),
     )

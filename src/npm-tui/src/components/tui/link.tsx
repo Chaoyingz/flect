@@ -3,7 +3,7 @@ import { AnyComponents, ComponentProps } from '@/components/tui/any-component'
 import { Link as RemixLink } from 'react-router-dom'
 
 export interface LinkProps {
-  ctype: 'link'
+  componentType: 'link'
   className?: string
   href: string
   text: string

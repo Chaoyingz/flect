@@ -1,7 +1,7 @@
 import { AnyComponents, ComponentProps } from '@/components/tui/any-component'
 
 export interface ContainerProps {
-  ctype: 'container'
+  componentType: 'container'
   className?: string
   children?: ComponentProps[]
   tag: 'div' | 'section' | 'header' | 'footer' | 'main' | 'nav' | 'aside'

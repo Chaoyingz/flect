@@ -1,15 +1,17 @@
 from html import escape
 from typing import Annotated, Literal, Optional, Union
 
-from pydantic import BaseModel, ConfigDict, Field, SerializeAsAny, field_serializer, model_validator
+from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, SerializeAsAny, field_serializer, model_validator
+from pydantic.alias_generators import to_camel
 from typing_extensions import Self
 
 
 class BaseComponent(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", alias_generator=AliasGenerator(serialization_alias=to_camel))
 
     class_name: Optional[str] = Field(
-        None, description="The tailwind class names of the component.", serialization_alias="className"
+        None,
+        description="The tailwind class names of the component.",
     )
 
     def render_to_html(self) -> str:
@@ -24,7 +26,7 @@ class BaseContainerComponent(BaseComponent):
 
 
 class Avatar(BaseComponent):
-    ctype: Literal["avatar"] = "avatar"
+    component_type: Literal["avatar"] = "avatar"
 
     src: Optional[str] = Field(
         None,
@@ -50,7 +52,7 @@ class Avatar(BaseComponent):
 
 
 class Button(BaseComponent):
-    ctype: Literal["button"] = "button"
+    component_type: Literal["button"] = "button"
 
     variant: Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = Field(
         "default",
@@ -71,7 +73,7 @@ class Button(BaseComponent):
 
 
 class Container(BaseContainerComponent):
-    ctype: Literal["container"] = "container"
+    component_type: Literal["container"] = "container"
 
     tag: Literal["div", "section", "header", "footer", "main", "nav", "aside"] = Field(
         "div",
@@ -87,7 +89,7 @@ class Container(BaseContainerComponent):
 
 
 class Form(BaseComponent):
-    ctype: Literal["form"] = "form"
+    component_type: Literal["form"] = "form"
     model: type[BaseModel] = Field(
         ...,
         description="The model of the form.",
@@ -107,7 +109,7 @@ class Form(BaseComponent):
 
 
 class Heading(BaseComponent):
-    ctype: Literal["heading"] = "heading"
+    component_type: Literal["heading"] = "heading"
 
     level: Literal[1, 2, 3, 4, 5, 6] = Field(
         ...,
@@ -131,7 +133,7 @@ class Heading(BaseComponent):
 
 
 class Link(BaseContainerComponent):
-    ctype: Literal["link"] = "link"
+    component_type: Literal["link"] = "link"
 
     href: str = Field(
         ...,
@@ -147,11 +149,11 @@ class Link(BaseContainerComponent):
 
 
 class Outlet(BaseComponent):
-    ctype: Literal["outlet"] = "outlet"
+    component_type: Literal["outlet"] = "outlet"
 
 
 class Table(BaseComponent):
-    ctype: Literal["table"] = "table"
+    component_type: Literal["table"] = "table"
 
     labels: list[str] = Field(
         [],
@@ -184,7 +186,7 @@ class Table(BaseComponent):
 
 
 class Text(BaseComponent):
-    ctype: Literal["text"] = "text"
+    component_type: Literal["text"] = "text"
 
     text: str = Field(
         ...,
@@ -199,7 +201,7 @@ class Text(BaseComponent):
 
 AnyComponent = Annotated[
     Union[Avatar, Button, Container, Form, Heading, Link, Outlet, Table, Text],
-    Field(discriminator="ctype"),
+    Field(discriminator="component_type"),
 ]
 
 # Rebuild forward ref models

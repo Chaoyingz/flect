@@ -1,5 +1,5 @@
 export interface TextProps {
-  ctype: 'text'
+  componentType: 'text'
   className?: string
   text: string
 }

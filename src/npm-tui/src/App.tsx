@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <Router />
-      <Toaster />
+      <Toaster richColors />
     </>
   )
 }

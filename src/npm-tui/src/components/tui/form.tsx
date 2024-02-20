@@ -17,7 +17,7 @@ import { ajvResolver } from '@/lib/ajv-resolver'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import React from 'react'
-import { toast } from 'sonner'
+import { ActionResponse, executeAction } from '@/lib/action'
 
 interface InputAttrs {
   type: 'text' | 'password' | 'email'
@@ -38,8 +38,8 @@ type FieldCtype = 'checkbox' | 'input' | 'select' | 'textarea'
 type FieldAttrs = InputAttrs | TextAreaAttrs | SelectAttrs
 
 interface Model extends JSONSchema7 {
-  ctype: FieldCtype
-  class_name?: string
+  componentType: FieldCtype
+  className?: string
   attrs?: FieldAttrs
   properties: {
     [key: string]: Model
@@ -47,9 +47,9 @@ interface Model extends JSONSchema7 {
 }
 
 export interface FormProps {
-  ctype: 'form'
+  componentType: 'form'
   model: Model
-  submit_url: string
+  submitUrl: string
 }
 
 function getDefaultValues(schema: Model): FieldValues {
@@ -63,22 +63,13 @@ function getDefaultValues(schema: Model): FieldValues {
   return defaults
 }
 
-type Action = {
-  title: string
-}
-
-type ActionResponse = {
-  action: Action
-}
-
 export function Form(props: FormProps) {
   const form = useForm({
     resolver: ajvResolver(props.model),
     defaultValues: getDefaultValues(props.model),
   })
   async function onSubmit(values: FieldValues) {
-    console.log('values', values)
-    const response = await fetch(props.submit_url, {
+    const response = await fetch(props.submitUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -89,9 +80,7 @@ export function Form(props: FormProps) {
       throw new Error(response.statusText)
     }
     const action = (await response.json()) as ActionResponse
-    console.log('action', action)
-    console.log(action['action']['title'])
-    toast(action['action']['title'])
+    executeAction(action.action)
   }
   return (
     <FormUI {...form}>
@@ -99,7 +88,7 @@ export function Form(props: FormProps) {
         {props.model.properties &&
           Object.entries(props.model.properties).map(([key, value]) => {
             let modifiedAttrs = value.attrs
-            if (value.ctype === 'select' && value.enum) {
+            if (value.componentType === 'select' && value.enum) {
               modifiedAttrs = {
                 ...value.attrs,
                 options: value.enum as string[],
@@ -116,10 +105,10 @@ export function Form(props: FormProps) {
                       <FormLabel>{value.title || key}</FormLabel>
                       <FormControl>
                         <FormFieldSlot
-                          ctype={value.ctype}
+                          componentType={value.componentType}
                           attrs={modifiedAttrs}
                           field={field}
-                          className={value.class_name}
+                          className={value.className}
                         />
                       </FormControl>
                       <FormDescription>{value.description}</FormDescription>
@@ -139,14 +128,14 @@ export function Form(props: FormProps) {
 }
 
 interface FormFieldSlotProps {
-  ctype: FieldCtype
+  componentType: FieldCtype
   attrs?: FieldAttrs
   className?: string
   field: ControllerRenderProps
 }
 
-const FormFieldSlot = React.memo(({ ctype, attrs, field, className }: FormFieldSlotProps) => {
-  switch (ctype) {
+const FormFieldSlot = React.memo(({ componentType, attrs, field, className }: FormFieldSlotProps) => {
+  switch (componentType) {
     case 'checkbox':
       return <Checkbox className={className} {...field} />
     case 'input':
