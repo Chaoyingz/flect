@@ -35,6 +35,7 @@ dev = [
 path = "src/python-tui/src/tui/version.py"
 
 [tool.hatch.build]
+ignore-vcs = true
 only-include = ["src/python-tui/src/static", "src/python-tui/src/tui"]
 packages = ["src/python-tui/src/tui"]
 
