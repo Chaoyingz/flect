@@ -7,6 +7,7 @@ import { Text, TextProps } from '@/components/tui/text'
 import { Table, TableProps } from '@/components/tui/table'
 import { Outlet, OutletProps } from '@/components/tui/outlet'
 import { Form, FormProps } from '@/components/tui/form'
+import { NavLink, NavLinkProps } from '@/components/tui/nav-link'
 
 export type ComponentProps =
   | AvatarProps
@@ -15,6 +16,7 @@ export type ComponentProps =
   | FormProps
   | HeadingProps
   | LinkProps
+  | NavLinkProps
   | OutletProps
   | TableProps
   | TextProps
@@ -34,6 +36,8 @@ export function AnyComponent(props: ComponentProps) {
       return <Heading {...props} />
     case 'link':
       return <Link {...props} />
+    case 'nav-link':
+      return <NavLink {...props} />
     case 'outlet':
       return <Outlet />
     case 'table':

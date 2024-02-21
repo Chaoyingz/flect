@@ -148,6 +148,22 @@ class Link(BaseContainerComponent):
         """
 
 
+class NavLink(BaseContainerComponent):
+    component_type: Literal["nav-link"] = "nav-link"
+
+    href: str = Field(
+        ...,
+        description="The href of the link.",
+    )
+
+    def render_to_html(self) -> str:
+        return f"""\
+        <a href="{escape(self.href)}">
+            {"".join(component.render_to_html() for component in self.children) if self.children else ""}
+        </a>
+        """
+
+
 class Outlet(BaseComponent):
     component_type: Literal["outlet"] = "outlet"
 
@@ -200,7 +216,7 @@ class Text(BaseComponent):
 
 
 AnyComponent = Annotated[
-    Union[Avatar, Button, Container, Form, Heading, Link, Outlet, Table, Text],
+    Union[Avatar, Button, Container, Form, Heading, Link, NavLink, Outlet, Table, Text],
     Field(discriminator="component_type"),
 ]
 
@@ -216,6 +232,7 @@ __all__ = (
     "Form",
     "Heading",
     "Link",
+    "NavLink",
     "Outlet",
     "Table",
     "Text",
