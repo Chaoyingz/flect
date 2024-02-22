@@ -208,7 +208,7 @@ COMPONENT_DOCS_MAP = {
             "elements like input fields, checkboxes, radio buttons, and dropdowns. ",
         ),
         preview_section=get_component_preview_section(
-            preview=c.Form(model=FormExampleModel, submit_url="/docs/components/form/"),
+            preview=c.Form(model=FormExampleModel, submit_url="/components/form/"),
         ),
         api_reference_section=get_component_api_reference_section(component=c.Form),
     ),

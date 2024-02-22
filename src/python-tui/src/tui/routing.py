@@ -15,7 +15,8 @@ from tui.render import generate_html, render_server_side_html
 from tui.response import PageResponse
 
 EXCLUDED_FOLDER_NAMES = {"__pycache__"}
-DYNAMIC_ROUTE_PREFIX = "_"
+DYNAMIC_ROUTE_PREFIX = "dynamic__"
+GROUP_ROUTE_PREFIX = "group__"
 
 CLIENT_ROUTE_INDEX_FILENAME = "page.py"
 CLIENT_ROUTE_LAYOUT_FILENAME = "layout.py"
@@ -34,9 +35,13 @@ class ClientRoute(BaseModel):
         ...,
         description="The segment of the route.",
     )
-    pathname: str = Field(
+    path: str = Field(
         ...,
-        description="The pathname of the route.",
+        description="The path of the route.",
+    )
+    url: str = Field(
+        ...,
+        description="The URL of the route.",
     )
     index: bool = Field(
         False,
@@ -83,27 +88,38 @@ def load_module(file_path: pathlib.Path) -> ModuleType:
     raise ImportError(f"Could not load module from {file_path}")
 
 
-def get_route_segment(folder: pathlib.Path, is_root: bool = True) -> str:
+def get_route_segment(folder: pathlib.Path, is_root: bool) -> str:
     """
     Gets the route segment based on the folder name.
     """
-    if is_root:
+    if is_root or folder.stem.startswith(GROUP_ROUTE_PREFIX):
         return ""
     if folder.stem.startswith(DYNAMIC_ROUTE_PREFIX):
         return "{" + folder.stem[len(DYNAMIC_ROUTE_PREFIX) :] + "}"
     return folder.stem
 
 
-def get_route_pathname(parent_pathname: str, segment: str) -> str:
+def get_route_path(parent_path: str, segment: str) -> str:
     """
-    Constructs the route pathname based on the parent pathname and the segment.
+    Constructs the route path based on the parent path and the segment.
     """
-    return f"{parent_pathname.rstrip('/')}/{segment}/" if segment else parent_pathname
+    return f"{parent_path.rstrip('/')}/{segment}/" if segment else parent_path
+
+
+def get_route_url(folder: pathlib.Path, path: str) -> str:
+    """
+    Constructs the route URL based on the parent URL and the segment.
+    """
+    if folder.stem.startswith(GROUP_ROUTE_PREFIX):
+        url = f"{path}{folder.stem}/"
+    else:
+        url = path
+    return url
 
 
 def get_client_route_objs(
     folder: pathlib.Path,
-    parent_pathname: str = "/",
+    parent_path: str = "/",
     is_root: bool = True,
 ) -> list[ClientRoute]:
     """
@@ -113,8 +129,8 @@ def get_client_route_objs(
     ----------
     folder : pathlib.Path
         The folder from which to start building routes.
-    parent_pathname : str, optional
-        The pathname of the parent route, by default "/".
+    parent_path : str, optional
+        The path of the parent route, by default "/".
     is_root : bool, optional
         Flag indicating if the folder is the root of the routing structure, by default True.
 
@@ -125,30 +141,34 @@ def get_client_route_objs(
     """
     routes = []
     segment = get_route_segment(folder, is_root)
-    pathname = get_route_pathname(parent_pathname, segment)
+    path = get_route_path(parent_path, segment)
+    url = get_route_url(folder, path)
+
     layout_file = folder / CLIENT_ROUTE_LAYOUT_FILENAME
     page_file = folder / CLIENT_ROUTE_INDEX_FILENAME
+
+    for child_folder in folder.iterdir():
+        if child_folder.is_dir() and child_folder.name not in EXCLUDED_FOLDER_NAMES:
+            routes.extend(get_client_route_objs(child_folder, path, False))
 
     if page_file.is_file():
         routes.append(
             ClientRoute(
                 segment=segment,
-                pathname=pathname,
+                path=path,
+                url=url,
                 endpoint=load_module(page_file).page,
                 index=layout_file.is_file(),
                 children=[],
             )
         )
 
-    for child_folder in folder.iterdir():
-        if child_folder.is_dir() and child_folder.name not in EXCLUDED_FOLDER_NAMES:
-            routes.extend(get_client_route_objs(child_folder, pathname, False))
-
     if layout_file.is_file():
         routes = [
             ClientRoute(
                 segment=segment,
-                pathname=pathname,
+                url=url + CLIENT_LAYOUT_ROUTER_SUFFIX,
+                path=path,
                 index=False,
                 endpoint=load_module(layout_file).layout,
                 children=routes,
@@ -200,9 +220,9 @@ def get_client_loader_router(
         The configured APIRouter instance.
     """
     for route in routes:
-        path = route.pathname if not route.children else route.pathname + CLIENT_LAYOUT_ROUTER_SUFFIX
+        # path = route.path if not route.children else route.path + CLIENT_LAYOUT_ROUTER_SUFFIX
         router.add_api_route(
-            path,
+            route.url,
             route.endpoint,
             response_model=PageResponse,
             methods=["GET"],
@@ -214,23 +234,23 @@ def get_client_loader_router(
 
 def get_server_api_router(
     folder: pathlib.Path,
-    parent_pathname: str = "/",
+    parent_path: str = "/",
     is_root: bool = True,
 ) -> APIRouter:
     router = APIRouter()
     segment = get_route_segment(folder, is_root)
-    pathname = get_route_pathname(parent_pathname, segment)
+    path = get_route_path(parent_path, segment)
     route_file = folder / SERVER_API_ROUTE_FILENAME
     if route_file.is_file():
         module = load_module(route_file)
         for method in SERVER_API_ROUTE_METHODS:
             endpoint = getattr(module, method.lower(), None)
             if endpoint:
-                router.add_api_route(pathname, endpoint, methods=[method])
+                router.add_api_route(path, endpoint, methods=[method])
 
     for child_folder in folder.iterdir():
         if child_folder.is_dir() and child_folder.name not in EXCLUDED_FOLDER_NAMES:
-            router.include_router(get_server_api_router(child_folder, parent_pathname=pathname, is_root=False))
+            router.include_router(get_server_api_router(child_folder, parent_path=path, is_root=False))
     return router
 
 

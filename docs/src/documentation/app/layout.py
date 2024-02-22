@@ -37,7 +37,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             ],
                                         ),
                                         c.Link(
-                                            href="/docs/components/avatar/",
+                                            href="/components/avatar/",
                                             children=[
                                                 c.Text(
                                                     text="Components",

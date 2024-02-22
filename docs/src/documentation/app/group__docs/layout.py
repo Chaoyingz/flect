@@ -49,7 +49,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                     class_name="flex flex-col gap-2",
                                     children=[
                                         c.NavLink(
-                                            href="/docs/components/avatar/",
+                                            href="/components/avatar/",
                                             children=[
                                                 c.Text(
                                                     text="Avatar",
@@ -57,7 +57,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             ],
                                         ),
                                         c.NavLink(
-                                            href="/docs/components/button/",
+                                            href="/components/button/",
                                             children=[
                                                 c.Text(
                                                     text="Button",
@@ -65,7 +65,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             ],
                                         ),
                                         c.NavLink(
-                                            href="/docs/components/container/",
+                                            href="/components/container/",
                                             children=[
                                                 c.Text(
                                                     text="Container",
@@ -73,7 +73,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             ],
                                         ),
                                         c.NavLink(
-                                            href="/docs/components/form/",
+                                            href="/components/form/",
                                             children=[
                                                 c.Text(
                                                     text="Form",
@@ -81,7 +81,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             ],
                                         ),
                                         c.NavLink(
-                                            href="/docs/components/heading/",
+                                            href="/components/heading/",
                                             children=[
                                                 c.Text(
                                                     text="Heading",
@@ -89,7 +89,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             ],
                                         ),
                                         c.NavLink(
-                                            href="/docs/components/link/",
+                                            href="/components/link/",
                                             children=[
                                                 c.Text(
                                                     text="Link",
@@ -97,7 +97,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             ],
                                         ),
                                         c.NavLink(
-                                            href="/docs/components/table/",
+                                            href="/components/table/",
                                             children=[
                                                 c.Text(
                                                     text="Table",
@@ -105,7 +105,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             ],
                                         ),
                                         c.NavLink(
-                                            href="/docs/components/text/",
+                                            href="/components/text/",
                                             children=[
                                                 c.Text(
                                                     text="Text",

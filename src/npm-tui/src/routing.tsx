@@ -13,17 +13,16 @@ import { AnyComponent, ComponentProps } from '@/components/tui/any-component'
 import React from 'react'
 import { Button } from './components/ui/button'
 
-const LAYOUT_ENDPOINT_NAME = 'layout'
-
-const ROOT_ROUTER_PREFIX = '/tui'
-const ROUTE_ROUTER_PATH = '/_route/'
-const LAYOUT_ROUTER_SUFFIX = '_layout/'
+const CLIENT_ROOT_ROUTER_PREFIX = '/tui'
+const CLIENT_ROUTE_ROUTER_PATH = '/_route/'
 
 export type RouteProps = RemixRouteProps & {
   children?: RouteProps[]
   segment: string
-  pathname: string
+  path: string
+  url: string
   endpoint: 'layout' | 'page'
+  index: boolean
 }
 
 type MetaTitleTemplate = {
@@ -85,36 +84,36 @@ const useRoutes = () => {
   const [routes, setRoutes] = useState<RouteObject[] | undefined>()
 
   const convertRoute = useCallback((route: RouteProps): RouteObject => {
-    const path = route.pathname.replace(/{(.*?)}/g, ':$1')
+    const path = route.path.replace(/{(.*?)}/g, ':$1')
     const loader = async ({ params }: LoaderFunctionArgs) => {
-      let endpointPath = `${ROOT_ROUTER_PREFIX}${path}`
-      if (route.endpoint === LAYOUT_ENDPOINT_NAME) {
-        endpointPath += LAYOUT_ROUTER_SUFFIX
-      }
+      let url = `${CLIENT_ROOT_ROUTER_PREFIX}${route.url.replace(/{(.*?)}/g, ':$1')}`
 
       Object.keys(params).forEach((key) => {
         const value = params[key]
         if (value) {
-          endpointPath = endpointPath.replace(`:${key}`, value)
+          url = url.replace(`:${key}`, value)
         }
       })
-
-      return fetchJson<ComponentProps[]>(endpointPath)
+      return fetchJson<ComponentProps[]>(url)
     }
-
-    return {
+    const routeObj: Partial<RouteObject> = {
       path: path,
       element: <RouteElement />,
       errorElement: <ErrorElement />,
       loader,
-      children: route.children?.map(convertRoute),
     }
+    if (route.index === true) {
+      routeObj.index = true
+    } else {
+      routeObj.children = route.children?.map(convertRoute)
+    }
+    return routeObj
   }, [])
 
   useEffect(() => {
     let isMounted = true
 
-    fetchJson<RouteProps[]>(`${ROOT_ROUTER_PREFIX}${ROUTE_ROUTER_PATH}`)
+    fetchJson<RouteProps[]>(`${CLIENT_ROOT_ROUTER_PREFIX}${CLIENT_ROUTE_ROUTER_PATH}`)
       .then((routeProps) => {
         if (isMounted) {
           setRoutes(routeProps.map(convertRoute))
@@ -132,5 +131,6 @@ const useRoutes = () => {
 
 export const Router = () => {
   const routeObjects = useRoutes()
+  console.log(routeObjects)
   return routeObjects ? <RouterProvider router={createBrowserRouter(routeObjects)} /> : null
 }

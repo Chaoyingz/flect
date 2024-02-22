@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from tui.actions import Notify
 from tui.response import ActionResponse
 
-from documentation.app.docs.components._component_type.page import FormExampleModel
+from documentation.app.group__docs.components.dynamic__component_type.page import FormExampleModel
 
 
 async def post(form: FormExampleModel) -> ActionResponse:
