@@ -11,16 +11,5 @@
       "src": "/(.*)",
       "dest": "src/documentation/main.py"
     }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "s-maxage=600, stale-while-revalidate=30"
-        }
-      ]
-    }
   ]
 }
