@@ -49,6 +49,7 @@ interface Model extends JSONSchema7 {
 
 export interface FormProps {
   componentType: 'form'
+  className?: string
   model: Model
   submitUrl: string
 }
@@ -85,7 +86,7 @@ export function Form(props: FormProps) {
   }
   return (
     <FormUI {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-8', props.className)}>
         {props.model.properties &&
           Object.entries(props.model.properties).map(([key, value]) => {
             let modifiedAttrs = value.attrs

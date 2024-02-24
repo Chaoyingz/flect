@@ -15,7 +15,7 @@ export interface TableProps {
 
 export function Table(props: TableProps) {
   return (
-    <TableUI>
+    <TableUI className={props.className}>
       <TableHeader>
         <TableRow>
           {props.labels.map((label, index) => (
@@ -39,5 +39,5 @@ export function Table(props: TableProps) {
 }
 
 function Cell({ value }: { value: Json }) {
-  return <>{value}</>
+  return <>{JSON.stringify(value)}</>
 }

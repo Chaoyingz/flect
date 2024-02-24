@@ -195,7 +195,7 @@ class Table(BaseComponent):
                 </tr>
             </thead>
             <tbody>
-                {"".join(f"<tr>{''.join(f'<td>{escape(getattr(dataset, label))}</td>' for label in self.labels)}</tr>" for dataset in self.datasets)}
+                {"".join(f"<tr>{''.join(f'<td>{escape(str(getattr(dataset, label)))}</td>' for label in self.labels)}</tr>" for dataset in self.datasets)}
             </tbody>
         </table>
         """
