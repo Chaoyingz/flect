@@ -14,6 +14,21 @@ requires-python = ">=3.9"
 readme = "README.md"
 license = {text = "MIT"}
 dynamic = ["version"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Topic :: Internet",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Framework :: Pydantic :: 2",
+    "Framework :: FastAPI",
+]
 
 [build-system]
 requires = ["hatchling"]
