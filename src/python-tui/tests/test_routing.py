@@ -8,6 +8,7 @@ from tui.routing import (
     get_client_routes_router,
     get_server_api_router,
     get_server_pre_render_router,
+    get_server_sitemap_router,
     load_module,
 )
 
@@ -34,19 +35,13 @@ def test_get_client_route_objs(app_folder):
     assert routes
 
 
-@pytest.fixture()
-def routes():
-    routes = get_client_route_objs(pathlib.Path(app.__file__).parent)
-    return routes
-
-
-def test_get_client_routes_router(routes):
-    router = get_client_routes_router(routes)
+def test_get_client_routes_router(client_routes):
+    router = get_client_routes_router(client_routes)
     assert router.routes
 
 
-def test_get_client_loader_router(routes):
-    router = get_client_loader_router(routes)
+def test_get_client_loader_router(client_routes):
+    router = get_client_loader_router(client_routes)
     assert router.routes
 
 
@@ -55,11 +50,16 @@ def test_get_server_api_router(app_folder):
     assert router.routes
 
 
-def test_get_server_pre_render_router(routes):
-    router = get_server_pre_render_router(routes)
+def test_get_server_pre_render_router(client_routes):
+    router = get_server_pre_render_router(client_routes)
     assert router.routes
 
 
-def test_configure_app_router(routes):
+def test_get_server_sitemap_router(client_routes):
+    router = get_server_sitemap_router(client_routes)
+    assert router
+
+
+def test_configure_app_router():
     router = configure_app_router(app)
     assert router

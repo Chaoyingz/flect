@@ -3,16 +3,17 @@ import pathlib
 from collections.abc import Awaitable
 from functools import lru_cache
 from types import ModuleType
-from typing import Any, Callable, cast
+from typing import Any, Callable, Optional, cast
 
 from fastapi import APIRouter
 from fastapi.requests import Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
 from fastapi.routing import APIRoute
-from pydantic import BaseModel, ConfigDict, Field, field_serializer
+from pydantic import BaseModel, ConfigDict, Field
 
 from tui.render import generate_html, render_server_side_html
 from tui.response import PageResponse
+from tui.sitemap import Sitemap, generate_sitemap_xml
 
 EXCLUDED_FOLDER_NAMES = {"__pycache__"}
 DYNAMIC_ROUTE_PREFIX = "dynamic__"
@@ -48,18 +49,35 @@ class ClientRoute(BaseModel):
         description="Determines if the route is an index route."
         "Index routes render into their parent's Outlet at their parent's URL.",
     )
-    endpoint: Callable[[Any], Awaitable[PageResponse]] = Field(
-        ...,
-        description="The endpoint of the route.",
-    )
     children: list["ClientRoute"] = Field(
         [],
         description="The children of the route.",
     )
 
-    @field_serializer("endpoint")
-    def serialize_endpoint(self, value: Callable[[Request], Awaitable[PageResponse]]) -> str:
-        return value.__name__
+    endpoint: Callable[[Any], Awaitable[PageResponse]] = Field(
+        ...,
+        exclude=True,
+        description="The endpoint of the route.",
+    )
+    sitemap: Optional[Callable[[str], Awaitable[list[Sitemap]]]] = Field(
+        None,
+        exclude=True,
+        description="The sitemap of the route.",
+    )
+
+    @property
+    def is_page(self) -> bool:
+        """
+        Determines if the route is a page route.
+        """
+        return not self.children
+
+    @property
+    def is_dynamic(self) -> bool:
+        """
+        Determines if the route is a dynamic route.
+        """
+        return "{" in self.url
 
 
 ClientRoute.model_rebuild()
@@ -152,14 +170,16 @@ def get_client_route_objs(
             routes.extend(get_client_route_objs(child_folder, path, False))
 
     if page_file.is_file():
+        page_module = load_module(page_file)
         routes.append(
             ClientRoute(
                 segment=segment,
                 path=path,
                 url=url,
-                endpoint=load_module(page_file).page,
                 index=layout_file.is_file(),
                 children=[],
+                endpoint=page_module.page,
+                sitemap=getattr(page_module, "sitemap", None),
             )
         )
 
@@ -170,8 +190,9 @@ def get_client_route_objs(
                 url=url + CLIENT_LAYOUT_ROUTER_SUFFIX,
                 path=path,
                 index=False,
-                endpoint=load_module(layout_file).layout,
                 children=routes,
+                endpoint=load_module(layout_file).layout,
+                sitemap=None,
             )
         ]
 
@@ -220,7 +241,6 @@ def get_client_loader_router(
         The configured APIRouter instance.
     """
     for route in routes:
-        # path = route.path if not route.children else route.path + CLIENT_LAYOUT_ROUTER_SUFFIX
         router.add_api_route(
             route.url,
             route.endpoint,
@@ -280,6 +300,19 @@ def get_server_pre_render_router(loader_routes: list[APIRoute]) -> APIRouter:
     return router
 
 
+def get_server_sitemap_router(
+    routes: list[ClientRoute],
+) -> APIRouter:
+    router = APIRouter()
+
+    async def get_sitemap(request: Request) -> Response:
+        base_url = f"{request.base_url.scheme}://{request.base_url.netloc}"
+        return Response(await generate_sitemap_xml(routes, base_url), media_type="application/xml")
+
+    router.add_api_route("/sitemap.xml", get_sitemap, methods=["GET"])
+    return router
+
+
 def configure_app_router(app: ModuleType) -> APIRouter:
     """
     Constructs the main APIRouter for the application by loading routes from the app module.
@@ -311,5 +344,7 @@ def configure_app_router(app: ModuleType) -> APIRouter:
     root_router.include_router(loader_router)
 
     root_router.include_router(get_server_api_router(app_folder))
+    root_router.include_router(get_server_sitemap_router(client_routes))
+    # pre render router should be last because it catches all other routes
     root_router.include_router(get_server_pre_render_router(cast(list[APIRoute], loader_router.routes)))
     return root_router

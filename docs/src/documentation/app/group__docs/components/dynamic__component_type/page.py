@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 from pydantic_core._pydantic_core import PydanticUndefined
 from tui import Meta, PageResponse
 from tui.form import Checkbox, Input, Select, Textarea
+from tui.sitemap import Sitemap
 
 
 def get_component_description_section(
@@ -279,6 +280,18 @@ COMPONENT_DOCS_MAP = {
         api_reference_section=get_component_api_reference_section(component=c.Text),
     ),
 }
+
+
+async def sitemap(dynamic_url: str) -> list[Sitemap]:
+    return [
+        Sitemap(
+            url=dynamic_url.format(component_type=component_type),
+            last_modified=None,
+            change_frequency=None,
+            priority=None,
+        )
+        for component_type in COMPONENT_DOCS_MAP
+    ]
 
 
 async def page(
