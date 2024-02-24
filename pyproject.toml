@@ -1,5 +1,5 @@
 [project]
-name = "tuilib"
+name = "tuiframework"
 description = "Turning ideas into web app fast."
 authors = [
     {name = "Chaoying", email = "chaunceywe@gmail.com"},

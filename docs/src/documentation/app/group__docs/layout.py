@@ -4,7 +4,7 @@ from tui import components as c
 
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
     return PageResponse(
-        meta=Meta(title=TitleTemplate(template="{title} - tui", default="tui documentation", absolute=True)),
+        meta=Meta(title=TitleTemplate(template="{title} - tui framework", default="tui documentation", absolute=True)),
         element=c.Container(
             tag="div",
             class_name="flex",
