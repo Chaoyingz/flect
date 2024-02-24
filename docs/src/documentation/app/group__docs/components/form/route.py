@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 from fastapi.encoders import jsonable_encoder
@@ -8,6 +9,7 @@ from documentation.app.group__docs.components.dynamic__component_type.page impor
 
 
 async def post(form: FormExampleModel) -> ActionResponse:
+    await asyncio.sleep(0.1)
     return ActionResponse(
         action=Notify(
             title="You submitted the following values:",

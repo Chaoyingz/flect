@@ -21,7 +21,6 @@ export type RouteProps = RemixRouteProps & {
   segment: string
   path: string
   url: string
-  endpoint: 'layout' | 'page'
   index: boolean
 }
 

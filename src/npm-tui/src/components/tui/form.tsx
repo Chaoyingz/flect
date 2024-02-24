@@ -17,6 +17,7 @@ import { ajvResolver } from '@/lib/ajv-resolver'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import React from 'react'
+import { ReloadIcon } from '@radix-ui/react-icons'
 import { ActionResponse, executeAction } from '@/lib/action'
 
 interface InputAttrs {
@@ -120,8 +121,16 @@ export function Form(props: FormProps) {
             }
             return null
           })}
-
-        <Button type="submit">Submit</Button>
+        {form.formState.isSubmitting ? (
+          <Button type="submit" className="w-36" disabled={form.formState.isSubmitting}>
+            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+            Submitting...
+          </Button>
+        ) : (
+          <Button type="submit" className="w-36">
+            Submit
+          </Button>
+        )}
       </form>
     </FormUI>
   )
