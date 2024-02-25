@@ -1,6 +1,12 @@
 ## Introduction
 
-Use Pydantic models in the backend that correspond to the properties of React components in the frontend. This enables you to quickly develop interactive and beautiful UIs using Python.
+Welcome to the tui framework documentation!
+
+### What is tui?
+
+tui is a Python framework for building full-stack web applications. It constructs user interfaces by utilizing Pydantic
+models in the backend that correspond to the properties of React components in the frontend. This integration enables
+quick development of interactive and beautiful UIs using Python.
 
 The key features are:
 

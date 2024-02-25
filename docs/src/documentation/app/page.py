@@ -16,9 +16,7 @@ async def page() -> PageResponse:
                             level=1, text="Turning ideas into web app fast", class_name="text-center text-5xl font-bold"
                         ),
                         c.Text(
-                            text="Use Pydantic models in the backend that correspond to the properties of React components "
-                            "in the frontend. This enables you to quickly develop interactive and beautiful UIs using "
-                            "Python.",
+                            text="tui enables you to quickly create full-stack web applications using Python.",
                             class_name="text-center text-xl mt-8 w-1/2",
                         ),
                         c.Container(
