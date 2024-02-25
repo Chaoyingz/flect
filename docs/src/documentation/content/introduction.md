@@ -23,9 +23,7 @@ The key features are:
 ## Installation
 
 ```console
-$ pip install tuiframework
-
----> 100%
+pip install tuiframework
 ```
 
 ## Example
@@ -108,10 +106,6 @@ async def post(form: TodoInCreate) -> ActionResponse:
 
 Which renders like this:
 ![tui-todo](https://github.com/Chaoyingz/tui/assets/32626585/f48415d8-b25c-432d-8dc4-d0bd4d65777d)
-
-## Demo
-
-Check out the `docs` folder in the project repository. The documentation website is built directly from these sources.
 
 ## License
 

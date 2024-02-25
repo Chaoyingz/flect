@@ -11,10 +11,12 @@ import { NavLink, NavLinkProps } from '@/components/tui/nav-link'
 import { Paragraph, ParagraphProps } from '@/components/tui/paragraph'
 import { Markdown, MarkdownProps } from '@/components/tui/markdown'
 import { CopyButton, CopyButtonProps } from '@/components/tui/copy-button'
+import { CodeBlock, CodeBlockProps } from '@/components/tui/code-block'
 
 export type ComponentProps =
   | AvatarProps
   | ButtonProps
+  | CodeBlockProps
   | ContainerProps
   | CopyButtonProps
   | FormProps
@@ -34,6 +36,8 @@ export function AnyComponent(props: ComponentProps) {
       return <Avatar {...props} />
     case 'button':
       return <Button {...props} />
+    case 'code-block':
+      return <CodeBlock {...props} />
     case 'container':
       return <Container {...props} />
     case 'copy-button':

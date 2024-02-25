@@ -72,6 +72,31 @@ class Button(BaseComponent):
         """
 
 
+class CodeBlock(BaseComponent):
+    component_type: Literal["code-block"] = "code-block"
+    text: str = Field(
+        ...,
+        description="The text of the code block.",
+    )
+    language: Optional[str] = Field(
+        None,
+        description="The language of the code block.",
+    )
+    code_style: Optional[str] = Field(
+        None,
+        description="The style of the code block.",
+    )
+
+    def render_to_html(self) -> str:
+        return f"""\
+        <pre>
+            <code>
+                {escape(self.text)}
+            </code>
+        </pre>
+        """
+
+
 class Container(BaseContainerComponent):
     component_type: Literal["container"] = "container"
 
@@ -264,7 +289,20 @@ class Text(BaseComponent):
 
 AnyComponent = Annotated[
     Union[
-        Avatar, Button, Container, CopyButton, Form, Heading, Link, Markdown, NavLink, Outlet, Paragraph, Table, Text
+        Avatar,
+        Button,
+        CodeBlock,
+        Container,
+        CopyButton,
+        Form,
+        Heading,
+        Link,
+        Markdown,
+        NavLink,
+        Outlet,
+        Paragraph,
+        Table,
+        Text,
     ],
     Field(discriminator="component_type"),
 ]
@@ -277,6 +315,7 @@ for container_component in BaseContainerComponent.__subclasses__():
 __all__ = (
     "Avatar",
     "Button",
+    "CodeBlock",
     "Container",
     "CopyButton",
     "Form",

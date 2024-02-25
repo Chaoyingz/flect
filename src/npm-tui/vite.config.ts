@@ -1,7 +1,7 @@
 import path from 'path'
 import react from '@vitejs/plugin-react'
-import { analyzer } from 'vite-bundle-analyzer'
 import { defineConfig } from 'vite'
+import { analyzer } from 'vite-bundle-analyzer'
 
 const version = process.env.npm_package_version
 
