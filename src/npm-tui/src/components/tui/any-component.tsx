@@ -8,6 +8,7 @@ import { Table, TableProps } from '@/components/tui/table'
 import { Outlet, OutletProps } from '@/components/tui/outlet'
 import { Form, FormProps } from '@/components/tui/form'
 import { NavLink, NavLinkProps } from '@/components/tui/nav-link'
+import { Paragraph, ParagraphProps } from '@/components/tui/paragraph'
 
 export type ComponentProps =
   | AvatarProps
@@ -18,6 +19,7 @@ export type ComponentProps =
   | LinkProps
   | NavLinkProps
   | OutletProps
+  | ParagraphProps
   | TableProps
   | TextProps
 
@@ -40,6 +42,8 @@ export function AnyComponent(props: ComponentProps) {
       return <NavLink {...props} />
     case 'outlet':
       return <Outlet />
+    case 'paragraph':
+      return <Paragraph {...props} />
     case 'table':
       return <Table {...props} />
     case 'text':

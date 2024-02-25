@@ -168,6 +168,22 @@ class Outlet(BaseComponent):
     component_type: Literal["outlet"] = "outlet"
 
 
+class Paragraph(BaseComponent):
+    component_type: Literal["paragraph"] = "paragraph"
+
+    text: str = Field(
+        ...,
+        description="The text of the paragraph.",
+    )
+
+    def render_to_html(self) -> str:
+        return f"""\
+        <p>
+            {escape(self.text)}
+        </p>
+        """
+
+
 class Table(BaseComponent):
     component_type: Literal["table"] = "table"
 
@@ -216,7 +232,7 @@ class Text(BaseComponent):
 
 
 AnyComponent = Annotated[
-    Union[Avatar, Button, Container, Form, Heading, Link, NavLink, Outlet, Table, Text],
+    Union[Avatar, Button, Container, Form, Heading, Link, NavLink, Outlet, Paragraph, Table, Text],
     Field(discriminator="component_type"),
 ]
 
@@ -234,6 +250,7 @@ __all__ = (
     "Link",
     "NavLink",
     "Outlet",
+    "Paragraph",
     "Table",
     "Text",
     "AnyComponent",
