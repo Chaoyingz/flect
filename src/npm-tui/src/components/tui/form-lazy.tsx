@@ -17,8 +17,8 @@ import { ajvResolver } from '@/lib/ajv-resolver'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import React from 'react'
-import { ReloadIcon } from '@radix-ui/react-icons'
 import { ActionResponse, executeAction } from '@/lib/action'
+import { RotateCw } from 'lucide-react'
 
 interface InputAttrs {
   type: 'text' | 'password' | 'email'
@@ -124,7 +124,7 @@ export default function FormLazy(props: FormLazyProps) {
           })}
         {form.formState.isSubmitting ? (
           <Button type="submit" className="w-36" disabled={form.formState.isSubmitting}>
-            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+            <RotateCw className="mr-2 h-4 w-4 animate-spin" />
             Submitting...
           </Button>
         ) : (
