@@ -127,3 +127,7 @@ async def post(form: TodoInCreate) -> ActionResponse:
 ## 演示
 
 请查看项目仓库中的 `docs` 文件夹。文档网站直接从这些源文件构建。
+
+## 证书
+
+这个项目遵守 MIT 许可证.

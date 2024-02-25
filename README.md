@@ -127,3 +127,7 @@ Which renders like this:
 ## Demo
 
 Check out the `docs` folder in the project repository. The documentation website is built directly from these sources.
+
+## License
+
+This project is licensed under the terms of the MIT license.
