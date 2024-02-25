@@ -148,6 +148,22 @@ class Link(BaseContainerComponent):
         """
 
 
+class Markdown(BaseComponent):
+    component_type: Literal["markdown"] = "markdown"
+
+    text: str = Field(
+        ...,
+        description="The text of the markdown.",
+    )
+
+    def render_to_html(self) -> str:
+        return f"""\
+        <p>
+            {escape(self.text)}
+        </p>
+        """
+
+
 class NavLink(BaseContainerComponent):
     component_type: Literal["nav-link"] = "nav-link"
 
@@ -232,7 +248,7 @@ class Text(BaseComponent):
 
 
 AnyComponent = Annotated[
-    Union[Avatar, Button, Container, Form, Heading, Link, NavLink, Outlet, Paragraph, Table, Text],
+    Union[Avatar, Button, Container, Form, Heading, Link, Markdown, NavLink, Outlet, Paragraph, Table, Text],
     Field(discriminator="component_type"),
 ]
 
@@ -248,6 +264,7 @@ __all__ = (
     "Form",
     "Heading",
     "Link",
+    "Markdown",
     "NavLink",
     "Outlet",
     "Paragraph",

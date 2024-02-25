@@ -130,6 +130,5 @@ const useRoutes = () => {
 
 export const Router = () => {
   const routeObjects = useRoutes()
-  console.log(routeObjects)
   return routeObjects ? <RouterProvider router={createBrowserRouter(routeObjects)} /> : null
 }

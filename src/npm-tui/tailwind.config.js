@@ -42,6 +42,7 @@ module.exports = {
     'text-center',
     'invisible',
     'absolute',
+    'overflow-hidden',
   ],
   prefix: '',
   theme: {
@@ -113,5 +114,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
 }

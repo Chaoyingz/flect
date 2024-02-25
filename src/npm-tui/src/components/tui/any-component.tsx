@@ -9,6 +9,8 @@ import { Outlet, OutletProps } from '@/components/tui/outlet'
 import { Form, FormProps } from '@/components/tui/form'
 import { NavLink, NavLinkProps } from '@/components/tui/nav-link'
 import { Paragraph, ParagraphProps } from '@/components/tui/paragraph'
+import { Markdown } from '@/components/tui/markdown'
+import { MarkdownProps } from '@/components/tui/markdown-lazy'
 
 export type ComponentProps =
   | AvatarProps
@@ -17,6 +19,7 @@ export type ComponentProps =
   | FormProps
   | HeadingProps
   | LinkProps
+  | MarkdownProps
   | NavLinkProps
   | OutletProps
   | ParagraphProps
@@ -38,6 +41,8 @@ export function AnyComponent(props: ComponentProps) {
       return <Heading {...props} />
     case 'link':
       return <Link {...props} />
+    case 'markdown':
+      return <Markdown {...props} />
     case 'nav-link':
       return <NavLink {...props} />
     case 'outlet':

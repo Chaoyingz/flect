@@ -1,5 +1,6 @@
 import path from 'path'
 import react from '@vitejs/plugin-react'
+import { analyzer } from 'vite-bundle-analyzer'
 import { defineConfig } from 'vite'
 
 const version = process.env.npm_package_version
@@ -13,7 +14,7 @@ const serverConfig = {
 }
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), analyzer()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

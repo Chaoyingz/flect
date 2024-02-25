@@ -45,7 +45,7 @@ def generate_html(
             {meta_html}
         </head>
         <body>
-            <div class="absolute invisible h-0 w-0">{element_html}</div>
+            <div class="absolute invisible h-0 w-0 overflow-hidden">{element_html}</div>
             <div id="root"></div>
         </body>
     </html>
