@@ -26,11 +26,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                     children=[
                                         c.NavLink(
                                             href="/docs/",
-                                            children=[
-                                                c.Text(
-                                                    text="Introduction",
-                                                )
-                                            ],
+                                            children=[c.Text(text="Introduction", class_name="text-sm")],
                                         )
                                     ],
                                 ),
@@ -50,67 +46,35 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                     children=[
                                         c.NavLink(
                                             href="/components/avatar/",
-                                            children=[
-                                                c.Text(
-                                                    text="Avatar",
-                                                )
-                                            ],
+                                            children=[c.Text(text="Avatar", class_name="text-sm")],
                                         ),
                                         c.NavLink(
                                             href="/components/button/",
-                                            children=[
-                                                c.Text(
-                                                    text="Button",
-                                                )
-                                            ],
+                                            children=[c.Text(text="Button", class_name="text-sm")],
                                         ),
                                         c.NavLink(
                                             href="/components/container/",
-                                            children=[
-                                                c.Text(
-                                                    text="Container",
-                                                )
-                                            ],
+                                            children=[c.Text(text="Container", class_name="text-sm")],
                                         ),
                                         c.NavLink(
                                             href="/components/form/",
-                                            children=[
-                                                c.Text(
-                                                    text="Form",
-                                                )
-                                            ],
+                                            children=[c.Text(text="Form", class_name="text-sm")],
                                         ),
                                         c.NavLink(
                                             href="/components/heading/",
-                                            children=[
-                                                c.Text(
-                                                    text="Heading",
-                                                )
-                                            ],
+                                            children=[c.Text(text="Heading", class_name="text-sm")],
                                         ),
                                         c.NavLink(
                                             href="/components/link/",
-                                            children=[
-                                                c.Text(
-                                                    text="Link",
-                                                )
-                                            ],
+                                            children=[c.Text(text="Link", class_name="text-sm")],
                                         ),
                                         c.NavLink(
                                             href="/components/table/",
-                                            children=[
-                                                c.Text(
-                                                    text="Table",
-                                                )
-                                            ],
+                                            children=[c.Text(text="Table", class_name="text-sm")],
                                         ),
                                         c.NavLink(
                                             href="/components/text/",
-                                            children=[
-                                                c.Text(
-                                                    text="Text",
-                                                )
-                                            ],
+                                            children=[c.Text(text="Text", class_name="text-sm")],
                                         ),
                                     ],
                                 ),
