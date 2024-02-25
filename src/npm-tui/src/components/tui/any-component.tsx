@@ -9,8 +9,7 @@ import { Outlet, OutletProps } from '@/components/tui/outlet'
 import { Form, FormProps } from '@/components/tui/form'
 import { NavLink, NavLinkProps } from '@/components/tui/nav-link'
 import { Paragraph, ParagraphProps } from '@/components/tui/paragraph'
-import { Markdown } from '@/components/tui/markdown'
-import { MarkdownProps } from '@/components/tui/markdown-lazy'
+import { Markdown, MarkdownProps } from '@/components/tui/markdown'
 
 export type ComponentProps =
   | AvatarProps
