@@ -10,11 +10,13 @@ import { Form, FormProps } from '@/components/tui/form'
 import { NavLink, NavLinkProps } from '@/components/tui/nav-link'
 import { Paragraph, ParagraphProps } from '@/components/tui/paragraph'
 import { Markdown, MarkdownProps } from '@/components/tui/markdown'
+import { CopyButton, CopyButtonProps } from '@/components/tui/copy-button'
 
 export type ComponentProps =
   | AvatarProps
   | ButtonProps
   | ContainerProps
+  | CopyButtonProps
   | FormProps
   | HeadingProps
   | LinkProps
@@ -34,6 +36,8 @@ export function AnyComponent(props: ComponentProps) {
       return <Button {...props} />
     case 'container':
       return <Container {...props} />
+    case 'copy-button':
+      return <CopyButton {...props} />
     case 'form':
       return <Form {...props} />
     case 'heading':
