@@ -28,10 +28,10 @@ quick development of interactive and beautiful UIs using Python.
 The key features are:
 
 - **Fast development**: Write your entire app with Python, seamlessly integrating backend logic and frontend UI.
-- **SEO Friendly**: Supports server-side rendering for better search engine visibility.
+- **Easy Form Validation**: Define a single Pydantic model for seamless and consistent form validation across your app, enhancing development speed and reducing potential errors.
 - **Client-Side Routing**: Fast, smooth page transitions without reloads.
 - **Folder-Based Routing**: Easy route management through folder structure.
-- **Easy Form Validation**: Define a single Pydantic model for seamless and consistent form validation across your app, enhancing development speed and reducing potential errors.
+- **SEO Friendly**: Supports server-side rendering for better search engine visibility.
 
 ## Requirements
 
