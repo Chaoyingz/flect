@@ -23,11 +23,16 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                 ),
                                 c.Container(
                                     tag="nav",
+                                    class_name="flex flex-col gap-2",
                                     children=[
                                         c.NavLink(
-                                            href="/docs/",
+                                            href="/docs/introduction/",
                                             children=[c.Text(text="Introduction", class_name="text-sm")],
-                                        )
+                                        ),
+                                        c.NavLink(
+                                            href="/docs/installation/",
+                                            children=[c.Text(text="Installation", class_name="text-sm")],
+                                        ),
                                     ],
                                 ),
                             ],

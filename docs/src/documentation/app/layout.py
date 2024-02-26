@@ -29,7 +29,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             ],
                                         ),
                                         c.Link(
-                                            href="/docs/",
+                                            href="/docs/introduction/",
                                             children=[
                                                 c.Text(
                                                     text="Docs",
@@ -67,6 +67,34 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                     tag="main",
                     class_name="container",
                     children=[outlet],
+                ),
+                c.Container(
+                    tag="footer",
+                    class_name="border-t text-sm container py-8 mt-8",
+                    children=[
+                        c.Text(text="Built by "),
+                        c.Link(
+                            href="https://github.com/Chaoyingz",
+                            children=[
+                                c.Text(
+                                    text="Chaoying.",
+                                    class_name="underline",
+                                )
+                            ],
+                        ),
+                        c.Text(
+                            text=" The source code is available on ",
+                        ),
+                        c.Link(
+                            href="https://github.com/Chaoyingz/tui/tree/main/docs",
+                            children=[
+                                c.Text(
+                                    text="GitHub.",
+                                    class_name="underline",
+                                )
+                            ],
+                        ),
+                    ],
                 ),
             ],
         ),

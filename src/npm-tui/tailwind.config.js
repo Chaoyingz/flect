@@ -43,6 +43,7 @@ module.exports = {
     'invisible',
     'absolute',
     'overflow-hidden',
+    'underline',
   ],
   prefix: '',
   theme: {

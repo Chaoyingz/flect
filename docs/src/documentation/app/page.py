@@ -10,7 +10,7 @@ async def page() -> PageResponse:
             children=[
                 c.Container(
                     tag="section",
-                    class_name="flex justify-center py-28 flex-col items-center",
+                    class_name="flex justify-center py-32 flex-col items-center",
                     children=[
                         c.Heading(
                             level=1, text="Turning ideas into web app fast", class_name="text-center text-5xl font-bold"
@@ -24,7 +24,7 @@ async def page() -> PageResponse:
                             class_name="flex gap-4 mt-8",
                             children=[
                                 c.Link(
-                                    href="/docs/",
+                                    href="/docs/introduction/",
                                     children=[
                                         c.Button(
                                             children="Get Started",
