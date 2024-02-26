@@ -1,6 +1,7 @@
 import path from 'path'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import { baseUrl } from 'rollup-plugin-base-url'
 
 const version = process.env.npm_package_version
 
@@ -28,6 +29,11 @@ export default defineConfig({
         chunkFileNames: `assets/[name]-${version}.js`,
         assetFileNames: `assets/[name]-${version}.[ext]`,
       },
+      plugins: [
+        baseUrl({
+          url: '/static',
+        }),
+      ],
     },
     outDir: '../python-tui/src/static/',
   },
