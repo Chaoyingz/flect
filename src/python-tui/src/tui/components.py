@@ -1,6 +1,7 @@
 from html import escape
 from typing import Annotated, Literal, Optional, Union
 
+import pyromark
 from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, SerializeAsAny, field_serializer, model_validator
 from pydantic.alias_generators import to_camel
 from typing_extensions import Self
@@ -198,9 +199,7 @@ class Markdown(BaseComponent):
 
     def render_to_html(self) -> str:
         return f"""\
-        <p>
-            {escape(self.text)}
-        </p>
+        {pyromark.markdown(self.text)}
         """
 
 
