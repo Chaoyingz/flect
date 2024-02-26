@@ -19,7 +19,7 @@ export default function CodeBlockLazy(props: CodeBlockLazyProps) {
     <div className="relative">
       <CopyButton
         value={props.text}
-        className="absolute right-4 top-4 z-20 w-6 h-6 p-1.5"
+        className="absolute right-4 top-3 z-20 w-6 h-6 p-1.5"
         componentType="copy-button"
       />
       <SyntaxHighlighter className={cn(props.className)} PreTag="div" language={props.language} style={dracula}>
