@@ -3,8 +3,8 @@ docs_path = docs/src
 
 .PHONY: install
 install:
-	pip install -U pip pre-commit pdm
-	pdm install
+	curl -sSf https://rye-up.com/get | bash
+	rye sync
 	pip install -e .
 	pre-commit install
 
@@ -20,7 +20,7 @@ lint:
 
 .PHONY: typecheck
 typecheck:
-	pdm run pyright
+	rye run pyright
 
 
 .PHONY: test

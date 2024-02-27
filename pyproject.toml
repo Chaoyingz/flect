@@ -34,11 +34,9 @@ classifiers = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.pdm]
-package-type = "library"
-
-[tool.pdm.dev-dependencies]
-dev = [
+[tool.rye]
+managed = true
+dev-dependencies = [
     "ruff>=0.1.12",
     "pyright>=1.1.347",
     "coverage>=7.4.1",
