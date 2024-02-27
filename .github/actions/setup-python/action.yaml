@@ -1,0 +1,16 @@
+name: 'Setup Python'
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      shell: bash
+      run: curl -sSf https://rye-up.com/get | RYE_NO_AUTO_INSTALL=1 RYE_INSTALL_OPTION="--yes" bash
+    - name: Add shims
+      shell: bash
+      run: echo "$HOME/.rye/shims" >> $GITHUB_PATH
+    - name: Install
+      shell: bash
+      run: make install

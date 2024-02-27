@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '**'
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-python
+      - uses: ./.github/actions/setup-npm
+
+      - run: pre-commit run --show-diff-on-failure --color=always  --all-files
+
+  test:
+    name: test ${{ matrix.python-version }} on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu, macos]
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+
+    runs-on: ${{ matrix.os }}-latest
+
+    env:
+      PYTHON: ${{ matrix.python-version }}
+      OS: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - run: sed '/-e/d' requirements-dev.lock > requirements.txt
+      - run: pip install -r requirements.txt
+      - run: pip install -e .
+
+      - run: export PYTHONPATH=docs/src && coverage run -m pytest
+      # display coverage and fail if it's below 80%, which shouldn't happen
+      - run: coverage report --fail-under=80
+
+      - run: coverage xml
+
+      - uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          env_vars: PYTHON,OS
+
+  check: # This job does nothing and is only used for the branch protection
+    if: always()
+    needs: [ lint, test ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Decide whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@release/v1
+        id: all-green
+        with:
+          jobs: ${{ toJSON(needs) }}
+
+  release:
+    needs: [ check ]
+    if: "success() && startsWith(github.ref, 'refs/tags/')"
+    runs-on: ubuntu-latest
+    environment: release
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-python
+      - uses: ./.github/actions/setup-npm
+
+      - run: npm run build
+      - run: rye publish --token ${{ secrets.PYPI_TOKEN }} --yes

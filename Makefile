@@ -3,20 +3,19 @@ docs_path = docs/src
 
 .PHONY: install
 install:
-	curl -sSf https://rye-up.com/get | bash
 	rye sync
-	pip install -e .
+	rye install pre-commit
 	pre-commit install
 
 .PHONY: format
 format:
-	ruff check --fix-only $(path) docs
-	ruff format $(path) docs
+	rye run ruff check --fix-only $(path) docs
+	rye run ruff format $(path) docs
 
 .PHONY: lint
 lint:
-	ruff check $(path) docs
-	ruff format --check $(path) docs
+	rye run ruff check $(path) docs
+	rye run ruff format --check $(path) docs
 
 .PHONY: typecheck
 typecheck:
@@ -25,7 +24,7 @@ typecheck:
 
 .PHONY: test
 test:
-	coverage run -m pytest
+	export PYTHONPATH=$(docs_path) && rye run coverage run -m pytest
 
 
 .PHONY: testcov

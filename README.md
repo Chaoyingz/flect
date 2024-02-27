@@ -3,9 +3,15 @@
 
   <h3 align="center">tui framework</h3>
 
+  <p align='center'>
+    <em>Turning ideas into web app fast.</em>
+  </p>
   <p align="center">
-    Turning ideas into web app fast.
-    <br />
+    <a href="https://github.com/Chaoyingz/tui/actions?query=workflow%3ATest+event%3Apush+branch%3Amain" target="_blank">
+        <img src="https://github.com/Chaoyingz/tui/actions/workflows/CI.yaml/badge.svg?event=push&branch=main" alt="Test">
+    </a>
+  </p>
+  <p align="center">
     <a href="https://tui.celerforge.com/"><strong>Explore the docs »</strong></a>
     <br />
     <br />

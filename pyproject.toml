@@ -55,8 +55,10 @@ packages = ["src/python-tui/src/tui"]
 
 [tool.ruff]
 line-length = 120
-extend-select = ["Q", "RUF100", "UP", "I"]
 target-version = "py39"
+
+[tool.ruff.lint]
+extend-select = ["Q", "RUF100", "UP", "I"]
 
 [tool.pyright]
 include = ["src/python-tui/src"]
