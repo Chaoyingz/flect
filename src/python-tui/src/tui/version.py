@@ -1,1 +1,3 @@
-VERSION = "0.1.6"
+import importlib.metadata
+
+VERSION = importlib.metadata.version("tuiframework")

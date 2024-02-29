@@ -2,9 +2,9 @@ name: 'Setup NPM'
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-node@v4
+    - uses: pnpm/action-setup@v3
       with:
-        node-version: 18
+        version: 8
     - name: Install dependencies
       shell: bash
-      run: npm install
+      run: pnpm install
