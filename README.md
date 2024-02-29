@@ -7,8 +7,8 @@
     <em>Turning ideas into web app fast.</em>
   </p>
   <p align="center">
-    <a href="https://github.com/Chaoyingz/tui/actions?query=workflow%3ATest+event%3Apush+branch%3Amain" target="_blank">
-        <img src="https://github.com/Chaoyingz/tui/actions/workflows/CI.yaml/badge.svg?event=push&branch=main" alt="Test">
+    <a href="https://github.com/Chaoyingz/tui/actions?query=workflow" target="_blank">
+        <img src="https://github.com/Chaoyingz/tui/actions/workflows/test.yaml/badge.svg?event=push&branch=main" alt="Test">
     </a>
   </p>
   <p align="center">
