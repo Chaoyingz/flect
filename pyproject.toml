@@ -10,7 +10,6 @@ dependencies = [
     "uvicorn>=0.25.0",
     "pydantic>=2.6.1",
     "pyromark>=0.3.0",
-    "cookiecutter>=2.6.0",
 ]
 requires-python = ">=3.9"
 readme = "README.md"
@@ -30,6 +29,11 @@ classifiers = [
     "Framework :: Pydantic :: 2",
     "Framework :: FastAPI",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Chaoyingz/tui"
+Documentation = "https://tui.celerforge.com/"
+Source = "https://github.com/Chaoyingz/tui"
 
 [build-system]
 requires = ["hatchling"]
@@ -61,8 +65,8 @@ target-version = "py39"
 extend-select = ["Q", "RUF100", "UP", "I"]
 
 [tool.pyright]
-include = ["src/python-tui/src"]
-extraPaths = ["src/python-tui/src"]
+include = ["src/python-tui/src/tui"]
+extraPaths = ["src/python-tui/src/tui"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

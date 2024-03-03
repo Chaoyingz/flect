@@ -1,4 +1,4 @@
-path = src/python-tui/
+path = src/python-tui/src/tui/
 docs_path = docs/src
 
 .PHONY: install
