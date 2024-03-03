@@ -157,7 +157,7 @@ COMPONENT_DOCS_MAP = {
     "avatar": get_component_page(
         description_section=get_component_description_section(
             title="Avatar",
-            description="An avatar is a visual representation of a user or a group of users.",
+            description="The Avatar component visually represents a user or a group of users.",
         ),
         preview_section=get_component_preview_section(
             preview=c.Container(
@@ -180,7 +180,7 @@ COMPONENT_DOCS_MAP = {
     "button": get_component_page(
         description_section=get_component_description_section(
             title="Button",
-            description="A control that triggers an action. Button labels should express what action will occur when the ",
+            description="The Button component triggers a defined action. Button labels should clearly indicate the action that will be performed upon interaction.",
         ),
         preview_section=get_component_preview_section(
             preview=get_component_preview_literal_component(
@@ -192,10 +192,20 @@ COMPONENT_DOCS_MAP = {
         ),
         api_reference_section=get_component_api_reference_section(component=c.Button),
     ),
+    "code-block": get_component_page(
+        description_section=get_component_description_section(
+            title="CodeBlock",
+            description="The CodeBlock component displays blocks of code.",
+        ),
+        preview_section=get_component_preview_section(
+            preview=c.CodeBlock(text="print('Hello, World!')"),
+        ),
+        api_reference_section=get_component_api_reference_section(component=c.CodeBlock),
+    ),
     "container": get_component_page(
         description_section=get_component_description_section(
             title="Container",
-            description="A container component.",
+            description="The Container component serves as a wrapper for other components.",
         ),
         preview_section=c.Container(
             tag="div",
@@ -205,8 +215,7 @@ COMPONENT_DOCS_MAP = {
     "form": get_component_page(
         description_section=get_component_description_section(
             title="Form",
-            description="A form component serves as a container for collecting user inputs through various form "
-            "elements like input fields, checkboxes, radio buttons, and dropdowns. ",
+            description="The Form component collects user inputs through various form elements such as input fields, checkboxes, radio buttons, and dropdowns.",
         ),
         preview_section=get_component_preview_section(
             preview=c.Form(model=FormExampleModel, submit_url="/components/form/"),
@@ -216,7 +225,7 @@ COMPONENT_DOCS_MAP = {
     "heading": get_component_page(
         description_section=get_component_description_section(
             title="Heading",
-            description="A heading component.",
+            description="The Heading component displays section headings.",
         ),
         preview_section=get_component_preview_section(
             preview=c.Heading(
@@ -229,7 +238,7 @@ COMPONENT_DOCS_MAP = {
     "link": get_component_page(
         description_section=get_component_description_section(
             title="Link",
-            description="A link component.",
+            description="The Link component creates navigation links.",
         ),
         preview_section=get_component_preview_section(
             preview=c.Link(
@@ -243,11 +252,22 @@ COMPONENT_DOCS_MAP = {
         ),
         api_reference_section=get_component_api_reference_section(component=c.Link),
     ),
+    "markdown": get_component_page(
+        description_section=get_component_description_section(
+            title="Markdown",
+            description="The Markdown component renders text in markdown format.",
+        ),
+        preview_section=get_component_preview_section(
+            preview=c.Markdown(
+                text="## Markdown",
+            )
+        ),
+        api_reference_section=get_component_api_reference_section(component=c.Markdown),
+    ),
     "table": get_component_page(
         description_section=get_component_description_section(
             title="Table",
-            description="A table component is used to display data in a structured, grid-like format consisting of rows"
-            " and columns.",
+            description="The Table component displays data in a grid format with rows and columns.",
         ),
         preview_section=get_component_preview_section(
             preview=c.Table(
@@ -270,7 +290,7 @@ COMPONENT_DOCS_MAP = {
     "text": get_component_page(
         description_section=get_component_description_section(
             title="Text",
-            description="A text component.",
+            description="The Text component displays a string of text.",
         ),
         preview_section=get_component_preview_section(
             preview=c.Text(

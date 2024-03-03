@@ -86,6 +86,10 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             children=[c.Text(text="Button", class_name="text-sm")],
                                         ),
                                         c.NavLink(
+                                            href="/components/code-block/",
+                                            children=[c.Text(text="Code Block", class_name="text-sm")],
+                                        ),
+                                        c.NavLink(
                                             href="/components/container/",
                                             children=[c.Text(text="Container", class_name="text-sm")],
                                         ),
@@ -100,6 +104,10 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                         c.NavLink(
                                             href="/components/link/",
                                             children=[c.Text(text="Link", class_name="text-sm")],
+                                        ),
+                                        c.NavLink(
+                                            href="/components/markdown/",
+                                            children=[c.Text(text="Markdown", class_name="text-sm")],
                                         ),
                                         c.NavLink(
                                             href="/components/table/",

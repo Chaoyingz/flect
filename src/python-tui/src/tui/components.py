@@ -12,7 +12,7 @@ class BaseComponent(BaseModel):
 
     class_name: Optional[str] = Field(
         None,
-        description="The tailwind class names of the component.",
+        description="Specifies the Tailwind CSS classes for the component.",
     )
 
     def render_to_html(self) -> str:
@@ -22,7 +22,7 @@ class BaseComponent(BaseModel):
 class BaseContainerComponent(BaseComponent):
     children: Optional[list["AnyComponent"]] = Field(
         None,
-        description="The children of the component.",
+        description="Defines the child components.",
     )
 
 
@@ -31,15 +31,15 @@ class Avatar(BaseComponent):
 
     src: Optional[str] = Field(
         None,
-        description="The source of the avatar.",
+        description="Specifies the image source for the avatar.",
     )
     alt: Optional[str] = Field(
         None,
-        description="The alternative text of the avatar.",
+        description="Provides alternative text for the avatar image.",
     )
     fallback: str = Field(
         ...,
-        description="The fallback text of the avatar.",
+        description="Defines the fallback text for the avatar image.",
     )
 
     def render_to_html(self) -> str:
@@ -57,11 +57,11 @@ class Button(BaseComponent):
 
     variant: Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = Field(
         "default",
-        description="The variant of the button.",
+        description="Determines the button's style variant.",
     )
     size: Literal["default", "sm", "lg", "icon"] = Field(
         "default",
-        description="The size of the button.",
+        description="Determines the button's size.",
     )
     children: str
 
@@ -77,15 +77,15 @@ class CodeBlock(BaseComponent):
     component_type: Literal["code-block"] = "code-block"
     text: str = Field(
         ...,
-        description="The text of the code block.",
+        description="Specifies the code text.",
     )
     language: Optional[str] = Field(
         None,
-        description="The language of the code block.",
+        description="Defines the programming language for syntax highlighting.",
     )
     code_style: Optional[str] = Field(
         None,
-        description="The style of the code block.",
+        description="Determines the code block's style.",
     )
 
     def render_to_html(self) -> str:
@@ -103,7 +103,7 @@ class Container(BaseContainerComponent):
 
     tag: Literal["div", "section", "header", "footer", "main", "nav", "aside"] = Field(
         "div",
-        description="The tag of the container.",
+        description="Specifies the HTML tag for the container.",
     )
 
     def render_to_html(self) -> str:
@@ -118,7 +118,7 @@ class CopyButton(BaseComponent):
     component_type: Literal["copy-button"] = "copy-button"
     text: str = Field(
         ...,
-        description="The text of the copy button.",
+        description="Specifies the button's text.",
     )
 
     def render_to_html(self) -> str:
@@ -133,15 +133,15 @@ class Form(BaseComponent):
     component_type: Literal["form"] = "form"
     model: type[BaseModel] = Field(
         ...,
-        description="The model of the form.",
+        description="Defines the form's data model.",
     )
     submit_method: Literal["POST", "PUT", "PATCH"] = Field(
         "POST",
-        description="The submit method of the form.",
+        description="Specifies the HTTP method for form submission.",
     )
     submit_url: str = Field(
         ...,
-        description="The submit url of the form.",
+        description="Specifies the URL where the form will be submitted.",
     )
 
     @field_serializer("model")
@@ -154,15 +154,15 @@ class Heading(BaseComponent):
 
     level: Literal[1, 2, 3, 4, 5, 6] = Field(
         ...,
-        description="The level of the heading.",
+        description="Determines the heading's level (1-6).",
     )
     text: str = Field(
         ...,
-        description="The text of the heading.",
+        description="Specifies the heading's text.",
     )
     id: Optional[str] = Field(
         None,
-        description="The id of the heading.",
+        description="Specifies the heading's id.",
     )
 
     def render_to_html(self) -> str:
@@ -178,7 +178,7 @@ class Link(BaseContainerComponent):
 
     href: str = Field(
         ...,
-        description="The href of the link.",
+        description="Specifies the URL for the link.",
     )
 
     def render_to_html(self) -> str:
@@ -194,7 +194,7 @@ class Markdown(BaseComponent):
 
     text: str = Field(
         ...,
-        description="The text of the markdown.",
+        description="Specifies the markdown text.",
     )
 
     def render_to_html(self) -> str:
@@ -208,7 +208,7 @@ class NavLink(BaseContainerComponent):
 
     href: str = Field(
         ...,
-        description="The href of the link.",
+        description="Specifies the URL for the navigation link.",
     )
 
     def render_to_html(self) -> str:
@@ -228,7 +228,7 @@ class Paragraph(BaseComponent):
 
     text: str = Field(
         ...,
-        description="The text of the paragraph.",
+        description="Specifies the paragraph's text.",
     )
 
     def render_to_html(self) -> str:
@@ -244,11 +244,11 @@ class Table(BaseComponent):
 
     labels: list[str] = Field(
         [],
-        description="The labels of the table, defaults to the keys of the dataset.",
+        description="Defines the table's column labels. Defaults to the keys of the dataset.",
     )
     datasets: list[SerializeAsAny[BaseModel]] = Field(
         ...,
-        description="The datasets of the table.",
+        description="Specifies the table's data.",
     )
 
     @model_validator(mode="after")
@@ -277,7 +277,7 @@ class Text(BaseComponent):
 
     text: str = Field(
         ...,
-        description="The text of the text.",
+        description="Specifies the text content.",
     )
 
     def render_to_html(self) -> str:
@@ -309,7 +309,6 @@ AnyComponent = Annotated[
 # Rebuild forward ref models
 for container_component in BaseContainerComponent.__subclasses__():
     container_component.model_rebuild()
-
 
 __all__ = (
     "Avatar",
