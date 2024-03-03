@@ -31,6 +31,11 @@ test:
 testcov: test
 	coverage html
 
+
+.PHONY: build
+build:
+	npm run build
+
 .PHONY: dev
 dev:
 	export PYTHONPATH=$(docs_path) && uvicorn docs.src.documentation.main:app --reload --reload-dir .
