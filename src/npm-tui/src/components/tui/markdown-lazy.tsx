@@ -14,6 +14,9 @@ export default function Markdown(props: MarkdownLazyProps) {
   const components: Components = {
     code({ children, className }) {
       const language = /language-(\w+)/.exec(className || '')
+      if (!language) {
+        return <code className={className}>{children}</code>
+      }
       return <CodeBlock text={children as string} componentType="code-block" language={language?.[1]} />
     },
   }
