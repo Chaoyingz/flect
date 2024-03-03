@@ -10,6 +10,7 @@ dependencies = [
     "uvicorn>=0.25.0",
     "pydantic>=2.6.1",
     "pyromark>=0.3.0",
+    "cookiecutter>=2.6.0",
 ]
 requires-python = ">=3.9"
 readme = "README.md"
@@ -46,8 +47,10 @@ dev-dependencies = [
 ]
 
 [tool.hatch.build]
-ignore-vcs = true
+artifacts = ["src/python-tui/src/static"]
 only-include = ["src/python-tui/src/static", "src/python-tui/src/tui"]
+
+[tool.hatch.build.targets.wheel]
 packages = ["src/python-tui/src/tui"]
 
 [tool.ruff]
