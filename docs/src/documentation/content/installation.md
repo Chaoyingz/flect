@@ -34,7 +34,7 @@ For those who prefer to use a project template to kickstart their application, f
    Use Cookiecutter to create the project structure by running:
 
    ```console
-   cookiecutter https://github.com/Chaoyingz/tui/tree/main/src/python-tui/src/cookiecutter-tui
+   cookiecutter https://github.com/Chaoyingz/cookiecutter-tui
    ```
 
 2. **Navigate to Project Directory**
@@ -58,7 +58,8 @@ For those who prefer to use a project template to kickstart their application, f
    Start your application with Uvicorn:
 
    ```console
-   uvicorn src.{project_slug}.main:app
+   export PYTHONPATH=$PWD/src
+   rye run uvicorn src.{project_slug}.main:app --reloa
    ```
 
 By following these steps, you can either set up your project from scratch or use a pre-defined template to get started quickly.
