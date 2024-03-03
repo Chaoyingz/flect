@@ -1,7 +1,7 @@
 [project]
-name = "{{cookiecutter.project_name}}"
+name = "{{cookiecutter.project_slug}}"
 version = "0.1.0"
-description = "Add your description here"
+description = "{{cookiecutter.project_name}}"
 authors = []
 dependencies = [
     "tuiframework",

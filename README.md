@@ -53,16 +53,78 @@ $ pip install tuiframework
 
 ## Example
 
-- The simple example shown below.
+- The simple todo app is shown below.
 
 ```python
-from tui.response import PageResponse
-from tui import components as c
+import json
+from typing import Annotated, Optional
 
+from fastapi.encoders import jsonable_encoder
+from pydantic import BaseModel
+from tui import PageResponse
+from tui import components as c
+from tui import form as f
+from tui.actions import Notify
+from tui.response import ActionResponse
+
+# Define a model for creating new todo items with a single 'task' field
+class TodoInCreate(BaseModel):
+    task: Annotated[str, f.Input(placeholder="Enter task...")]
+
+# Define a model for todo items stored in the database, extending the creation model with an 'id' and 'completed' field
+class TodoInDB(TodoInCreate):
+    id: int
+    completed: Optional[bool] = False
+
+# Initialize a list of todo items
+todos = [
+    TodoInDB(id=1, task="Task 1", completed=False),
+    TodoInDB(id=2, task="Task 2", completed=True),
+    TodoInDB(id=3, task="Task 3", completed=False),
+]
+
+# Define the page
 async def page() -> PageResponse:
     return PageResponse(
-        element=c.Text(
-            text="Hello World!",
+        element=c.Container(
+            # support tailwind css
+            class_name="container mx-auto px-32 py-10",
+            children=[
+                # Add a heading to the page
+                c.Heading(
+                    level=1,
+                    text="Todo App",
+                    class_name="text-3xl mb-10",
+                ),
+                # Add a form for creating new todo items
+                c.Form(
+                    model=TodoInCreate,
+                    submit_url="/",
+                    class_name="mb-5 border p-5",
+                ),
+                # Add a table displaying all todo items
+                c.Table(
+                    datasets=todos,
+                    class_name="border p-5",
+                )
+            ]
+        )
+    )
+
+# Define the form handling logic
+async def post(form: TodoInCreate) -> ActionResponse:
+    todos.append(
+        TodoInDB(
+            id=len(todos) + 1,
+            task=form.task,
+            completed=False,
+        )
+    )
+    # Return a notification with the submitted form values
+    return ActionResponse(
+        action=Notify(
+            title="You submitted the following values:",
+            description=json.dumps(jsonable_encoder(form), indent=2),
         )
     )
 ```
