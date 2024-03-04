@@ -1,12 +1,15 @@
 from typing import Annotated, Any, Literal, Optional
 
 import flect.components as c
-from fastapi import Path
+from fastapi import Path, Request
 from flect import Meta, PageResponse
 from flect.form import Checkbox, Input, Select, Textarea
+from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
 from flect.sitemap import Sitemap
 from pydantic import BaseModel, Field
 from pydantic_core._pydantic_core import PydanticUndefined
+
+from documentation.app.group__docs.layout import get_docs_pager
 
 
 def get_component_description_section(
@@ -119,18 +122,6 @@ def get_component_api_reference_section(component: c.AnyComponent) -> c.Containe
     )
 
 
-def get_component_page(
-    description_section: c.AnyComponent,
-    preview_section: c.AnyComponent,
-    api_reference_section: c.AnyComponent,
-) -> c.AnyComponent:
-    return c.Container(
-        tag="div",
-        class_name="flex gap-12 flex-col",
-        children=[description_section, preview_section, api_reference_section],
-    )
-
-
 class TableExampleModel(BaseModel):
     column1: str
     column2: str
@@ -154,12 +145,12 @@ class FormExampleModel(BaseModel):
 
 
 COMPONENT_DOCS_MAP = {
-    "avatar": get_component_page(
-        description_section=get_component_description_section(
+    "avatar": [
+        get_component_description_section(
             title="Avatar",
             description="The Avatar component visually represents a user or a group of users.",
         ),
-        preview_section=get_component_preview_section(
+        get_component_preview_section(
             preview=c.Container(
                 tag="div",
                 class_name="flex gap-3",
@@ -175,14 +166,14 @@ COMPONENT_DOCS_MAP = {
                 ],
             )
         ),
-        api_reference_section=get_component_api_reference_section(component=c.Avatar),
-    ),
-    "button": get_component_page(
-        description_section=get_component_description_section(
+        get_component_api_reference_section(component=c.Avatar),
+    ],
+    "button": [
+        get_component_description_section(
             title="Button",
             description="The Button component triggers a defined action. Button labels should clearly indicate the action that will be performed upon interaction.",
         ),
-        preview_section=get_component_preview_section(
+        get_component_preview_section(
             preview=get_component_preview_literal_component(
                 component_type=c.Button,
                 literal_props=["variant", "size"],
@@ -190,57 +181,57 @@ COMPONENT_DOCS_MAP = {
                 default_props_values={},
             )
         ),
-        api_reference_section=get_component_api_reference_section(component=c.Button),
-    ),
-    "code-block": get_component_page(
-        description_section=get_component_description_section(
+        get_component_api_reference_section(component=c.Button),
+    ],
+    "code-block": [
+        get_component_description_section(
             title="CodeBlock",
             description="The CodeBlock component displays blocks of code.",
         ),
-        preview_section=get_component_preview_section(
+        get_component_preview_section(
             preview=c.CodeBlock(text="print('Hello, World!')"),
         ),
-        api_reference_section=get_component_api_reference_section(component=c.CodeBlock),
-    ),
-    "container": get_component_page(
-        description_section=get_component_description_section(
+        get_component_api_reference_section(component=c.CodeBlock),
+    ],
+    "container": [
+        get_component_description_section(
             title="Container",
             description="The Container component serves as a wrapper for other components.",
         ),
-        preview_section=c.Container(
+        c.Container(
             tag="div",
         ),
-        api_reference_section=get_component_api_reference_section(component=c.Container),
-    ),
-    "form": get_component_page(
-        description_section=get_component_description_section(
+        get_component_api_reference_section(component=c.Container),
+    ],
+    "form": [
+        get_component_description_section(
             title="Form",
             description="The Form component collects user inputs through various form elements such as input fields, checkboxes, radio buttons, and dropdowns.",
         ),
-        preview_section=get_component_preview_section(
+        get_component_preview_section(
             preview=c.Form(model=FormExampleModel, submit_url="/components/form/"),
         ),
-        api_reference_section=get_component_api_reference_section(component=c.Form),
-    ),
-    "heading": get_component_page(
-        description_section=get_component_description_section(
+        get_component_api_reference_section(component=c.Form),
+    ],
+    "heading": [
+        get_component_description_section(
             title="Heading",
             description="The Heading component displays section headings.",
         ),
-        preview_section=get_component_preview_section(
+        get_component_preview_section(
             preview=c.Heading(
                 level=2,
                 text="Heading",
             )
         ),
-        api_reference_section=get_component_api_reference_section(component=c.Heading),
-    ),
-    "link": get_component_page(
-        description_section=get_component_description_section(
+        get_component_api_reference_section(component=c.Heading),
+    ],
+    "link": [
+        get_component_description_section(
             title="Link",
             description="The Link component creates navigation links.",
         ),
-        preview_section=get_component_preview_section(
+        get_component_preview_section(
             preview=c.Link(
                 href="/",
                 children=[
@@ -250,26 +241,26 @@ COMPONENT_DOCS_MAP = {
                 ],
             )
         ),
-        api_reference_section=get_component_api_reference_section(component=c.Link),
-    ),
-    "markdown": get_component_page(
-        description_section=get_component_description_section(
+        get_component_api_reference_section(component=c.Link),
+    ],
+    "markdown": [
+        get_component_description_section(
             title="Markdown",
             description="The Markdown component renders text in markdown format.",
         ),
-        preview_section=get_component_preview_section(
+        get_component_preview_section(
             preview=c.Markdown(
                 text="## Markdown",
             )
         ),
-        api_reference_section=get_component_api_reference_section(component=c.Markdown),
-    ),
-    "table": get_component_page(
-        description_section=get_component_description_section(
+        get_component_api_reference_section(component=c.Markdown),
+    ],
+    "table": [
+        get_component_description_section(
             title="Table",
             description="The Table component displays data in a grid format with rows and columns.",
         ),
-        preview_section=get_component_preview_section(
+        get_component_preview_section(
             preview=c.Table(
                 datasets=[
                     TableExampleModel(
@@ -285,20 +276,20 @@ COMPONENT_DOCS_MAP = {
                 ]
             )
         ),
-        api_reference_section=get_component_api_reference_section(component=c.Table),
-    ),
-    "text": get_component_page(
-        description_section=get_component_description_section(
+        get_component_api_reference_section(component=c.Table),
+    ],
+    "text": [
+        get_component_description_section(
             title="Text",
             description="The Text component displays a string of text.",
         ),
-        preview_section=get_component_preview_section(
+        get_component_preview_section(
             preview=c.Text(
                 text="Text",
             )
         ),
-        api_reference_section=get_component_api_reference_section(component=c.Text),
-    ),
+        get_component_api_reference_section(component=c.Text),
+    ],
 }
 
 
@@ -315,12 +306,21 @@ async def sitemap(dynamic_url: str) -> list[Sitemap]:
 
 
 async def page(
+    request: Request,
     component_type: Annotated[str, Path(..., description="The component type to render")],
 ) -> PageResponse:
+    component_elements = COMPONENT_DOCS_MAP.get(component_type, c.Text(text="Unknown component type"))
     return PageResponse(
         meta=Meta(
             title=f"{component_type} component",
             description=f"{component_type} component",
         ),
-        element=COMPONENT_DOCS_MAP.get(component_type, c.Text(text="Component Not found")),
+        element=c.Container(
+            tag="div",
+            class_name="flex gap-12 flex-col",
+            children=[
+                *component_elements,
+                get_docs_pager(current_link=request.url.path.replace(CLIENT_ROOT_ROUTER_PREFIX, "")),
+            ],
+        ),
     )
