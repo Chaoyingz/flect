@@ -1,33 +1,33 @@
 <!-- PROJECT LOGO -->
 <div align="center">
 
-  <h3 align="center">tui framework</h3>
+  <h3 align="center">flect</h3>
 
   <p align='center'>
     <em>Turning ideas into web app fast.</em>
   </p>
   <p align="center">
-    <a href="https://github.com/Chaoyingz/tui/actions?query=workflow" target="_blank">
-        <img src="https://github.com/Chaoyingz/tui/actions/workflows/test.yaml/badge.svg?event=push&branch=main" alt="Test">
+    <a href="https://github.com/Chaoyingz/flect/actions?query=workflow" target="_blank">
+        <img src="https://github.com/Chaoyingz/flect/actions/workflows/test.yaml/badge.svg?event=push&branch=main" alt="Test">
     </a>
   </p>
   <p align="center">
-    <a href="https://tui.celerforge.com/"><strong>Explore the docs »</strong></a>
+    <a href="https://flect.celerforge.com/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/Chaoyingz/tui/blob/main/README_CN.md">简体中文</a>
+    <a href="https://github.com/Chaoyingz/flect/blob/main/README_CN.md">简体中文</a>
     ·
-    <a href="https://github.com/Chaoyingz/tui/issues">Report Bug</a>
+    <a href="https://github.com/Chaoyingz/flect/issues">Report Bug</a>
     ·
-    <a href="https://github.com/Chaoyingz/tui/issues">Request Feature</a>
+    <a href="https://github.com/Chaoyingz/flect/issues">Request Feature</a>
   </p>
 </div>
 
-<!-- WHAT IS TUI -->
+<!-- WHAT IS flect -->
 
-## What is tui?
+## What is flect?
 
-tui is a Python framework for building full-stack web applications. It constructs user interfaces by utilizing Pydantic
+flect is a Python framework for building full-stack web applications. It constructs user interfaces by utilizing Pydantic
 models in the backend that correspond to the properties of React components in the frontend. This integration enables
 quick development of interactive and beautiful UIs using Python.
 
@@ -46,7 +46,7 @@ The key features are:
 ## Installation
 
 ```console
-$ pip install tuiframework
+$ pip install flect
 
 ---> 100%
 ```
@@ -61,11 +61,11 @@ from typing import Annotated, Optional
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
-from tui import PageResponse
-from tui import components as c
-from tui import form as f
-from tui.actions import Notify
-from tui.response import ActionResponse
+from flect import PageResponse
+from flect import components as c
+from flect import form as f
+from flect.actions import Notify
+from flect.response import ActionResponse
 
 # Define a model for creating new todo items with a single 'task' field
 class TodoInCreate(BaseModel):
@@ -130,7 +130,7 @@ async def post(form: TodoInCreate) -> ActionResponse:
 ```
 
 Which renders like this:
-![tui-todo](https://github.com/Chaoyingz/tui/assets/32626585/f48415d8-b25c-432d-8dc4-d0bd4d65777d)
+![flect-todo](https://github.com/Chaoyingz/flect/assets/32626585/f48415d8-b25c-432d-8dc4-d0bd4d65777d)
 
 ## Demo
 

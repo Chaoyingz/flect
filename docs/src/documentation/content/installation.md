@@ -8,17 +8,17 @@ This guide will help you install the necessary dependencies and assist you in se
 
 ## Basic Installation
 
-If you prefer to start a project from scratch, you can directly install the tui framework.
+If you prefer to start a project from scratch, you can directly install the flect framework.
 
-1. **Install tui framework**
+1. **Install flect framework**
 
-   To install the tui framework, run the following command in your terminal:
+   To install the flect framework, run the following command in your terminal:
 
    ```console
-   pip install tuiframework
+   pip install flectframework
    ```
 
-## Installation Using Project Template
+## Installation Using Project Template (Recommended)
 
 For those who prefer to use a project template to kickstart their application, follow these steps:
 
@@ -34,7 +34,7 @@ For those who prefer to use a project template to kickstart their application, f
    Use Cookiecutter to create the project structure by running:
 
    ```console
-   cookiecutter https://github.com/Chaoyingz/cookiecutter-tui
+   cookiecutter https://github.com/Chaoyingz/cookiecutter-flect
    ```
 
 2. **Navigate to Project Directory**
@@ -58,8 +58,7 @@ For those who prefer to use a project template to kickstart their application, f
    Start your application with Uvicorn:
 
    ```console
-   export PYTHONPATH=$PWD/src
-   rye run uvicorn src.{project_slug}.main:app --reloa
+   make dev
    ```
 
 By following these steps, you can either set up your project from scratch or use a pre-defined template to get started quickly.

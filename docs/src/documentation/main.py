@@ -1,5 +1,5 @@
-from tui import tui
+from flect import flect
 
 from documentation import app as document_app
 
-app = tui(document_app, docs_url="/documentation")
+app = flect(document_app, docs_url="/documentation")

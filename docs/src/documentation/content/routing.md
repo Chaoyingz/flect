@@ -1,6 +1,6 @@
 # Routing
 
-Routing is the foundation of every application. This guide will introduce the essential concepts of web routing and how to effectively manage routing in a tui application.
+Routing is the foundation of every application. This guide will introduce the essential concepts of web routing and how to effectively manage routing in a flect application.
 
 ## Route Segments
 
@@ -8,14 +8,14 @@ Each folder in a route represents a route segment. Each route segment correspond
 
 Consider the following folder structure:
 
-```markdown
+```console
 app
-├── layout.py
-├── page.py
-└── dashboard
-├── page.py
-└── users
-└── page.py
+  ├── layout.py
+  ├── page.py
+  └── dashboard
+    ├── page.py
+    └── users
+      └── page.py
 ```
 
 In this structure, `dashboard` and `users` are route segments. The URL path to access the `users` page under `dashboard` would be `/dashboard/users`.
@@ -26,7 +26,7 @@ In this example, each `page.py` file maps to a specific URL path based on its lo
 - `app/dashboard/page.py` maps to `/dashboard/`. This is the page displayed when users navigate to the `/dashboard/` path in your application.
 - `app/dashboard/users/page.py` maps to `/dashboard/users/`. This is the page displayed when users navigate to the `/dashboard/users/` path in your application.
 
-This way, each `page.py` file serves as a unique route in your application, and the folder structure directly translates to the application's routing structure. This makes managing and understanding your application's routes straightforward and intuitive.
+This way, each `page.py` file serves as a unique route in your application, and the folder structure directly translates to the application's routing structure. This makes managing and understanding your application's routes straightforward and inflecttive.
 
 ## Defining Routing Files
 
@@ -37,8 +37,8 @@ A layout is a user interface (UI) that is shared across multiple routes. Layouts
 Here's how you can define a layout:
 
 ```python
-from tui import PageResponse
-from tui import components as c
+from flect import PageResponse
+from flect import components as c
 
 # The layout function must be named "layout" and accept an "outlet" parameter
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
@@ -59,8 +59,8 @@ A page is a UI that is unique to a specific route. Each unique page in the appli
 Here's how you can define a page:
 
 ```python
-from tui import PageResponse
-from tui import components as c
+from flect import PageResponse
+from flect import components as c
 
 async def page() -> PageResponse:
     return PageResponse(

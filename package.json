@@ -1,12 +1,12 @@
 {
-  "name": "tui",
+  "name": "flect",
   "private": true,
   "type": "module",
   "workspaces": [
     "src/*"
   ],
   "scripts": {
-    "dev": "npm run --workspace=@chaoying/npm-tui build --watch",
+    "dev": "npm run --workspace=@chaoying/npm-flect build --watch",
     "build": "npm run --workspaces build",
     "prettier": "prettier --write",
     "format": "npm run prettier -- . && npm run lint-fix"

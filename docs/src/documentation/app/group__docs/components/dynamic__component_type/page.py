@@ -1,12 +1,12 @@
 from typing import Annotated, Any, Literal, Optional
 
-import tui.components as c
+import flect.components as c
 from fastapi import Path
+from flect import Meta, PageResponse
+from flect.form import Checkbox, Input, Select, Textarea
+from flect.sitemap import Sitemap
 from pydantic import BaseModel, Field
 from pydantic_core._pydantic_core import PydanticUndefined
-from tui import Meta, PageResponse
-from tui.form import Checkbox, Input, Select, Textarea
-from tui.sitemap import Sitemap
 
 
 def get_component_description_section(
@@ -93,7 +93,7 @@ def get_component_api_reference_section(component: c.AnyComponent) -> c.Containe
         if field == "component_type":
             continue
         if field == "children":
-            filed_info.annotation = "tui.components.AnyComponents"
+            filed_info.annotation = "flect.components.AnyComponents"
             filed_info.default = "[]"
             filed_info.description = "The children of the component."
         if filed_info.default == PydanticUndefined:

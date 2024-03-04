@@ -1,10 +1,10 @@
-from tui import Meta, PageResponse, TitleTemplate
-from tui import components as c
+from flect import Meta, PageResponse, TitleTemplate
+from flect import components as c
 
 
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
     return PageResponse(
-        meta=Meta(title=TitleTemplate(template="{title} - tui framework", default="tui")),
+        meta=Meta(title=TitleTemplate(template="{title} - flect", default="flect")),
         element=c.Container(
             tag="div",
             children=[
@@ -23,7 +23,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             href="/",
                                             children=[
                                                 c.Text(
-                                                    text="tui",
+                                                    text="flect",
                                                     class_name="font-medium text-xl",
                                                 )
                                             ],
@@ -50,7 +50,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                     tag="div",
                                     children=[
                                         c.Link(
-                                            href="https://github.com/Chaoyingz/tui",
+                                            href="https://github.com/Chaoyingz/flect",
                                             children=[
                                                 c.Text(
                                                     text="GitHub",
@@ -86,7 +86,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                             text=" The source code is available on ",
                         ),
                         c.Link(
-                            href="https://github.com/Chaoyingz/tui/tree/main/docs",
+                            href="https://github.com/Chaoyingz/flect/tree/main/docs",
                             children=[
                                 c.Text(
                                     text="GitHub.",

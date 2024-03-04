@@ -1,5 +1,5 @@
-from tui import PageResponse
-from tui import components as c
+from flect import PageResponse
+from flect import components as c
 
 
 async def page() -> PageResponse:
@@ -16,7 +16,7 @@ async def page() -> PageResponse:
                             level=1, text="Turning ideas into web app fast", class_name="text-center text-5xl font-bold"
                         ),
                         c.Text(
-                            text="tui enables you to quickly create full-stack web applications using Python.",
+                            text="flect enables you to quickly create full-stack web applications using Python.",
                             class_name="text-center text-xl mt-8 w-1/2",
                         ),
                         c.Container(
@@ -32,7 +32,7 @@ async def page() -> PageResponse:
                                     ],
                                 ),
                                 c.Link(
-                                    href="https://github.com/Chaoyingz/tui",
+                                    href="https://github.com/Chaoyingz/flect",
                                     children=[
                                         c.Button(
                                             children="GitHub",

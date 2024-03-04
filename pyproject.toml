@@ -1,6 +1,6 @@
 [project]
-name = "tuiframework"
-version = "0.1.8"
+name = "flect"
+version = "0.1.0"
 description = "Turning ideas into web app fast."
 authors = [
     {name = "Chaoying", email = "chaunceywe@gmail.com"},
@@ -31,9 +31,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Chaoyingz/tui"
-Documentation = "https://tui.celerforge.com/"
-Source = "https://github.com/Chaoyingz/tui"
+Homepage = "https://github.com/Chaoyingz/flect"
+Documentation = "https://flect.celerforge.com/"
+Source = "https://github.com/Chaoyingz/flect"
 
 [build-system]
 requires = ["hatchling"]
@@ -51,11 +51,11 @@ dev-dependencies = [
 ]
 
 [tool.hatch.build]
-artifacts = ["src/python-tui/src/static"]
-only-include = ["src/python-tui/src/static", "src/python-tui/src/tui"]
+artifacts = ["src/python-flect/src/static"]
+only-include = ["src/python-flect/src/static", "src/python-flect/src/flect"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/python-tui/src/tui"]
+packages = ["src/python-flect/src/flect"]
 
 [tool.ruff]
 line-length = 120
@@ -65,14 +65,14 @@ target-version = "py39"
 extend-select = ["Q", "RUF100", "UP", "I"]
 
 [tool.pyright]
-include = ["src/python-tui/src/tui"]
-extraPaths = ["src/python-tui/src/tui"]
+include = ["src/python-flect/src/flect"]
+extraPaths = ["src/python-flect/src/flect"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 addopts = "-s -p no:warnings"
 cache_dir = ".pytest_cache/"
 testpaths = [
-    "src/python-tui/tests",
-    "src/python-tui/src/tui",
+    "src/python-flect/tests",
+    "src/python-flect/src/flect",
 ]

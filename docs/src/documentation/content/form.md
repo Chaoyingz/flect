@@ -1,6 +1,6 @@
 # Form
 
-The tui framework allows you to create forms with ease.
+The flect framework allows you to create forms with ease.
 
 ## Defining Your Form Model
 
@@ -9,7 +9,7 @@ To define your form model, you can use Python's `Annotated` and `pydantic`'s `Ba
 ```python
 from typing import Annotated
 from pydantic import BaseModel, Field
-from tui.form import Input
+from flect.form import Input
 
 class FormExampleModel(BaseModel):
     # Use Annotated to define the field
@@ -25,8 +25,8 @@ In this example, we define a `name` field with a placeholder text "Enter your us
 Once you've defined your form model, you can use it in your form like so:
 
 ```python
-from tui import components as c
-from tui import PageResponse
+from flect import components as c
+from flect import PageResponse
 
 def page() -> PageResponse:
     return PageResponse(
@@ -49,7 +49,7 @@ In this example, we create a `PageResponse` that contains a `Container` with a s
 After defining the form and its model, you can add server logic to handle the form submission. Here's a simple example:
 
 ```python
-from tui.response import ActionResponse
+from flect.response import ActionResponse
 
 async def post(form: FormExampleModel) -> ActionResponse:
     # handle the form

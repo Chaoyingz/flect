@@ -1,10 +1,10 @@
-from tui import Meta, PageResponse, TitleTemplate
-from tui import components as c
+from flect import Meta, PageResponse, TitleTemplate
+from flect import components as c
 
 
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
     return PageResponse(
-        meta=Meta(title=TitleTemplate(template="{title} - tui framework", default="tui documentation", absolute=True)),
+        meta=Meta(title=TitleTemplate(template="{title} - flect", default="flect documentation", absolute=True)),
         element=c.Container(
             tag="div",
             class_name="flex",

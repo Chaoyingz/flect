@@ -1,27 +1,27 @@
 <!-- 项目标志 -->
 <div align="center">
 
-  <h3 align="center">tui framework</h3>
+  <h3 align="center">flect</h3>
 
   <p align="center">
     快速将想法转化为 Web 应用。
     <br />
-    <a href="https://tui.celerforge.com/"><strong>探索文档 »</strong></a>
+    <a href="https://flect.celerforge.com/"><strong>探索文档 »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/Chaoyingz/tui/">English</a>
+    <a href="https://github.com/Chaoyingz/flect/">English</a>
     ·
-    <a href="https://github.com/Chaoyingz/tui/issues">报告错误</a>
+    <a href="https://github.com/Chaoyingz/flect/issues">报告错误</a>
     ·
-    <a href="https://github.com/Chaoyingz/tui/issues">请求新功能</a>
+    <a href="https://github.com/Chaoyingz/flect/issues">请求新功能</a>
   </p>
 </div>
 
-<!-- tui 是什么 -->
+<!-- flect 是什么 -->
 
-## tui 是什么
+## flect 是什么
 
-tui 是一个用于构建全栈 Web 应用程序的 Python 框架。它通过在后端使用与前端 React 组件属性相对应的 Pydantic 模型来构建用户界面。
+flect 是一个用于构建全栈 Web 应用程序的 Python 框架。它通过在后端使用与前端 React 组件属性相对应的 Pydantic 模型来构建用户界面。
 这种集成允许开发者利用 Python 快速开发具有交互性和美观的用户界面。
 
 主要特性包括：
@@ -39,7 +39,7 @@ tui 是一个用于构建全栈 Web 应用程序的 Python 框架。它通过在
 ## 安装
 
 ```console
-$ pip install tuiframework
+$ pip install flect
 
 ---> 100%
 ```
@@ -54,11 +54,11 @@ from typing import Annotated, Optional
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
-from tui import PageResponse
-from tui import components as c
-from tui import form as f
-from tui.actions import Notify
-from tui.response import ActionResponse
+from flect import PageResponse
+from flect import components as c
+from flect import form as f
+from flect.actions import Notify
+from flect.response import ActionResponse
 
 # 定义一个创建新待办事项的模型，只有一个 'task' 字段
 class TodoInCreate(BaseModel):
@@ -123,7 +123,7 @@ async def post(form: TodoInCreate) -> ActionResponse:
 ```
 
 渲染出来的效果如下：
-![tui-todo](https://github.com/Chaoyingz/tui/assets/32626585/f48415d8-b25c-432d-8dc4-d0bd4d65777d)
+![flect-todo](https://github.com/Chaoyingz/flect/assets/32626585/f48415d8-b25c-432d-8dc4-d0bd4d65777d)
 
 ## 演示
 

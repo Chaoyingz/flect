@@ -1,10 +1,10 @@
 from typing import Annotated
 
 from fastapi import Path
+from flect import PageResponse
+from flect import components as c
+from flect.sitemap import Sitemap
 from starlette.concurrency import run_in_threadpool
-from tui import PageResponse
-from tui import components as c
-from tui.sitemap import Sitemap
 
 from documentation.utils import get_markdown_content
 

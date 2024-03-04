@@ -1,4 +1,4 @@
-path = src/python-tui/src/tui/
+path = src/python-flect/src/flect/
 docs_path = docs/src
 
 .PHONY: install

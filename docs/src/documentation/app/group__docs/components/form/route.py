@@ -2,8 +2,8 @@ import asyncio
 import json
 
 from fastapi.encoders import jsonable_encoder
-from tui.actions import Notify
-from tui.response import ActionResponse
+from flect.actions import Notify
+from flect.response import ActionResponse
 
 from documentation.app.group__docs.components.dynamic__component_type.page import FormExampleModel
 

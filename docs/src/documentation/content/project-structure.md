@@ -1,10 +1,10 @@
-# tui project structure
+# flect project structure
 
-This document provides an overview of the project structure for a TUI application, with a focus on routing conventions.
+This document provides an overview of the project structure for a flect application, with a focus on routing conventions.
 
 ## Routing Conventions
 
-Understanding the routing conventions is crucial for navigating through a TUI application. Here are the key components and their functions:
+Understanding the routing conventions is crucial for navigating through a flect application. Here are the key components and their functions:
 
 ### Routing Files
 

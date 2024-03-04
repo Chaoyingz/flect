@@ -20,7 +20,7 @@ click==8.1.7
     # via uvicorn
 coverage==7.4.3
 fastapi==0.110.0
-    # via tuiframework
+    # via flect
 h11==0.14.0
     # via httpcore
     # via uvicorn
@@ -40,12 +40,12 @@ pluggy==1.4.0
     # via pytest
 pydantic==2.6.2
     # via fastapi
-    # via tuiframework
+    # via flect
 pydantic-core==2.16.3
     # via pydantic
 pyright==1.1.351
 pyromark==0.3.0
-    # via tuiframework
+    # via flect
 pytest==8.0.2
     # via pytest-asyncio
 pytest-asyncio==0.23.5
@@ -62,4 +62,4 @@ typing-extensions==4.10.0
     # via pydantic
     # via pydantic-core
 uvicorn==0.27.1
-    # via tuiframework
+    # via flect
