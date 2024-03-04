@@ -15,11 +15,11 @@
     <a href="https://flect.celerforge.com/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/Chaoyingz/flect/blob/main/README_CN.md">简体中文</a>
-    ·
     <a href="https://github.com/Chaoyingz/flect/issues">Report Bug</a>
     ·
     <a href="https://github.com/Chaoyingz/flect/issues">Request Feature</a>
+    ·
+    <a href="https://github.com/Chaoyingz/flect/blob/main/README_CN.md">简体中文</a>
   </p>
 </div>
 
@@ -35,21 +35,9 @@ The key features are:
 
 - **Fast development**: Write your entire app with Python, seamlessly integrating backend logic and frontend UI.
 - **Easy Form Validation**: Define a single Pydantic model for seamless and consistent form validation across your app, enhancing development speed and reducing potential errors.
-- **Client-Side Routing**: Fast, smooth page transitions without reloads.
 - **Folder-Based Routing**: Easy route management through folder structure.
+- **Client-Side Routing**: Fast, smooth page transitions without reloads.
 - **SEO Friendly**: Supports server-side rendering for better search engine visibility.
-
-## Requirements
-
-- Python 3.9+
-
-## Installation
-
-```console
-$ pip install flect
-
----> 100%
-```
 
 ## Example
 
@@ -136,9 +124,16 @@ async def post(form: TodoInCreate) -> ActionResponse:
 Which renders like this:
 ![flect-todo](https://github.com/Chaoyingz/flect/assets/32626585/f48415d8-b25c-432d-8dc4-d0bd4d65777d)
 
-## Demo
+## Learn More
 
-Check out the `docs` folder in the project repository. The documentation website is built directly from these sources.
+- [Documentation](https://flect.celerforge.com/)
+
+## Credits
+
+This project draws inspiration from the following frameworks:
+
+- [FastUI](https://github.com/pydantic/FastUI)
+- [Next.js](https://nextjs.org/)
 
 ## License
 
