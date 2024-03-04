@@ -46,7 +46,11 @@ $ pip install flect
 
 ## 示例
 
-- 下面展示了一个简单的待办事项应用。
+在这个例子中，我们将演示如何使用 flect 构建一个简单的待办事项应用程序。由于 flect 是建立在 [FastAPI](https://fastapi.tiangolo.com/) 之上的，因此您可以使用 FastAPI 的语法定义路由。
+
+注意：在实际的 flect 应用程序中，为了更好的组织，将 page 路由和 post 路由会定义在不同的文件中。
+
+以下是一个简单的待办事项应用程序。
 
 ```python
 import json

@@ -53,7 +53,11 @@ $ pip install flect
 
 ## Example
 
-- The simple todo app is shown below.
+In this example, we will demonstrate how to build a simple to-do application using flect. As flect is built on top of [FastAPI](https://fastapi.tiangolo.com/), so you can define your routes using FastAPI’s syntax.
+
+Note: In real-world flect applications, define page routes and post routes in separate files for better organization.
+
+Below is a simple to-do application.
 
 ```python
 import json

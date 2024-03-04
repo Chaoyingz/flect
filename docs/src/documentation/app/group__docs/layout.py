@@ -24,6 +24,10 @@ docs_nav = [
                         href="/docs/installation/",
                         children=[c.Text(text="Installation", class_name="text-sm")],
                     ),
+                    c.NavLink(
+                        href="/docs/tutorial/",
+                        children=[c.Text(text="Tutorial", class_name="text-sm")],
+                    ),
                 ],
             ),
         ],

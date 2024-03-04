@@ -8,14 +8,14 @@ This guide will help you install the necessary dependencies and assist you in se
 
 ## Basic Installation
 
-If you prefer to start a project from scratch, you can directly install the flect framework.
+If you prefer to start a project from scratch, you can directly install the flect.
 
-1. **Install flect framework**
+1. **Install flect**
 
-   To install the flect framework, run the following command in your terminal:
+   To install the flect, run the following command in your terminal:
 
    ```console
-   pip install flectframework
+   pip install flect
    ```
 
 ## Installation Using Project Template (Recommended)
@@ -24,7 +24,7 @@ For those who prefer to use a project template to kickstart their application, f
 
 ### Additional Requirements
 
-- Rye (https://github.com/Chaoyingz/rye) for dependency management
+- Rye (https://rye-up.com/) for dependency management
 - Cookiecutter (https://cookiecutter.readthedocs.io/en/stable/) for project scaffolding
 
 ### Steps
@@ -60,5 +60,11 @@ For those who prefer to use a project template to kickstart their application, f
    ```console
    make dev
    ```
+
+5. **Visit Your Application**
+
+   Open your browser and visit http://127.0.0.1:8000 you will see the following page.
+
+   ![welcome-to-flect](https://github.com/Chaoyingz/flect/assets/32626585/12c0f31b-8030-41b6-8c4b-3efb11e419ca)
 
 By following these steps, you can either set up your project from scratch or use a pre-defined template to get started quickly.
