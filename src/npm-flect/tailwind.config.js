@@ -44,6 +44,7 @@ module.exports = {
     'absolute',
     'overflow-hidden',
     'underline',
+    'min-h-screen',
   ],
   prefix: '',
   theme: {

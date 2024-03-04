@@ -65,7 +65,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                 ),
                 c.Container(
                     tag="main",
-                    class_name="container",
+                    class_name="container min-h-screen",
                     children=[outlet],
                 ),
                 c.Container(

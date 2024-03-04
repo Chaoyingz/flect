@@ -33,10 +33,6 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                             href="/docs/installation/",
                                             children=[c.Text(text="Installation", class_name="text-sm")],
                                         ),
-                                        c.NavLink(
-                                            href="/docs/project-structure/",
-                                            children=[c.Text(text="Project Structure", class_name="text-sm")],
-                                        ),
                                     ],
                                 ),
                             ],
@@ -53,6 +49,10 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                     tag="nav",
                                     class_name="flex flex-col gap-2",
                                     children=[
+                                        c.NavLink(
+                                            href="/learn/project-structure/",
+                                            children=[c.Text(text="Project Structure", class_name="text-sm")],
+                                        ),
                                         c.NavLink(
                                             href="/learn/routing/",
                                             children=[c.Text(text="Routing", class_name="text-sm")],

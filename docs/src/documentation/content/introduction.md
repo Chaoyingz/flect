@@ -16,7 +16,7 @@ The key features are:
 - **Folder-Based Routing**: Easy route management through folder structure.
 - **SEO Friendly**: Supports server-side rendering for better search engine visibility.
 
-This is inspired by the [FastUI](https://github.com/pydantic/FastUI) framework.
+This project is inspired by the [FastUI](https://github.com/pydantic/FastUI) and [Nextjs](https://nextjs.org/) framework.
 
 ## License
 

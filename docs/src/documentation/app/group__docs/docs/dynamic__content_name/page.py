@@ -4,9 +4,8 @@ from fastapi import Path
 from flect import PageResponse
 from flect import components as c
 from flect.sitemap import Sitemap
-from starlette.concurrency import run_in_threadpool
 
-from documentation.utils import get_markdown_content
+from documentation import CONTENT_DIR
 
 
 async def sitemap(dynamic_url: str) -> list[Sitemap]:
@@ -24,17 +23,11 @@ async def sitemap(dynamic_url: str) -> list[Sitemap]:
 async def page(
     content_name: Annotated[str, Path(..., description="The content name to render")],
 ) -> PageResponse:
-    try:
-        readme_text = await run_in_threadpool(get_markdown_content, f"{content_name}.md")
-    except FileNotFoundError:
-        readme_text = "Content not found"
     return PageResponse(
         element=c.Container(
             tag="div",
             children=[
-                c.Markdown(
-                    text=readme_text,
-                ),
+                c.Markdown.from_file(CONTENT_DIR / f"{content_name}.md"),
                 # c.Container(
                 #     tag="div",
                 #     class_name="mt-10 flex",

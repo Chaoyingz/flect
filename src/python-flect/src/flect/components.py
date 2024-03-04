@@ -1,3 +1,4 @@
+import pathlib
 from html import escape
 from typing import Annotated, Literal, Optional, Union
 
@@ -201,6 +202,13 @@ class Markdown(BaseComponent):
         return f"""\
         {pyromark.markdown(self.text)}
         """
+
+    @classmethod
+    def from_file(cls, path: pathlib.Path, class_name: Optional[str] = None) -> Self:
+        try:
+            return cls(text=path.read_text(), class_name=class_name)
+        except FileNotFoundError:
+            return cls(text="Markdown file not found.", class_name=class_name)
 
 
 class NavLink(BaseContainerComponent):
