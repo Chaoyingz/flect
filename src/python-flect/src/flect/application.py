@@ -22,12 +22,12 @@ class flect(FastAPI):
     ) -> None:
         self.default_lifespan = kwargs.pop("default_lifespan", None)
         super().__init__(**kwargs, lifespan=self.lifespan)
-        self.app = app
-        self.reload = asyncio.Event()
+        self.app_module = app
+        self.reload_event = asyncio.Event()
         self.setup_flect()
 
     def setup_flect(self) -> None:
-        app_router = configure_app_router(self.app)
+        app_router = configure_app_router(self.app_module)
         self.mount("/static", StaticFiles(directory=STATIC_FILE_PATH), name="static")
         self.add_api_route("/_hotreload", self.hotreload, methods=["GET"])
         self.include_router(app_router, tags=["flect"])
@@ -42,15 +42,18 @@ class flect(FastAPI):
             yield
 
     def on_sigterm(self, *_: Any) -> None:
-        self.reload.set()
+        self.reload_event.set()
 
     async def hotreload(self) -> StreamingResponse:
         async def event_generator():
             try:
                 while True:
-                    await self.reload.wait()
-                    yield "data: reload\n\n"
-                    self.reload.clear()
+                    try:
+                        await asyncio.wait_for(self.reload_event.wait(), timeout=5.0)
+                        yield "data: reload\n\n"
+                        self.reload_event.clear()
+                    except asyncio.TimeoutError:
+                        pass
             except asyncio.CancelledError:
                 pass
 
