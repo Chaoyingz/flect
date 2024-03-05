@@ -39,7 +39,7 @@ The key features are:
 - **Client-Side Routing**: Fast, smooth page transitions without reloads.
 - **SEO Friendly**: Supports server-side rendering for better search engine visibility.
 
-## Why choose flect?
+## Why use flect?
 
 flect leverages Python code for the development of web applications’ user interfaces, presenting several benefits:
 
