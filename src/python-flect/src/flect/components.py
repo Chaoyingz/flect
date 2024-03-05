@@ -261,7 +261,7 @@ class Table(BaseComponent):
 
     @model_validator(mode="after")
     def set_default_labels(self) -> Self:
-        if not self.labels:
+        if not self.labels and self.datasets:
             self.labels = list(self.datasets[0].model_fields.keys())
         return self
 
