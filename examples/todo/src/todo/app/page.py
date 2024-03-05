@@ -1,67 +1,37 @@
+import uuid
+from typing import Annotated
+
+from pydantic import BaseModel, Field
+
 from flect import PageResponse
 from flect import components as c
-from flect import version
+from flect import form
+
+from todo.storage import storage
+
+
+class TodoInCreate(BaseModel):
+    name: Annotated[str, form.Input(placeholder="Enter task name...")] = Field(..., max_length=16)
+
+
+class TodoInDB(TodoInCreate):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
 
 
 async def page() -> PageResponse:
+    todos = [TodoInDB(**todo) for todo in storage.list()]
     return PageResponse(
         element=c.Container(
             tag="section",
             children=[
-                c.Container(
-                    tag="header",
-                    class_name="h-14 border-b text-sm flex items-center px-6 justify-between",
-                    children=[
-                        c.Link(
-                            href="https://flect.celerforge.com/",
-                            children=[
-                                c.Text(
-                                    text="flect",
-                                    class_name="font-medium text-xl",
-                                )
-                            ],
-                        ),
-                        c.Text(
-                            text=f"v{version.VERSION}",
-                        ),
-                    ]
+                c.Form(
+                    model=TodoInCreate,
+                    submit_url="/",
+                    class_name="mb-5 border p-5",
                 ),
-                c.Container(
-                    tag="main",
-                    class_name="flex justify-center p-32 flex-col items-center",
-                    children=[
-                        c.Heading(
-                            level=1, text="Welcome to flect framework",
-                            class_name="flex items-center justify-center text-5xl font-bold mb-4"
-                        ),
-                        c.Text(
-                            text="Get started by editing src/todo/app/page.py",
-                        ),
-                        c.Container(
-                            tag="div",
-                            class_name="flex gap-4 mt-8",
-                            children=[
-                                c.Link(
-                                    href="/",
-                                    children=[
-                                        c.Button(
-                                            children="Go to docs",
-                                        )
-                                    ],
-                                ),
-                                c.Link(
-                                    href="https://github.com/Chaoyingz/flect",
-                                    children=[
-                                        c.Button(
-                                            children="GitHub",
-                                            variant="outline",
-                                        )
-                                    ],
-                                ),
-                            ],
-                        )
-                    ]
-                ),
+                c.Table(
+                    datasets=todos,
+                )
             ],
         ),
     )

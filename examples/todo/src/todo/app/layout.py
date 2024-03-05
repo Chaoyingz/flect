@@ -26,6 +26,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                 ),
                 c.Container(
                     tag="main",
+                    class_name="p-12",
                     children=[outlet]
                 ),
                 c.Container(

@@ -18,7 +18,7 @@ exceptiongroup==1.2.0
     # via anyio
 fastapi==0.110.0
     # via flect
-flect==0.1.0
+flect==0.1.1
     # via todo
 h11==0.14.0
     # via uvicorn
