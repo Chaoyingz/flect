@@ -39,7 +39,7 @@ The key features are:
 - **Client-Side Routing**: Fast, smooth page transitions without reloads.
 - **SEO Friendly**: Supports server-side rendering for better search engine visibility.
 
-You can also view the [documentation website](https://flect.celerforge.com/docs/introduction/), which is completely built with flect and deployed using Vercel, directly. source code can be found [here](https://github.com/Chaoyingz/flect/tree/main/docs).
+You can also view the [documentation website](https://flect.celerforge.com/docs/introduction/), which is completely built with flect and deployed using Vercel, source code can be found [here](https://github.com/Chaoyingz/flect/tree/main/docs).
 
 ## Why use flect?
 
