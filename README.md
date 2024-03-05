@@ -39,13 +39,17 @@ The key features are:
 - **Client-Side Routing**: Fast, smooth page transitions without reloads.
 - **SEO Friendly**: Supports server-side rendering for better search engine visibility.
 
-## Why use flect?
+## Why choose flect?
 
 flect leverages Python code for the development of web applications’ user interfaces, presenting several benefits:
 
-- If you're a Python developer — you can build responsive web applications using React without writing a single line of JavaScript, or touching npm.
-- If you're a frontend developer — you can concentrate on building magical components that are truly reusable, no copy-pasting components for each view.
-- For everyone — a true separation of concerns, the backend defines the entire application; while the frontend is free to implement just the user interface.
+> If you're a Python developer — you can build responsive web applications using React without writing a single line of JavaScript, or touching npm.
+>
+> If you're a frontend developer — you can concentrate on building magical components that are truly reusable, no copy-pasting components for each view.
+>
+> For everyone — a true separation of concerns, the backend defines the entire application; while the frontend is free to implement just the user interface.
+>
+> — _From FastUI_
 
 ## Example
 
