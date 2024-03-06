@@ -53,7 +53,7 @@ class Avatar(BaseComponent):
         """
 
 
-class Button(BaseComponent):
+class Button(BaseContainerComponent):
     component_type: Literal["button"] = "button"
 
     variant: Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = Field(
@@ -64,12 +64,11 @@ class Button(BaseComponent):
         "default",
         description="Determines the button's size.",
     )
-    children: str
 
     def render_to_html(self) -> str:
         return f"""\
         <button>
-            {escape(self.children)}
+            {"".join(component.render_to_html() for component in self.children) if self.children else ""}
         </button>
         """
 
