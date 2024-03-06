@@ -21,6 +21,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                     children=[
                                         c.Link(
                                             href="/",
+                                            underline="none",
                                             children=[
                                                 c.Text(
                                                     text="flect",
@@ -30,6 +31,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                         ),
                                         c.Link(
                                             href="/docs/introduction/",
+                                            underline="none",
                                             children=[
                                                 c.Text(
                                                     text="Docs",
@@ -38,6 +40,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                         ),
                                         c.Link(
                                             href="/components/avatar/",
+                                            underline="none",
                                             children=[
                                                 c.Text(
                                                     text="Components",
@@ -51,6 +54,8 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                                     children=[
                                         c.Link(
                                             href="https://github.com/Chaoyingz/flect",
+                                            target="_blank",
+                                            underline="none",
                                             children=[
                                                 c.Text(
                                                     text="GitHub",

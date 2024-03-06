@@ -1,25 +1,20 @@
 import { cn } from '@/lib/utils'
-import { AnyComponents, ComponentProps } from '@/components/flect/any-component'
+import { AnyComponents } from '@/components/flect/any-component'
 import { NavLink as RemixNavLink } from 'react-router-dom'
+import { LinkProps } from '@/components/flect/link'
+import { linkVariants } from '@/components/flect/link.types'
 
-export interface NavLinkProps {
+export interface NavLinkProps extends Omit<LinkProps, 'componentType'> {
   componentType: 'nav-link'
-  className?: string
-  href: string
-  text: string
-  children?: ComponentProps[]
 }
 
 export function NavLink(props: NavLinkProps) {
-  const { href, children } = props
+  const { href, underline, className, children } = props
   return (
     <RemixNavLink
       to={href}
-      className={({ isActive }) =>
-        isActive
-          ? cn('text-primary underline-offset-4 hover:underline font-semibold', props.className)
-          : cn('text-primary underline-offset-4 hover:underline', props.className)
-      }
+      className={({ isActive }) => cn(linkVariants({ underline, isActive, className }))}
+      target={props.target}
     >
       <AnyComponents children={children} />
     </RemixNavLink>

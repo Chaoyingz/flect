@@ -181,10 +181,18 @@ class Link(BaseContainerComponent):
         ...,
         description="Specifies the URL for the link.",
     )
+    underline: Literal["none", "hover", "always"] = Field(
+        "hover",
+        description="Determines the link's underline style.",
+    )
+    target: Literal["_self", "_blank"] = Field(
+        "_self",
+        description="Specifies the target for the link.",
+    )
 
     def render_to_html(self) -> str:
         return f"""\
-        <a href="{escape(self.href)}">
+        <a href="{escape(self.href)}" target="{self.target}">
             {"".join(component.render_to_html() for component in self.children) if self.children else ""}
         </a>
         """
@@ -218,10 +226,18 @@ class NavLink(BaseContainerComponent):
         ...,
         description="Specifies the URL for the navigation link.",
     )
+    underline: Literal["none", "hover", "always"] = Field(
+        "hover",
+        description="Determines the link's underline style.",
+    )
+    target: Literal["_self", "_blank"] = Field(
+        "_self",
+        description="Specifies the target for the link.",
+    )
 
     def render_to_html(self) -> str:
         return f"""\
-        <a href="{escape(self.href)}">
+        <a href="{escape(self.href)}" target="{self.target}">
             {"".join(component.render_to_html() for component in self.children) if self.children else ""}
         </a>
         """
