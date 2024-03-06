@@ -17,7 +17,7 @@ def test_generate_html():
 @pytest.fixture()
 async def endpoint():
     async def route_endpoint() -> PageResponse:
-        return PageResponse(element=c.Button(children="Hello flect!"))
+        return PageResponse(element=c.Button(children=[c.Text(text="Hello flect!")]))
 
     return route_endpoint
 

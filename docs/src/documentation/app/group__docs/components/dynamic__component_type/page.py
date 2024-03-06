@@ -60,7 +60,7 @@ def get_component_preview_literal_component(
                             component_type(
                                 **{
                                     literal_prop: literal_value,
-                                    **{dp: literal_value for dp in dynamic_props},
+                                    **{dp: [c.Text(text=literal_value)] for dp in dynamic_props},
                                     **default_props_values,
                                 }
                             )
@@ -232,13 +232,13 @@ COMPONENT_DOCS_MAP = {
             description="The Link component creates navigation links.",
         ),
         get_component_preview_section(
-            preview=c.Link(
-                href="/",
-                children=[
-                    c.Text(
-                        text="Link",
-                    )
-                ],
+            preview=get_component_preview_literal_component(
+                component_type=c.Link,
+                literal_props=["underline", "target"],
+                dynamic_props=["children"],
+                default_props_values={
+                    "href": "/components/link/",
+                },
             )
         ),
         get_component_api_reference_section(component=c.Link),

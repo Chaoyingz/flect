@@ -137,13 +137,13 @@ def get_docs_pager(current_link: str) -> c.AnyComponent:
         children=[
             c.Link(
                 href=prev_link_text[0],
-                children=[c.Button(children=f"< {prev_link_text[1]}", variant="outline", size="sm")],
+                children=[c.Button(children=[c.Text(text=f"< {prev_link_text[1]}")], variant="outline", size="sm")],
             )
             if prev_link_text
             else c.Container(),
             c.Link(
                 href=next_link_text[0],
-                children=[c.Button(children=f"{next_link_text[1]} >", variant="outline", size="sm")],
+                children=[c.Button(children=[c.Text(text=f"{next_link_text[1]} >")], variant="outline", size="sm")],
             )
             if next_link_text
             else c.Container(),

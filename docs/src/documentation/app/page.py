@@ -27,7 +27,7 @@ async def page() -> PageResponse:
                                     href="/docs/introduction/",
                                     children=[
                                         c.Button(
-                                            children="Get Started",
+                                            children=[c.Text(text="Get Started")],
                                         )
                                     ],
                                 ),
@@ -35,7 +35,7 @@ async def page() -> PageResponse:
                                     href="https://github.com/Chaoyingz/flect",
                                     children=[
                                         c.Button(
-                                            children="GitHub",
+                                            children=[c.Text(text="GitHub")],
                                             variant="outline",
                                         )
                                     ],
