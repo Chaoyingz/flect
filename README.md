@@ -10,6 +10,15 @@
     <a href="https://github.com/Chaoyingz/flect/actions?query=workflow" target="_blank">
         <img src="https://github.com/Chaoyingz/flect/actions/workflows/test.yaml/badge.svg?event=push&branch=main" alt="Test">
     </a>
+    <a href="https://pypi.python.org/pypi/flect" target="_blank">
+        <img src="https://img.shields.io/pypi/v/flect.svg" alt="pypi">
+    </a>
+    <a href="https://github.com/Chaoyingz/flect" target="_blank">
+        <img src="https://img.shields.io/pypi/pyversions/flect.svg" alt="versions">
+    </a>
+    <a href="https://github.com/Chaoyingz/flect/blob/main/LICENSE" target="_blank">
+        <img src="https://img.shields.io/github/license/chaoyingz/flect.svg" alt="license">
+    </a>
   </p>
   <p align="center">
     <a href="https://flect.celerforge.com/"><strong>Explore the docs »</strong></a>
