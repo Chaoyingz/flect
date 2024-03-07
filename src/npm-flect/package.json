@@ -54,7 +54,7 @@
     "tailwindcss": "^3.4.1",
     "ts-json-schema-generator": "^1.5.0",
     "typescript": "^5.3.3",
-    "vite": "^5.1.4",
+    "vite": "^5.0.12",
     "vite-bundle-analyzer": "^0.8.1"
   },
   "description": "Tui is a quick and easy way to build web applications. It's based on FastAPI for speedy backend development and Shadcn UI for slick user interfaces.",
