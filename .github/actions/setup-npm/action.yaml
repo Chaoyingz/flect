@@ -1,6 +1,6 @@
 name: 'Setup NPM'
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - uses: pnpm/action-setup@v3
       with:

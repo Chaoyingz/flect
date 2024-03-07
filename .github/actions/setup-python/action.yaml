@@ -1,6 +1,6 @@
 name: 'Setup Python'
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - uses: actions/setup-python@v5
       with:
