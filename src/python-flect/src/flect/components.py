@@ -143,6 +143,10 @@ class Form(BaseComponent):
         ...,
         description="Specifies the URL where the form will be submitted.",
     )
+    submit_text: Optional[str] = Field(
+        None,
+        description="Specifies the text for the submit button.",
+    )
 
     @field_serializer("model")
     def serialize_model(self, model: type[BaseModel]) -> dict:

@@ -52,6 +52,7 @@ export interface FormLazyProps {
   className?: string
   model: Model
   submitUrl: string
+  submitText?: string
 }
 
 function getDefaultValues(schema: Model): FieldValues {
@@ -128,8 +129,8 @@ export default function FormLazy(props: FormLazyProps) {
             Submitting...
           </Button>
         ) : (
-          <Button type="submit" className="w-36">
-            Submit
+          <Button type="submit" className="min-w-36">
+            {props.submitText || 'Submit'}
           </Button>
         )}
       </form>
