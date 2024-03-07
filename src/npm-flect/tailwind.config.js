@@ -9,6 +9,9 @@ module.exports = {
       pattern: /^w-/,
     },
     {
+      pattern: /^max-w-/,
+    },
+    {
       pattern: /^h-/,
     },
     {

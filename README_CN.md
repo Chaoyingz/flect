@@ -76,11 +76,10 @@ from typing import Annotated, Optional
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
-from flect import PageResponse
+from flect import PageResponse, ActionResponse
 from flect import components as c
 from flect import form as f
 from flect.actions import Notify
-from flect.response import ActionResponse
 
 # 定义一个创建新待办事项的模型，只有一个 'task' 字段
 class TodoInCreate(BaseModel):
