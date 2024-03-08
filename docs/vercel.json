@@ -1,5 +1,8 @@
 {
-  "devCommand": "uvicorn src.documentation:app --reload --reload-dir .",
+  "devCommand": "uvicorn src.documentation.main:app --reload --reload-dir .",
+  "env": {
+    "PYTHONPATH": "src"
+  },
   "builds": [
     {
       "src": "src/documentation/main.py",
