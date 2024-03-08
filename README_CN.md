@@ -48,7 +48,7 @@ flect 是一个用于构建全栈 Web 应用程序的 Python 框架。它通过�
 - **客户端路由**：无需重新加载即可实现快速、流畅的页面转换。
 - **SEO 友好**：支持服务器端渲染，以获得更好的搜索引擎可见性。
 
-您也可以访问[文档网站](https://flect.celerforge.com/docs/introduction/)，该网站完全使用 flect 构建，并通过 Vercel 部署，源代码可以在[这里](https://github.com/Chaoyingz/flect/tree/main/docs)找到。
+您也可以访问[文档网站](https://flect.celerforge.com/docs/introduction/)，该网站完全使用 flect 构建，并通过 [Vercel](https://vercel.com/) 部署，源代码可以在[这里](https://github.com/Chaoyingz/flect/tree/main/docs)找到。
 
 ## 为什么使用 flect ?
 
