@@ -1,38 +1,38 @@
-from typing import Any, Callable, Literal, Optional, TypedDict
+from typing import Any, Callable, Literal, Optional, TypedDict, Union
 
 from pydantic import AliasChoices, AliasPath, Field, types
 from typing_extensions import Unpack
 
 
 class FieldKwargs(TypedDict):
-    default_factory: Callable[[], Any] | None
-    alias: str | None
-    alias_priority: int | None
-    validation_alias: str | AliasPath | AliasChoices | None
-    serialization_alias: str | None
-    title: str | None
-    description: str | None
-    examples: list[Any] | None
-    exclude: bool | None
-    discriminator: str | types.Discriminator | None
-    frozen: bool | None
-    validate_default: bool | None
+    default_factory: Optional[Callable[[], Any]]
+    alias: Optional[str]
+    alias_priority: Optional[int]
+    validation_alias: Optional[Union[str, AliasPath, AliasChoices]]
+    serialization_alias: Optional[str]
+    title: Optional[str]
+    description: Optional[str]
+    examples: Optional[list[Any]]
+    exclude: Optional[bool]
+    discriminator: Optional[Union[str, types.Discriminator]]
+    frozen: Optional[bool]
+    validate_default: Optional[bool]
     repr: bool
-    init: bool | None
-    init_var: bool | None
-    kw_only: bool | None
-    pattern: str | None
-    strict: bool | None
-    gt: float | None
-    ge: float | None
-    lt: float | None
-    le: float | None
-    multiple_of: float | None
-    allow_inf_nan: bool | None
-    max_digits: int | None
-    decimal_places: int | None
-    min_length: int | None
-    max_length: int | None
+    init: Optional[bool]
+    init_var: Optional[bool]
+    kw_only: Optional[bool]
+    pattern: Optional[str]
+    strict: Optional[bool]
+    gt: Optional[float]
+    ge: Optional[float]
+    lt: Optional[float]
+    le: Optional[float]
+    multiple_of: Optional[float]
+    allow_inf_nan: Optional[bool]
+    max_digits: Optional[int]
+    decimal_places: Optional[int]
+    min_length: Optional[int]
+    max_length: Optional[int]
     union_mode: Literal["smart", "left_to_right"]
 
 
