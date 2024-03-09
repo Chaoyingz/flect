@@ -20,7 +20,7 @@ class flect(FastAPI):
         app: ModuleType,
         **kwargs: Any,
     ) -> None:
-        self.default_lifespan = kwargs.pop("default_lifespan", None)
+        self.default_lifespan = kwargs.pop("lifespan", None)
         super().__init__(**kwargs, lifespan=self.lifespan)
         self.app_module = app
         self.reload_event = asyncio.Event()
