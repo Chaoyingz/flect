@@ -12,7 +12,7 @@ class BaseComponent(BaseModel):
     model_config = ConfigDict(extra="forbid", alias_generator=AliasGenerator(serialization_alias=to_camel))
 
     class_name: Optional[str] = Field(
-        None,
+        default=None,
         description="Specifies the Tailwind CSS classes for the component.",
     )
 
@@ -22,7 +22,7 @@ class BaseComponent(BaseModel):
 
 class BaseContainerComponent(BaseComponent):
     children: Optional[list["AnyComponent"]] = Field(
-        None,
+        default=None,
         description="Defines the child components.",
     )
 
@@ -31,11 +31,11 @@ class Avatar(BaseComponent):
     component_type: Literal["avatar"] = "avatar"
 
     src: Optional[str] = Field(
-        None,
+        default=None,
         description="Specifies the image source for the avatar.",
     )
     alt: Optional[str] = Field(
-        None,
+        default=None,
         description="Provides alternative text for the avatar image.",
     )
     fallback: str = Field(
@@ -57,11 +57,11 @@ class Button(BaseContainerComponent):
     component_type: Literal["button"] = "button"
 
     variant: Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = Field(
-        "default",
+        default="default",
         description="Determines the button's style variant.",
     )
     size: Literal["default", "sm", "lg", "icon"] = Field(
-        "default",
+        default="default",
         description="Determines the button's size.",
     )
 
@@ -80,11 +80,11 @@ class CodeBlock(BaseComponent):
         description="Specifies the code text.",
     )
     language: Optional[str] = Field(
-        None,
+        default=None,
         description="Defines the programming language for syntax highlighting.",
     )
     code_style: Optional[str] = Field(
-        None,
+        default=None,
         description="Determines the code block's style.",
     )
 
@@ -102,7 +102,7 @@ class Container(BaseContainerComponent):
     component_type: Literal["container"] = "container"
 
     tag: Literal["div", "section", "header", "footer", "main", "nav", "aside"] = Field(
-        "div",
+        default="div",
         description="Specifies the HTML tag for the container.",
     )
 
@@ -136,7 +136,7 @@ class Form(BaseComponent):
         description="Defines the form's data model.",
     )
     submit_method: Literal["POST", "PUT", "PATCH"] = Field(
-        "POST",
+        default="POST",
         description="Specifies the HTTP method for form submission.",
     )
     submit_url: str = Field(
@@ -144,7 +144,7 @@ class Form(BaseComponent):
         description="Specifies the URL where the form will be submitted.",
     )
     submit_text: Optional[str] = Field(
-        None,
+        default=None,
         description="Specifies the text for the submit button.",
     )
 
@@ -165,7 +165,7 @@ class Heading(BaseComponent):
         description="Specifies the heading's text.",
     )
     id: Optional[str] = Field(
-        None,
+        default=None,
         description="Specifies the heading's id.",
     )
 
@@ -185,11 +185,11 @@ class Link(BaseContainerComponent):
         description="Specifies the URL for the link.",
     )
     underline: Literal["none", "hover", "always"] = Field(
-        "hover",
+        default="hover",
         description="Determines the link's underline style.",
     )
     target: Literal["_self", "_blank"] = Field(
-        "_self",
+        default="_self",
         description="Specifies the target for the link.",
     )
 
@@ -230,11 +230,11 @@ class NavLink(BaseContainerComponent):
         description="Specifies the URL for the navigation link.",
     )
     underline: Literal["none", "hover", "always"] = Field(
-        "hover",
+        default="hover",
         description="Determines the link's underline style.",
     )
     target: Literal["_self", "_blank"] = Field(
-        "_self",
+        default="_self",
         description="Specifies the target for the link.",
     )
 
@@ -270,7 +270,7 @@ class Table(BaseComponent):
     component_type: Literal["table"] = "table"
 
     labels: list[str] = Field(
-        [],
+        default=[],
         description="Defines the table's column labels. Defaults to the keys of the dataset.",
     )
     datasets: list[SerializeAsAny[BaseModel]] = Field(

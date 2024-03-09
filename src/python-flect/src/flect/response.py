@@ -8,9 +8,9 @@ from flect.components import AnyComponent
 
 
 class TitleTemplate(BaseModel):
-    template: Optional[str] = Field(None, description="The template of the title.")
+    template: Optional[str] = Field(default=None, description="The template of the title.")
     default: str = Field(..., description="The default title.")
-    absolute: bool = Field(False, description="Determines if the title is absolute.")
+    absolute: bool = Field(default=False, description="Determines if the title is absolute.")
 
     def apply_parent_title(self, parent_title: Union[Self, str, None]) -> None:
         if parent_title is None or self.absolute:
@@ -34,9 +34,9 @@ class TitleTemplate(BaseModel):
 
 
 class Meta(BaseModel):
-    title: Union[str, TitleTemplate, None] = Field(None, description="The document title.")
-    description: Optional[str] = Field(None, description="Standard metadata names.")
-    keywords: Optional[str] = Field(None, description="The keywords for the document.")
+    title: Union[str, TitleTemplate, None] = Field(default=None, description="The document title.")
+    description: Optional[str] = Field(default=None, description="Standard metadata names.")
+    keywords: Optional[str] = Field(default=None, description="The keywords for the document.")
 
     @field_validator("title")
     def validate_title(cls, value: Union[str, TitleTemplate, None]) -> Union[TitleTemplate, None]:
@@ -76,8 +76,8 @@ def merge_meta(meta: Optional[Meta], other: Optional[Meta]) -> Optional[Meta]:
 
 
 class PageResponse(BaseModel):
-    meta: Optional[Meta] = Field(None, description="The metadata of the response.")
-    element: Optional[AnyComponent] = Field(None, description="The components of the response.")
+    meta: Optional[Meta] = Field(default=None, description="The metadata of the response.")
+    element: Optional[AnyComponent] = Field(default=None, description="The components of the response.")
 
 
 class ActionResponse(BaseModel):

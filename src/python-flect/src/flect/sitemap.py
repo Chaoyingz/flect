@@ -12,7 +12,7 @@ class Sitemap(BaseModel):
     url: str
     last_modified: Optional[str]
     change_frequency: Optional[Literal["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"]]
-    priority: Optional[float] = Field(None, ge=0.0, le=1.0)
+    priority: Optional[float] = Field(default=None, ge=0.0, le=1.0)
 
 
 async def get_sitemap_objs(routes: list["ClientRoute"]) -> list[Sitemap]:

@@ -45,12 +45,12 @@ class ClientRoute(BaseModel):
         description="The URL of the route.",
     )
     index: bool = Field(
-        False,
+        default=False,
         description="Determines if the route is an index route."
         "Index routes render into their parent's Outlet at their parent's URL.",
     )
     children: list["ClientRoute"] = Field(
-        [],
+        default=[],
         description="The children of the route.",
     )
 
@@ -60,7 +60,7 @@ class ClientRoute(BaseModel):
         description="The endpoint of the route.",
     )
     sitemap: Optional[Callable[[str], Awaitable[list[Sitemap]]]] = Field(
-        None,
+        default=None,
         exclude=True,
         description="The sitemap of the route.",
     )
