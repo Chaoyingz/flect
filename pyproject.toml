@@ -1,6 +1,6 @@
 [project]
 name = "flect"
-version = "0.1.5"
+version = "0.1.6"
 description = "Turning ideas into web app fast."
 authors = [
     {name = "Chaoying", email = "chaunceywe@gmail.com"},
