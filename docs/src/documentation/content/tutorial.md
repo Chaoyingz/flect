@@ -105,16 +105,14 @@ You may have noticed that after editing the layout, two headers appear on the pa
 Edit the `src/todo/app/page.py` file and add the following code:
 
 ```python
-from typing import Annotated
-
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from flect import PageResponse
 from flect import components as c
 from flect import form
 
 class TodoInCreate(BaseModel):
-    name: Annotated[str, form.Input(placeholder="Enter task name...")] = Field(..., max_length=16)
+    name: str = form.Input(placeholder="Enter task name...", max_length=16)
 
 todos = {}
 
@@ -200,7 +198,6 @@ Edit the `src/todo/app/page.py` file and add the following code:
 
 ```python
 import uuid
-from typing import Annotated
 
 from pydantic import BaseModel, Field
 
@@ -211,7 +208,7 @@ from flect import form
 from todo.storage import storage
 
 class TodoInCreate(BaseModel):
-    name: Annotated[str, form.Input(placeholder="Enter task name...")] = Field(..., max_length=16)
+    name: str = form.Input(placeholder="Enter task name...", max_length=16)
 
 class TodoInDB(TodoInCreate):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))

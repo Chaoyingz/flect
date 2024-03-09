@@ -72,7 +72,7 @@ flect 利用 Python 代码开发 web 应用程序的用户界面，带来了几�
 
 ```python
 import json
-from typing import Annotated, Optional
+from typing import Optional
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
@@ -83,7 +83,7 @@ from flect.actions import Notify
 
 # 定义一个创建新待办事项的模型，只有一个 'task' 字段
 class TodoInCreate(BaseModel):
-    task: Annotated[str, f.Input(placeholder="Enter task...")]
+    task: str = f.Input(placeholder="Enter task...")
 
 # 定义存储在数据库中的待办事项模型，扩展创建模型添加 'id' 和 'completed' 字段
 class TodoInDB(TodoInCreate):

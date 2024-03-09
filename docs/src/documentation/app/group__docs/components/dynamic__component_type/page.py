@@ -6,7 +6,7 @@ from flect import Meta, PageResponse
 from flect.form import Checkbox, Input, Select, Textarea
 from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
 from flect.sitemap import Sitemap
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from pydantic_core._pydantic_core import PydanticUndefined
 
 from documentation.app.group__docs.layout import get_docs_pager
@@ -129,19 +129,11 @@ class TableExampleModel(BaseModel):
 
 
 class FormExampleModel(BaseModel):
-    username: Annotated[str, Input(placeholder="Enter your username")] = Field(
-        pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10
-    )
-    gender: Annotated[Literal["male", "female"], Select()] = Field(
-        default="male", description="The gender of the user."
-    )
-    password: Annotated[str, Input(type="password", placeholder="Enter your password")]
-    hobby: Annotated[Optional[str], Textarea(placeholder="Type your hobby")] = Field(
-        None, description="The hobby of the user."
-    )
-    terms_accepted: Annotated[bool, Checkbox(class_name="ml-3")] = Field(
-        default=False, description="The terms accepted by the user."
-    )
+    username: str = Input(placeholder="Enter your username", pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10)
+    gender: Literal["male", "female"] = Select(default="male", description="The gender of the user.")
+    password: str = Input(type="password", placeholder="Enter your password")
+    hobby: Optional[str] = Textarea(placeholder="Type your hobby", default=None, description="The hobby of the user.")
+    terms_accepted: bool = Checkbox(class_name="ml-3", default=False, description="The terms accepted by the user.")
 
 
 COMPONENT_DOCS_MAP = {

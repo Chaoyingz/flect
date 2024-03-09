@@ -72,7 +72,7 @@ Below is a simple to-do application.
 
 ```python
 import json
-from typing import Annotated, Optional
+from typing import Optional
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
@@ -83,7 +83,7 @@ from flect.actions import Notify
 
 # Define a model for creating new todo items with a single 'task' field
 class TodoInCreate(BaseModel):
-    task: Annotated[str, f.Input(placeholder="Enter task...")]
+    task: str = f.Input(placeholder="Enter task...")
 
 # Define a model for todo items stored in the database, extending the creation model with an 'id' and 'completed' field
 class TodoInDB(TodoInCreate):

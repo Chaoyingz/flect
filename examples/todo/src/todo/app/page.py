@@ -1,5 +1,4 @@
 import uuid
-from typing import Annotated
 
 from pydantic import BaseModel, Field
 
@@ -11,7 +10,7 @@ from todo.storage import storage
 
 
 class TodoInCreate(BaseModel):
-    name: Annotated[str, form.Input(placeholder="Enter task name...")] = Field(..., max_length=16)
+    name: str = form.Input(placeholder="Enter task name...", max_length=16)
 
 
 class TodoInDB(TodoInCreate):

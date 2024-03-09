@@ -7,15 +7,12 @@ The flect framework allows you to create forms with ease.
 To define your form model, you can use Python's `Annotated` and `pydantic`'s `BaseModel` and `Field`. Here's an example:
 
 ```python
-from typing import Annotated
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from flect.form import Input
 
 class FormExampleModel(BaseModel):
     # Use Annotated to define the field
-    name: Annotated[str, Input(placeholder="Enter your username")] = Field(
-        pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10
-    )
+    name: str = Input(placeholder="Enter your username", pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10)
 ```
 
 In this example, we define a `name` field with a placeholder text "Enter your username". The field accepts alphanumeric characters with a minimum length of 2 and a maximum length of 10.
