@@ -7,8 +7,8 @@ from flect.form import Checkbox, Input, Select, Textarea
 from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
 from flect.sitemap import Sitemap
 from pydantic import BaseModel
-from pydantic_core._pydantic_core import PydanticUndefined
 
+from documentation.app.group__docs.component import get_api_reference_section
 from documentation.app.group__docs.layout import get_docs_pager
 
 
@@ -27,13 +27,6 @@ def get_component_description_section(
             c.Text(text=description),
         ],
     )
-
-
-class ComponentProps(BaseModel):
-    prop: str
-    type: str
-    default: Optional[str]
-    description: Optional[str]
 
 
 def get_component_preview_literal_component(
@@ -90,38 +83,6 @@ def get_component_preview_section(
     )
 
 
-def get_component_api_reference_section(component: c.AnyComponent) -> c.Container:
-    props = []
-    for field, filed_info in component.model_fields.items():
-        if field == "component_type":
-            continue
-        if field == "children":
-            filed_info.annotation = "flect.components.AnyComponents"
-            filed_info.default = "[]"
-            filed_info.description = "The children of the component."
-        if filed_info.default == PydanticUndefined:
-            filed_info.default = "-"
-        props.append(
-            ComponentProps(
-                prop=field,
-                type=str(filed_info.annotation),
-                default=filed_info.default or "-",
-                description=filed_info.description,
-            )
-        )
-    return c.Container(
-        tag="section",
-        children=[
-            c.Heading(
-                level=2,
-                text="API Reference",
-                class_name="text-2xl mb-6 border-b pb-2",
-            ),
-            c.Table(datasets=props),
-        ],
-    )
-
-
 class TableExampleModel(BaseModel):
     column1: str
     column2: str
@@ -158,7 +119,7 @@ COMPONENT_DOCS_MAP = {
                 ],
             )
         ),
-        get_component_api_reference_section(component=c.Avatar),
+        get_api_reference_section(component=c.Avatar),
     ],
     "button": [
         get_component_description_section(
@@ -173,7 +134,7 @@ COMPONENT_DOCS_MAP = {
                 default_props_values={},
             )
         ),
-        get_component_api_reference_section(component=c.Button),
+        get_api_reference_section(component=c.Button),
     ],
     "code-block": [
         get_component_description_section(
@@ -183,17 +144,22 @@ COMPONENT_DOCS_MAP = {
         get_component_preview_section(
             preview=c.CodeBlock(text="print('Hello, World!')"),
         ),
-        get_component_api_reference_section(component=c.CodeBlock),
+        get_api_reference_section(component=c.CodeBlock),
     ],
     "container": [
         get_component_description_section(
             title="Container",
             description="The Container component serves as a wrapper for other components.",
         ),
-        c.Container(
-            tag="div",
+        get_component_preview_section(
+            preview=c.Container(
+                tag="div",
+                children=[
+                    c.Text(text="This is a sample text in container."),
+                ],
+            ),
         ),
-        get_component_api_reference_section(component=c.Container),
+        get_api_reference_section(component=c.Container),
     ],
     "form": [
         get_component_description_section(
@@ -203,7 +169,7 @@ COMPONENT_DOCS_MAP = {
         get_component_preview_section(
             preview=c.Form(model=FormExampleModel, submit_url="/components/form/"),
         ),
-        get_component_api_reference_section(component=c.Form),
+        get_api_reference_section(component=c.Form),
     ],
     "heading": [
         get_component_description_section(
@@ -216,7 +182,7 @@ COMPONENT_DOCS_MAP = {
                 text="Heading",
             )
         ),
-        get_component_api_reference_section(component=c.Heading),
+        get_api_reference_section(component=c.Heading),
     ],
     "link": [
         get_component_description_section(
@@ -233,7 +199,7 @@ COMPONENT_DOCS_MAP = {
                 },
             )
         ),
-        get_component_api_reference_section(component=c.Link),
+        get_api_reference_section(component=c.Link),
     ],
     "markdown": [
         get_component_description_section(
@@ -242,10 +208,10 @@ COMPONENT_DOCS_MAP = {
         ),
         get_component_preview_section(
             preview=c.Markdown(
-                text="## Markdown",
+                text="## Markdown\n\nThis is a sample markdown text.\n\n- Item 1\n- Item 2\n- Item 3",
             )
         ),
-        get_component_api_reference_section(component=c.Markdown),
+        get_api_reference_section(component=c.Markdown),
     ],
     "table": [
         get_component_description_section(
@@ -268,7 +234,7 @@ COMPONENT_DOCS_MAP = {
                 ]
             )
         ),
-        get_component_api_reference_section(component=c.Table),
+        get_api_reference_section(component=c.Table),
     ],
     "text": [
         get_component_description_section(
@@ -280,7 +246,7 @@ COMPONENT_DOCS_MAP = {
                 text="Text",
             )
         ),
-        get_component_api_reference_section(component=c.Text),
+        get_api_reference_section(component=c.Text),
     ],
 }
 

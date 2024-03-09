@@ -8,7 +8,12 @@ type Notify = {
   type: 'normal' | 'action' | 'success' | 'info' | 'warning' | 'error' | 'loading' | 'default'
 }
 
-type AnyAction = Notify
+type Redirect = {
+  actionType: 'redirect'
+  url: string
+}
+
+export type AnyAction = Notify | Redirect
 
 export type ActionResponse = {
   action: AnyAction
@@ -34,6 +39,11 @@ export function executeAction(action: AnyAction) {
         default:
           toast(title, action)
       }
+      break
+    }
+    case 'redirect': {
+      const { url } = action as Redirect
+      window.location.replace(url)
     }
   }
 }

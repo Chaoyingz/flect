@@ -1,12 +1,14 @@
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Literal, Optional, Union
 
 from pydantic import AliasGenerator, BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
 
-class Notify(BaseModel):
+class BaseAction(BaseModel):
     model_config = ConfigDict(extra="forbid", alias_generator=AliasGenerator(serialization_alias=to_camel))
 
+
+class Notify(BaseAction):
     action_type: Literal["notify"] = "notify"
 
     title: str = Field(..., description="The title of the notification.")
@@ -19,7 +21,12 @@ class Notify(BaseModel):
     )
 
 
+class Redirect(BaseAction):
+    action_type: Literal["redirect"] = "redirect"
+    url: str = Field(..., description="The URL to redirect to.")
+
+
 AnyAction = Annotated[
-    Notify,
+    Union[Notify, Redirect],
     Field(discriminator="action_type"),
 ]

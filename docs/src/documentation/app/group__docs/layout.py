@@ -65,6 +65,30 @@ docs_nav = [
         children=[
             c.Heading(
                 level=2,
+                text="Actions",
+                class_name="mb-2",
+            ),
+            c.Container(
+                tag="nav",
+                class_name="flex flex-col gap-2",
+                children=[
+                    c.NavLink(
+                        href="/actions/notify/",
+                        children=[c.Text(text="Notify", class_name="text-sm")],
+                    ),
+                    c.NavLink(
+                        href="/actions/redirect/",
+                        children=[c.Text(text="Redirect", class_name="text-sm")],
+                    ),
+                ],
+            ),
+        ],
+    ),
+    c.Container(
+        tag="div",
+        children=[
+            c.Heading(
+                level=2,
                 text="Components",
                 class_name="mb-2",
             ),

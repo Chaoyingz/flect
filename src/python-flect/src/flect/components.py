@@ -7,6 +7,8 @@ from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, SerializeAsAn
 from pydantic.alias_generators import to_camel
 from typing_extensions import Self
 
+from flect.actions import AnyAction
+
 
 class BaseComponent(BaseModel):
     model_config = ConfigDict(extra="forbid", alias_generator=AliasGenerator(serialization_alias=to_camel))
@@ -63,6 +65,10 @@ class Button(BaseContainerComponent):
     size: Literal["default", "sm", "lg", "icon"] = Field(
         default="default",
         description="Determines the button's size.",
+    )
+    on_click_action: Optional[AnyAction] = Field(
+        default=None,
+        description="Defines the action to be performed when the button is clicked.",
     )
 
     def render_to_html(self) -> str:
