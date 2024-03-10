@@ -24,26 +24,13 @@ export type RouteProps = RemixRouteProps & {
   index: boolean
 }
 
-type MetaTitleTemplate = {
-  template?: string
-  default: string
-  absolute?: boolean
-}
-
-type Meta = {
-  title?: MetaTitleTemplate
-  description?: string
-  keywords?: string
-}
-
 type PageResponse = {
-  meta?: Meta
-  element: ComponentProps
+  body: ComponentProps
 }
 
 const RouteElement = React.memo(() => {
   const response = useLoaderData() as PageResponse
-  return <AnyComponent {...response.element} />
+  return <AnyComponent {...response.body} />
 })
 
 const ErrorElement = React.memo(() => {

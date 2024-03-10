@@ -100,7 +100,7 @@ todos = [
 # Define the page
 async def page() -> PageResponse:
     return PageResponse(
-        element=c.Container(
+        body=c.Container(
             # support tailwind css
             class_name="container mx-auto px-32 py-10",
             children=[

@@ -27,7 +27,7 @@ from flect import PageResponse
 
 def page() -> PageResponse:
     return PageResponse(
-        element=c.Container(
+        body=c.Container(
             tag="div",
             children=[
                 c.Form(

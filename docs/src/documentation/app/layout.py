@@ -6,7 +6,7 @@ from flect.head import Head, TitleTemplate
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
     return PageResponse(
         head=Head(title=TitleTemplate(template="{title} - flect", default="flect")),
-        element=c.Container(
+        body=c.Container(
             tag="div",
             children=[
                 c.Container(

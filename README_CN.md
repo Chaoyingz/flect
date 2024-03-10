@@ -100,7 +100,7 @@ todos = [
 # 定义要显示的页面
 async def page() -> PageResponse:
     return PageResponse(
-        element=c.Container(
+        body=c.Container(
             # 支持 tailwind css
             class_name="container mx-auto px-32 py-10",
             children=[

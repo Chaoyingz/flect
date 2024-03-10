@@ -181,7 +181,7 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
         head=Head(
             title=TitleTemplate(template="{title} - flect documentation", default="flect documentation", absolute=True)
         ),
-        element=c.Container(
+        body=c.Container(
             tag="div",
             class_name="flex",
             children=[

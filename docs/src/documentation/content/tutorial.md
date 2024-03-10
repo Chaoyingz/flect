@@ -48,7 +48,7 @@ from flect import components as c
 
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
     return PageResponse(
-        element=c.Container(
+        body=c.Container(
             tag="div",
             children=[
                 c.Container(
@@ -118,7 +118,7 @@ todos = {}
 
 async def page() -> PageResponse:
     return PageResponse(
-        element=c.Container(
+        body=c.Container(
             tag="section",
             children=[
                 c.Form(
@@ -216,7 +216,7 @@ class TodoInDB(TodoInCreate):
 async def page() -> PageResponse:
     todos = [TodoInDB(**todo) for todo in storage.list()]
     return PageResponse(
-        element=c.Container(
+        body=c.Container(
             tag="section",
             children=[
                 c.Form(

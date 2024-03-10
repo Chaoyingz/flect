@@ -100,7 +100,7 @@ async def page(
             title=f"{action_type} action",
             description=f"{action_type} action",
         ),
-        element=c.Container(
+        body=c.Container(
             tag="div",
             class_name="flex gap-12 flex-col",
             children=[

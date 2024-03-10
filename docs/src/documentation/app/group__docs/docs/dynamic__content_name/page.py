@@ -31,7 +31,7 @@ async def page(
         head=Head(
             title=content_name,
         ),
-        element=c.Container(
+        body=c.Container(
             tag="div",
             children=[
                 c.Markdown.from_file(CONTENT_DIR / f"{content_name}.md"),

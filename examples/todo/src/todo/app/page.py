@@ -20,7 +20,7 @@ class TodoInDB(TodoInCreate):
 async def page() -> PageResponse:
     todos = [TodoInDB(**todo) for todo in storage.list()]
     return PageResponse(
-        element=c.Container(
+        body=c.Container(
             tag="section",
             children=[
                 c.Form(

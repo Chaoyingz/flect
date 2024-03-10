@@ -43,7 +43,7 @@ from flect import components as c
 # The layout function must be named "layout" and accept an "outlet" parameter
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
     return PageResponse(
-        element=c.Container(
+        body=c.Container(
             tag="div",
             class_name="flex",
             # use the outlet to render the layout's content
@@ -64,7 +64,7 @@ from flect import components as c
 
 async def page() -> PageResponse:
     return PageResponse(
-        element=c.Container(
+        body=c.Container(
             tag="div",
         )
     )

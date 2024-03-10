@@ -9,7 +9,7 @@ from flect.head import Head
 
 class PageResponse(BaseModel):
     head: Optional[Head] = Field(default=None, description="The head of the response.")
-    element: Optional[AnyComponent] = Field(default=None, description="The components of the response.")
+    body: Optional[AnyComponent] = Field(default=None, description="The components of the response.")
 
 
 class ActionResponse(BaseModel):

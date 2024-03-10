@@ -100,7 +100,7 @@ async def resolve_route_response(
     layout_router_suffix: str,
     is_layout: bool = False,
     children_head: Optional[Head] = None,
-    children_element: Optional[c.AnyComponent] = None,
+    children_body: Optional[c.AnyComponent] = None,
 ) -> tuple[Optional[Head], Optional[c.AnyComponent]]:
     for route in routes:
         if is_layout != route.path.endswith(layout_router_suffix):
@@ -112,9 +112,9 @@ async def resolve_route_response(
             }
             request.scope.get("path_params", {}).update(matched_params)
             # response will merge the children element
-            response = await get_route_response(request, route, children_element)
+            response = await get_route_response(request, route, children_body)
             head = merge_head(response.head or Head(), children_head or Head())
-            return head, response.element
+            return head, response.body
     return None, None
 
 
@@ -146,13 +146,13 @@ async def render_server_side_html(
         the server-rendered body HTML string
     """
     path = root_router_prefix + get_route_path(request.scope)
-    head, element = await resolve_route_response(request, routes, path, layout_router_suffix)
+    head, body = await resolve_route_response(request, routes, path, layout_router_suffix)
     path += layout_router_suffix
     while path.startswith(root_router_prefix):
-        layout_head, layout_element = await resolve_route_response(
-            request, routes, path, layout_router_suffix, is_layout=True, children_head=head, children_element=element
+        layout_head, layout_body = await resolve_route_response(
+            request, routes, path, layout_router_suffix, is_layout=True, children_head=head, children_body=body
         )
-        element = layout_element or element
+        body = layout_body or body
         head = layout_head or head
         path = "/".join(path.rsplit("/", 3)[:-3]) + "/" + layout_router_suffix
-    return head.render_to_html() if head else "", element.render_to_html() if element else ""
+    return head.render_to_html() if head else "", body.render_to_html() if body else ""

@@ -274,7 +274,7 @@ async def page(
             title=f"{component_type} component",
             description=f"{component_type} component",
         ),
-        element=c.Container(
+        body=c.Container(
             tag="div",
             class_name="flex gap-12 flex-col",
             children=[

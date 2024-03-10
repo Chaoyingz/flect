@@ -4,7 +4,7 @@ from flect import components as c
 
 async def page() -> PageResponse:
     return PageResponse(
-        element=c.Container(
+        body=c.Container(
             tag="section",
             class_name="container",
             children=[
