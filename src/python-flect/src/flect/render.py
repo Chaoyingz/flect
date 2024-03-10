@@ -7,6 +7,7 @@ from fastapi.routing import APIRoute
 from starlette._utils import get_route_path
 
 from flect import components as c
+from flect.constants import CLIENT_LAYOUT_ROUTER_SUFFIX, CLIENT_ROOT_ROUTER_PREFIX, GROUP_ROUTE_PREFIX
 from flect.head import Head, merge_head
 from flect.response import PageResponse
 from flect.version import VERSION
@@ -97,13 +98,12 @@ async def resolve_route_response(
     request: Request,
     routes: list[APIRoute],
     path: str,
-    layout_router_suffix: str,
     is_layout: bool = False,
     children_head: Optional[Head] = None,
     children_body: Optional[c.AnyComponent] = None,
 ) -> tuple[Optional[Head], Optional[c.AnyComponent]]:
     for route in routes:
-        if is_layout != route.path.endswith(layout_router_suffix):
+        if is_layout != route.path.endswith(CLIENT_LAYOUT_ROUTER_SUFFIX):
             continue
         match = route.path_regex.match(path)
         if match:
@@ -118,11 +118,45 @@ async def resolve_route_response(
     return None, None
 
 
+async def handle_route_response(
+    route: APIRoute,
+    path: str,
+    request: Request,
+    children_head: Optional[Head] = None,
+    children_body: Optional[c.AnyComponent] = None,
+) -> PageResponse:
+    match = route.path_regex.match(path)
+    if match:
+        matched_params = {key: route.param_convertors[key].convert(value) for key, value in match.groupdict().items()}
+        request.scope.get("path_params", {}).update(matched_params)
+        # response will merge the children element
+        response = await get_route_response(request, route, children_body)
+        response.head = merge_head(response.head or Head(), children_head or Head())
+        return response
+    raise ValueError("Route is not returning a PageResponse")
+
+
+def get_matched_layout_route(
+    path: str,
+    routes: list[APIRoute],
+):
+    group_layout_paths = {r.path.split(GROUP_ROUTE_PREFIX, 1)[0]: r for r in routes if GROUP_ROUTE_PREFIX in r.path}
+    while path.startswith(CLIENT_ROOT_ROUTER_PREFIX):
+        layout_path = path + CLIENT_LAYOUT_ROUTER_SUFFIX
+        matched_route = next((r for r in routes if r.path_regex.match(layout_path)), None)
+        if matched_route:
+            yield matched_route, layout_path
+        if path in group_layout_paths:
+            group_route = group_layout_paths[path]
+            group_name = group_route.path.strip("/").split("/")[-1]
+            group_path = path + group_name + "/"
+            yield group_route, group_path
+        path = "/".join(path.rsplit("/", 2)[:-2]) + "/"
+
+
 async def render_server_side_html(
     request: Request,
     routes: list[APIRoute],
-    root_router_prefix: str,
-    layout_router_suffix: str,
 ) -> tuple[str, str]:
     """
     Renders the server-side HTML for a request by resolving the appropriate
@@ -134,10 +168,6 @@ async def render_server_side_html(
         The request object.
     routes : list[APIRoute]
         The list of routes to match against the request.
-    root_router_prefix : str
-        The root prefix of the router to prepend to paths for matching.
-    layout_router_suffix : str
-        The suffix to use for finding layout components.
 
     Returns
     -------
@@ -145,14 +175,26 @@ async def render_server_side_html(
         the head HTML strings
         the server-rendered body HTML string
     """
-    path = root_router_prefix + get_route_path(request.scope)
-    head, body = await resolve_route_response(request, routes, path, layout_router_suffix)
-    path += layout_router_suffix
-    while path.startswith(root_router_prefix):
-        layout_head, layout_body = await resolve_route_response(
-            request, routes, path, layout_router_suffix, is_layout=True, children_head=head, children_body=body
+    request_path = CLIENT_ROOT_ROUTER_PREFIX + get_route_path(request.scope)
+    matched_page_route = next((r for r in routes if r.path_regex.match(request_path)), None)
+    if not matched_page_route:
+        return "", ""
+    page_response = await handle_route_response(
+        matched_page_route,
+        request_path,
+        request,
+    )
+    for layout_route, layout_path in get_matched_layout_route(request_path, routes):
+        layout_response = await handle_route_response(
+            layout_route,
+            layout_path,
+            request,
+            children_head=page_response.head,
+            children_body=page_response.body,
         )
-        body = layout_body or body
-        head = layout_head or head
-        path = "/".join(path.rsplit("/", 3)[:-3]) + "/" + layout_router_suffix
-    return head.render_to_html() if head else "", body.render_to_html() if body else ""
+        page_response.head = layout_response.head or page_response.head
+        page_response.body = layout_response.body or page_response.body
+    return (
+        page_response.head.render_to_html() if page_response.head else "",
+        page_response.body.render_to_html() if page_response.body else "",
+    )

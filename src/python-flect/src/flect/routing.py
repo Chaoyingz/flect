@@ -11,22 +11,21 @@ from fastapi.responses import HTMLResponse, Response
 from fastapi.routing import APIRoute
 from pydantic import BaseModel, ConfigDict, Field
 
+from flect.constants import (
+    CLIENT_LAYOUT_ROUTER_SUFFIX,
+    CLIENT_ROOT_ROUTER_PREFIX,
+    CLIENT_ROUTE_INDEX_FILENAME,
+    CLIENT_ROUTE_LAYOUT_FILENAME,
+    CLIENT_ROUTE_ROUTER_PATH,
+    DYNAMIC_ROUTE_PREFIX,
+    EXCLUDED_FOLDER_NAMES,
+    GROUP_ROUTE_PREFIX,
+    SERVER_API_ROUTE_FILENAME,
+    SERVER_API_ROUTE_METHODS,
+)
 from flect.render import generate_html, render_server_side_html
 from flect.response import PageResponse
 from flect.sitemap import Sitemap, generate_sitemap_xml
-
-EXCLUDED_FOLDER_NAMES = {"__pycache__"}
-DYNAMIC_ROUTE_PREFIX = "dynamic__"
-GROUP_ROUTE_PREFIX = "group__"
-
-CLIENT_ROUTE_INDEX_FILENAME = "page.py"
-CLIENT_ROUTE_LAYOUT_FILENAME = "layout.py"
-CLIENT_ROOT_ROUTER_PREFIX = "/flect"
-CLIENT_ROUTE_ROUTER_PATH = "/_route/"
-CLIENT_LAYOUT_ROUTER_SUFFIX = "_layout/"
-
-SERVER_API_ROUTE_FILENAME = "route.py"
-SERVER_API_ROUTE_METHODS = {"GET", "POST"}
 
 
 class ClientRoute(BaseModel):
@@ -291,9 +290,7 @@ def get_server_pre_render_router(loader_routes: list[APIRoute]) -> APIRouter:
     router = APIRouter()
 
     async def pre_render(request: Request) -> HTMLResponse:
-        head_html, element_html = await render_server_side_html(
-            request, loader_routes, CLIENT_ROOT_ROUTER_PREFIX, CLIENT_LAYOUT_ROUTER_SUFFIX
-        )
+        head_html, element_html = await render_server_side_html(request, loader_routes)
         return HTMLResponse(generate_html(head_html, element_html))
 
     router.add_api_route("/{path:path}", pre_render, methods=["GET"])
