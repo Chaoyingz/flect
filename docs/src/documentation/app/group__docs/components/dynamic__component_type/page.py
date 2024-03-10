@@ -2,8 +2,9 @@ from typing import Annotated, Any, Literal, Optional
 
 import flect.components as c
 from fastapi import Path, Request
-from flect import Meta, PageResponse
+from flect import PageResponse
 from flect.form import Checkbox, Input, Select, Textarea
+from flect.head import Head
 from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
 from flect.sitemap import Sitemap
 from pydantic import BaseModel
@@ -269,7 +270,7 @@ async def page(
 ) -> PageResponse:
     component_elements = COMPONENT_DOCS_MAP.get(component_type, c.Text(text="Unknown component type"))
     return PageResponse(
-        meta=Meta(
+        head=Head(
             title=f"{component_type} component",
             description=f"{component_type} component",
         ),

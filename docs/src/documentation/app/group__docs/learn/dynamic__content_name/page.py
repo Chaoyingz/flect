@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import Path, Request
 from flect import PageResponse
 from flect import components as c
+from flect.head import Head
 from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
 from flect.sitemap import Sitemap
 
@@ -27,11 +28,14 @@ async def page(
     content_name: Annotated[str, Path(..., description="The content name to render")],
 ) -> PageResponse:
     return PageResponse(
+        head=Head(
+            title=f"Learn {content_name}",
+        ),
         element=c.Container(
             tag="div",
             children=[
                 c.Markdown.from_file(CONTENT_DIR / f"{content_name}.md"),
                 get_docs_pager(current_link=request.url.path.replace(CLIENT_ROOT_ROUTER_PREFIX, "")),
             ],
-        )
+        ),
     )

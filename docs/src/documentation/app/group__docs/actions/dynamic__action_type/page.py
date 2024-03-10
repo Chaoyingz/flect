@@ -3,7 +3,8 @@ from typing import Annotated
 import flect.actions as a
 import flect.components as c
 from fastapi import Path, Request
-from flect import Meta, PageResponse
+from flect import PageResponse
+from flect.head import Head
 from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
 from flect.sitemap import Sitemap
 
@@ -95,7 +96,7 @@ async def page(
 ) -> PageResponse:
     component_elements = ACTION_DOCS_MAP.get(action_type, c.Text(text="Unknown action"))
     return PageResponse(
-        meta=Meta(
+        head=Head(
             title=f"{action_type} action",
             description=f"{action_type} action",
         ),

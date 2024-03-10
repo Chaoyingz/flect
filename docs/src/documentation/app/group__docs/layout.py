@@ -1,7 +1,8 @@
 from functools import lru_cache
 
-from flect import Meta, PageResponse, TitleTemplate
+from flect import PageResponse
 from flect import components as c
+from flect.head import Head, TitleTemplate
 
 docs_nav = [
     c.Container(
@@ -177,7 +178,9 @@ def get_docs_pager(current_link: str) -> c.AnyComponent:
 
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
     return PageResponse(
-        meta=Meta(title=TitleTemplate(template="{title} - flect", default="flect documentation", absolute=True)),
+        head=Head(
+            title=TitleTemplate(template="{title} - flect documentation", default="flect documentation", absolute=True)
+        ),
         element=c.Container(
             tag="div",
             class_name="flex",
