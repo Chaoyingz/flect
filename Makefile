@@ -9,13 +9,13 @@ install:
 
 .PHONY: format
 format:
-	rye run ruff check --fix-only $(path) docs
-	rye run ruff format $(path) docs
+	rye run ruff check --fix-only $(path) docs src/python-flect/
+	rye run ruff format $(path) docs src/python-flect/
 
 .PHONY: lint
 lint:
-	rye run ruff check $(path) docs
-	rye run ruff format --check $(path) docs
+	rye run ruff check $(path) docs src/python-flect/
+	rye run ruff format --check $(path) docs src/python-flect/
 
 .PHONY: typecheck
 typecheck:
