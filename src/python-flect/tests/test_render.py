@@ -2,12 +2,12 @@ import re
 
 import pytest
 from fastapi import FastAPI, Request
-from fastapi.routing import APIRouter
 from flect import PageResponse
 from flect import components as c
-from flect.constants import GROUP_ROUTE_PREFIX
 from flect.render import generate_html, get_route_response, render_server_side_html
-from flect.routing import CLIENT_LAYOUT_ROUTER_SUFFIX, CLIENT_ROOT_ROUTER_PREFIX
+from flect.routing import RouteInfo, get_route_info
+
+from tests.app.utils import APP_PATH, convert_path_to_regex_str
 
 
 def test_generate_html():
@@ -42,50 +42,95 @@ async def test_get_route_response(app, route_request):
     assert response is not None
 
 
-async def test_resolve_route_response(app, route_request):
-    response = await render_server_side_html(route_request, app.routes)
+async def test_resolve_route_response(route_request, client_routes, loader_routes):
+    response = await render_server_side_html(route_request, client_routes, loader_routes)
     assert response is not None
 
 
 @pytest.mark.parametrize(
-    "request_path, response_tags",
+    ("folder", "parent_path", "absolute_path", "is_root", "expected"),
     [
-        ("/", {"tag-layout-l1", "tag-page-l1"}),
-        ("/l2/", {"tag-layout-l1", "tag-group-l2", "tag-layout-l2", "tag-page-l2"}),
-        ("/l2/l3/", {"tag-layout-l1", "tag-group-l2", "tag-layout-l2", "tag-page-l3"}),
+        (
+            APP_PATH,
+            "",
+            "/",
+            True,
+            RouteInfo("", "", "", "/"),
+        ),
+        (
+            APP_PATH / "segment1",
+            "",
+            "/",
+            False,
+            RouteInfo("segment1", "/segment1/", "/segment1/", "/segment1/"),
+        ),
+        (
+            APP_PATH / "segment1" / "dynamic__segment_id",
+            "",
+            "/",
+            False,
+            RouteInfo("{segment_id}", "/{segment_id}/", "/{segment_id}/", "/dynamic__segment_id/"),
+        ),
+        (
+            APP_PATH / "segment1" / "group__segment2",
+            "",
+            "/",
+            False,
+            RouteInfo("", "", "group__segment2/", "/group__segment2/"),
+        ),
     ],
 )
-async def test_render_server_side_html(request_path, response_tags):
-    router = APIRouter(prefix=CLIENT_ROOT_ROUTER_PREFIX)
+def test_get_route_info(
+    folder,
+    parent_path,
+    absolute_path,
+    is_root,
+    expected,
+):
+    info = get_route_info(
+        folder,
+        parent_path,
+        absolute_path,
+        is_root,
+    )
+    assert info == expected
 
-    @router.get(f"/{CLIENT_LAYOUT_ROUTER_SUFFIX}")
-    async def layout_endpoint(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
-        return PageResponse(body=c.Container(children=[c.Text(text="tag-layout-l1"), outlet]))
 
-    @router.get("/")
-    async def page_endpoint() -> PageResponse:
-        return PageResponse(body=c.Button(children=[c.Text(text="tag-page-l1")]))
-
-    @router.get(f"/l2/{GROUP_ROUTE_PREFIX}l2/")
-    async def l2_group_endpoint(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
-        return PageResponse(body=c.Container(children=[c.Text(text="tag-group-l2"), outlet]))
-
-    @router.get(f"/l2/{CLIENT_LAYOUT_ROUTER_SUFFIX}")
-    async def l2_layout_endpoint(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
-        return PageResponse(body=c.Container(children=[c.Text(text="tag-layout-l2"), outlet]))
-
-    @router.get("/l2/")
-    async def l2_page_endpoint() -> PageResponse:
-        return PageResponse(body=c.Text(text="tag-page-l2"))
-
-    @router.get("/l2/l3/")
-    async def l3_page_endpoint() -> PageResponse:
-        return PageResponse(body=c.Text(text="tag-page-l3"))
-
-    request = Request(scope={"type": "http", "method": "GET", "path": request_path, "query_string": "", "headers": {}})
+@pytest.mark.parametrize(
+    "request_path, except_response",
+    [
+        ("/", {"page.py", "layout.py"}),
+        ("/segment1/", {"layout.py", "segment1/layout.py", "segment1/page.py"}),
+        ("/segment1/segment2/", {"layout.py", "segment1/layout.py", "segment1/segment2/page.py"}),
+        (
+            "/segment1/segment3/",
+            {
+                "layout.py",
+                "segment1/layout.py",
+                "segment1/group__segment2/layout.py",
+                "segment1/group__segment2/segment3/page.py",
+            },
+        ),
+        ("/segment1/0/", {"layout.py", "segment1/layout.py", "segment1/dynamic__segment_id/page.py"}),
+    ],
+)
+async def test_render_server_side_html(app_module, client_routes, loader_routes, request_path, except_response):
+    request = Request(
+        scope={
+            "type": "http",
+            "method": "GET",
+            "path": request_path,
+            "query_string": "",
+            "headers": {},
+            "path_params": {"path": request_path},
+        }
+    )
     _, body = await render_server_side_html(
         request,
-        router.routes,
+        client_routes,
+        loader_routes,
     )
-    tags = re.findall(r"tag-(?:page|layout|group)-l\d+", body)
-    assert set(tags) == response_tags
+    pattern = re.compile(r"(\^.*?\$)", re.MULTILINE)
+    matches = pattern.findall(body)
+    except_response = set((convert_path_to_regex_str(r)) for r in except_response)
+    assert except_response == set(matches)

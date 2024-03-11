@@ -18,8 +18,10 @@ class flect(FastAPI):
     def __init__(
         self,
         app: ModuleType,
+        debug: bool = True,
         **kwargs: Any,
     ) -> None:
+        self.debug = debug
         self.default_lifespan = kwargs.pop("lifespan", None)
         super().__init__(**kwargs, lifespan=self.lifespan)
         self.app_module = app
@@ -29,7 +31,8 @@ class flect(FastAPI):
     def setup_flect(self) -> None:
         app_router = configure_app_router(self.app_module)
         self.mount("/static", StaticFiles(directory=STATIC_FILE_PATH), name="static")
-        self.add_api_route("/_hotreload", self.hotreload, methods=["GET"])
+        if self.debug:
+            self.add_api_route("/_hotreload", self.hotreload, methods=["GET"])
         self.include_router(app_router, tags=["flect"])
 
     @asynccontextmanager

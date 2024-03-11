@@ -1,15 +1,17 @@
 import importlib.util
 import pathlib
+from collections import namedtuple
 from collections.abc import Awaitable
 from functools import lru_cache
 from types import ModuleType
-from typing import Any, Callable, Optional, cast
+from typing import Any, Callable, Optional, Union, cast
 
 from fastapi import APIRouter
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse, Response
 from fastapi.routing import APIRoute
 from pydantic import BaseModel, ConfigDict, Field
+from starlette.routing import BaseRoute
 
 from flect.constants import (
     CLIENT_LAYOUT_ROUTER_SUFFIX,
@@ -42,6 +44,10 @@ class ClientRoute(BaseModel):
     url: str = Field(
         ...,
         description="The URL of the route.",
+    )
+    absolute_path: str = Field(
+        ...,
+        description="The absolute path of the route.",
     )
     index: bool = Field(
         default=False,
@@ -105,38 +111,44 @@ def load_module(file_path: pathlib.Path) -> ModuleType:
     raise ImportError(f"Could not load module from {file_path}")
 
 
-def get_route_segment(folder: pathlib.Path, is_root: bool) -> str:
+def sort_loader_route(route: APIRoute) -> tuple[int, int, Union[float, int]]:
     """
-    Gets the route segment based on the folder name.
+    Sorts the routes based on their order in the loader.
     """
-    if is_root or folder.stem.startswith(GROUP_ROUTE_PREFIX):
-        return ""
-    if folder.stem.startswith(DYNAMIC_ROUTE_PREFIX):
-        return "{" + folder.stem[len(DYNAMIC_ROUTE_PREFIX) :] + "}"
-    return folder.stem
+    path = route.path
+    level = path.count("/")
+    num_dynamic = path.count("{")
+    first_dynamic = path.find("{") if "{" in path else float("inf")
+
+    return level, num_dynamic, first_dynamic
 
 
-def get_route_path(parent_path: str, segment: str) -> str:
-    """
-    Constructs the route path based on the parent path and the segment.
-    """
-    return f"{parent_path.rstrip('/')}/{segment}/" if segment else parent_path
+RouteInfo = namedtuple("RouteInfo", ["segment", "path", "url", "absolute_path"])
 
 
-def get_route_url(folder: pathlib.Path, path: str) -> str:
+def get_route_info(folder: pathlib.Path, parent_path: str, absolute_path: str, is_root: bool) -> RouteInfo:
     """
-    Constructs the route URL based on the parent URL and the segment.
+    Gets the route information based on the folder name and parent path.
     """
-    if folder.stem.startswith(GROUP_ROUTE_PREFIX):
-        url = f"{path}{folder.stem}/"
-    else:
-        url = path
-    return url
+    segment = ""
+    if not is_root and not folder.stem.startswith(GROUP_ROUTE_PREFIX):
+        if folder.stem.startswith(DYNAMIC_ROUTE_PREFIX):
+            segment = "{" + folder.stem[len(DYNAMIC_ROUTE_PREFIX) :] + "}"
+        else:
+            segment = folder.stem
+
+    path = f"{parent_path.rstrip('/')}/{segment}/" if segment else parent_path
+
+    url = f"{path}{folder.stem}/" if folder.stem.startswith(GROUP_ROUTE_PREFIX) else path
+
+    absolute_path = f"{absolute_path}{folder.stem}/" if not is_root else absolute_path
+    return RouteInfo(segment=segment, path=path, url=url, absolute_path=absolute_path)
 
 
-def get_client_route_objs(
+def get_client_routes(
     folder: pathlib.Path,
     parent_path: str = "/",
+    absolute_path: str = "/",
     is_root: bool = True,
 ) -> list[ClientRoute]:
     """
@@ -146,8 +158,10 @@ def get_client_route_objs(
     ----------
     folder : pathlib.Path
         The folder from which to start building routes.
-    parent_path : str, optional
+    parent_path : str
         The path of the parent route, by default "/".
+    absolute_path : str
+        The absolute path of the parent route, by default "/".
     is_root : bool, optional
         Flag indicating if the folder is the root of the routing structure, by default True.
 
@@ -157,24 +171,23 @@ def get_client_route_objs(
         A list of Route objects built from the folder structure.
     """
     routes = []
-    segment = get_route_segment(folder, is_root)
-    path = get_route_path(parent_path, segment)
-    url = get_route_url(folder, path)
+    route_info = get_route_info(folder, parent_path, absolute_path, is_root)
 
     layout_file = folder / CLIENT_ROUTE_LAYOUT_FILENAME
     page_file = folder / CLIENT_ROUTE_INDEX_FILENAME
 
     for child_folder in folder.iterdir():
         if child_folder.is_dir() and child_folder.name not in EXCLUDED_FOLDER_NAMES:
-            routes.extend(get_client_route_objs(child_folder, path, False))
+            routes.extend(get_client_routes(child_folder, route_info.path, route_info.absolute_path, False))
 
     if page_file.is_file():
         page_module = load_module(page_file)
         routes.append(
             ClientRoute(
-                segment=segment,
-                path=path,
-                url=url,
+                segment=route_info.segment,
+                path=route_info.path,
+                absolute_path=route_info.absolute_path,
+                url=route_info.url,
                 index=layout_file.is_file(),
                 children=[],
                 endpoint=page_module.page,
@@ -185,9 +198,10 @@ def get_client_route_objs(
     if layout_file.is_file():
         routes = [
             ClientRoute(
-                segment=segment,
-                url=url + CLIENT_LAYOUT_ROUTER_SUFFIX,
-                path=path,
+                segment=route_info.segment,
+                url=route_info.url + CLIENT_LAYOUT_ROUTER_SUFFIX,
+                path=route_info.path,
+                absolute_path=route_info.absolute_path,
                 index=False,
                 children=routes,
                 endpoint=load_module(layout_file).layout,
@@ -248,6 +262,8 @@ def get_client_loader_router(
         )
         if route.children:
             get_client_loader_router(route.children, router)
+    loader_routes = cast(list[APIRoute], router.routes)
+    router.routes = cast(list[BaseRoute], sorted(loader_routes, key=sort_loader_route))
     return router
 
 
@@ -257,28 +273,32 @@ def get_server_api_router(
     is_root: bool = True,
 ) -> APIRouter:
     router = APIRouter()
-    segment = get_route_segment(folder, is_root)
-    path = get_route_path(parent_path, segment)
+    route_info = get_route_info(folder, parent_path, absolute_path="/", is_root=is_root)
     route_file = folder / SERVER_API_ROUTE_FILENAME
     if route_file.is_file():
         module = load_module(route_file)
         for method in SERVER_API_ROUTE_METHODS:
             endpoint = getattr(module, method.lower(), None)
             if endpoint:
-                router.add_api_route(path, endpoint, methods=[method])
+                router.add_api_route(route_info.path, endpoint, methods=[method])
 
     for child_folder in folder.iterdir():
         if child_folder.is_dir() and child_folder.name not in EXCLUDED_FOLDER_NAMES:
-            router.include_router(get_server_api_router(child_folder, parent_path=path, is_root=False))
+            router.include_router(get_server_api_router(child_folder, parent_path=route_info.path, is_root=False))
     return router
 
 
-def get_server_pre_render_router(loader_routes: list[APIRoute]) -> APIRouter:
+def get_server_pre_render_router(
+    client_routes: list[ClientRoute],
+    loader_routes: list[APIRoute],
+) -> APIRouter:
     """
     Creates an APIRouter for pre-rendering server-side HTML based on the routes.
 
     Parameters
     ----------
+    client_routes : list[Route]
+        The list of client-side routes to use for pre-rendering.
     loader_routes : list[APIRoute]
         The list of loader routes to use for pre-rendering.
 
@@ -290,7 +310,7 @@ def get_server_pre_render_router(loader_routes: list[APIRoute]) -> APIRouter:
     router = APIRouter()
 
     async def pre_render(request: Request) -> HTMLResponse:
-        head_html, element_html = await render_server_side_html(request, loader_routes)
+        head_html, element_html = await render_server_side_html(request, client_routes, loader_routes)
         return HTMLResponse(generate_html(head_html, element_html))
 
     router.add_api_route("/{path:path}", pre_render, methods=["GET"])
@@ -335,7 +355,7 @@ def configure_app_router(app: ModuleType) -> APIRouter:
 
     root_router = APIRouter()
 
-    client_routes = get_client_route_objs(app_folder)
+    client_routes = get_client_routes(app_folder)
     root_router.include_router(get_client_routes_router(client_routes))
     loader_router = get_client_loader_router(client_routes)
     root_router.include_router(loader_router)
@@ -343,5 +363,5 @@ def configure_app_router(app: ModuleType) -> APIRouter:
     root_router.include_router(get_server_api_router(app_folder))
     root_router.include_router(get_server_sitemap_router(client_routes))
     # pre render router should be last because it catches all other routes
-    root_router.include_router(get_server_pre_render_router(cast(list[APIRoute], loader_router.routes)))
+    root_router.include_router(get_server_pre_render_router(client_routes, cast(list[APIRoute], loader_router.routes)))
     return root_router

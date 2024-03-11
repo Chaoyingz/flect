@@ -1,17 +1,20 @@
-from collections.abc import Generator
 from contextlib import AsyncExitStack
-from typing import Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 from fastapi import Request
-from fastapi.dependencies.utils import request_params_to_args, solve_dependencies
+from fastapi.dependencies.utils import solve_dependencies
 from fastapi.routing import APIRoute
 from starlette._utils import get_route_path
+from starlette.routing import compile_path
 
 from flect import components as c
-from flect.constants import CLIENT_LAYOUT_ROUTER_SUFFIX, CLIENT_ROOT_ROUTER_PREFIX, GROUP_ROUTE_PREFIX
+from flect.constants import CLIENT_LAYOUT_ROUTER_SUFFIX, CLIENT_ROOT_ROUTER_PREFIX
 from flect.head import Head, merge_head
 from flect.response import PageResponse
 from flect.version import VERSION
+
+if TYPE_CHECKING:
+    from flect.routing import ClientRoute
 
 
 def generate_html(
@@ -79,12 +82,6 @@ async def get_route_response(
         values, *_ = await solve_dependencies(
             request=request, dependant=route.dependant, async_exit_stack=async_exit_stack
         )
-        param_types = ["path_params", "query_params", "header_params", "cookie_params"]
-        for param_type in param_types:
-            values_update, errors_update = request_params_to_args(
-                getattr(route.dependant, param_type), getattr(request, param_type, {})
-            )
-            values.update(values_update)
         if outlet is not None:
             values["outlet"] = outlet
         assert route.dependant.call, "Route is not callable"
@@ -103,52 +100,39 @@ async def handle_route_response(
     children_body: Optional[c.AnyComponent] = None,
 ) -> PageResponse:
     match = route.path_regex.match(path)
-    if match:
-        matched_params = {key: route.param_convertors[key].convert(value) for key, value in match.groupdict().items()}
-        request.scope.get("path_params", {}).update(matched_params)
-        # response will merge the children element
-        response = await get_route_response(request, route, children_body)
-        response.head = merge_head(response.head or Head(), children_head or Head())
-        return response
-    raise ValueError("Route is not returning a PageResponse")
+    if not match:
+        raise ValueError("Route is not returning a PageResponse")
+    matched_params = {key: route.param_convertors[key].convert(value) for key, value in match.groupdict().items()}
+    request.scope.setdefault("path_params", {}).update(matched_params)
+    # response will merge the children element
+    response = await get_route_response(request, route, children_body)
+    response.head = merge_head(response.head or Head(), children_head or Head())
+    return response
 
 
-def get_matched_layout_route(
+def get_matched_client_route(
     path: str,
-    routes: list[APIRoute],
-) -> Generator[Tuple[APIRoute, str], None, None]:
-    """
-    Generator function to find layout routes matching the given path.
+    client_routes: list["ClientRoute"],
+) -> Optional["ClientRoute"]:
+    for route in client_routes:
+        path_regex, *_ = compile_path(route.path)
+        if path_regex.match(path):
+            return route
+        if route.children:
+            matched_route = get_matched_client_route(path, route.children)
+            if matched_route:
+                return matched_route
+    return None
 
-    Parameters
-    ----------
-    path : str
-        The path to match layout routes against.
-    routes : list[APIRoute]
-        The list of routes to search for layout routes.
 
-    Yields
-    ------
-    Tuple[APIRoute, str]
-        A tuple containing the matched layout route and its corresponding layout path.
-    """
-    group_layout_paths = {r.path.split(GROUP_ROUTE_PREFIX, 1)[0]: r for r in routes if GROUP_ROUTE_PREFIX in r.path}
-    while path.startswith(CLIENT_ROOT_ROUTER_PREFIX):
-        layout_path = path + CLIENT_LAYOUT_ROUTER_SUFFIX
-        matched_route = next((r for r in routes if r.path_regex.match(layout_path)), None)
-        if matched_route:
-            yield matched_route, layout_path
-        if path in group_layout_paths:
-            group_route = group_layout_paths[path]
-            group_name = group_route.path.strip("/").split("/")[-1]
-            group_path = path + group_name + "/"
-            yield group_route, group_path
-        path = "/".join(path.rsplit("/", 2)[:-2]) + "/"
+def get_matched_route(routes, path):
+    return next((r for r in routes if r.path_regex.match(path)), None)
 
 
 async def render_server_side_html(
     request: Request,
-    routes: list[APIRoute],
+    client_routes: list["ClientRoute"],
+    loader_routes: list[APIRoute],
 ) -> tuple[str, str]:
     """
     Renders the server-side HTML for a request by resolving the appropriate
@@ -158,7 +142,9 @@ async def render_server_side_html(
     ----------
     request : Request
         The request object.
-    routes : list[APIRoute]
+    client_routes : list[APIRoute]
+        The list of client-side routes to match against the request.
+    loader_routes : list[APIRoute]
         The list of routes to match against the request.
 
     Returns
@@ -167,27 +153,43 @@ async def render_server_side_html(
         the head HTML strings
         the server-rendered body HTML string
     """
-    request_path = CLIENT_ROOT_ROUTER_PREFIX + get_route_path(request.scope)
-    matched_page_route = next((r for r in routes if r.path_regex.match(request_path)), None)
+    request_path = get_route_path(request.scope)
+    loader_path = CLIENT_ROOT_ROUTER_PREFIX + request_path
+    matched_page_route = get_matched_route(loader_routes, loader_path)
     if not matched_page_route:
         return "", ""
 
     page_response = await handle_route_response(
         matched_page_route,
-        request_path,
+        loader_path,
         request,
     )
 
-    for layout_route, layout_path in get_matched_layout_route(request_path, routes):
-        layout_response = await handle_route_response(
-            layout_route,
-            layout_path,
-            request,
-            children_head=page_response.head,
-            children_body=page_response.body,
-        )
-        page_response.head = layout_response.head or page_response.head
-        page_response.body = layout_response.body or page_response.body
+    matched_client_route = get_matched_client_route(request_path, client_routes)
+    if matched_client_route:
+        absolute_path = matched_client_route.absolute_path
+        if matched_client_route.index:
+            layout_path = (
+                CLIENT_ROOT_ROUTER_PREFIX
+                + "/".join(absolute_path.rsplit("/", 3)[:-3])
+                + "/"
+                + CLIENT_LAYOUT_ROUTER_SUFFIX
+            )
+        else:
+            layout_path = CLIENT_ROOT_ROUTER_PREFIX + absolute_path + CLIENT_LAYOUT_ROUTER_SUFFIX
+        while layout_path.startswith(CLIENT_ROOT_ROUTER_PREFIX):
+            matched_layout_route = get_matched_route(loader_routes, layout_path)
+            if matched_layout_route:
+                layout_response = await handle_route_response(
+                    matched_layout_route,
+                    layout_path,
+                    request,
+                    children_head=page_response.head,
+                    children_body=page_response.body,
+                )
+                page_response.head = layout_response.head or page_response.head
+                page_response.body = layout_response.body or page_response.body
+            layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/" + CLIENT_LAYOUT_ROUTER_SUFFIX
 
     head_html = page_response.head.render_to_html() if page_response.head else ""
     element_html = page_response.body.render_to_html() if page_response.body else ""
