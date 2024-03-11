@@ -68,6 +68,9 @@ extend-select = ["Q", "RUF100", "UP", "I"]
 include = ["src/python-flect/src/flect"]
 extraPaths = ["src/python-flect/src/flect"]
 
+[tool.coverage.run]
+omit = ["src/python-flect/tests/app/"]
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 addopts = "-s -p no:warnings"
