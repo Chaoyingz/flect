@@ -214,6 +214,18 @@ COMPONENT_DOCS_MAP = {
         ),
         get_api_reference_section(component=c.Markdown),
     ],
+    "paragraph": [
+        get_component_description_section(
+            title="Paragraph",
+            description="The Paragraph component displays text.",
+        ),
+        get_component_preview_section(
+            preview=c.Paragraph(
+                text="Text, you can also use markdown link syntax here. example: [example](https://example.com).",
+            )
+        ),
+        get_api_reference_section(component=c.Text),
+    ],
     "table": [
         get_component_description_section(
             title="Table",
@@ -268,7 +280,7 @@ async def page(
     request: Request,
     component_type: Annotated[str, Path(..., description="The component type to render")],
 ) -> PageResponse:
-    component_elements = COMPONENT_DOCS_MAP.get(component_type, c.Text(text="Unknown component type"))
+    component_elements = COMPONENT_DOCS_MAP.get(component_type, [c.Text(text="Unknown component type")])
     return PageResponse(
         head=Head(
             title=f"{component_type} component",

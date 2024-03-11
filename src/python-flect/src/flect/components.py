@@ -1,4 +1,5 @@
 import pathlib
+import re
 from html import escape
 from typing import Annotated, Literal, Optional, Union
 
@@ -265,9 +266,12 @@ class Paragraph(BaseComponent):
     )
 
     def render_to_html(self) -> str:
+        text = escape(self.text)
+        pattern = r"\[(.*?)\]\((.*?)\)"
+        html_text = re.sub(pattern, r'<a href="\2">\1</a>', text)
         return f"""\
         <p>
-            {escape(self.text)}
+            {html_text}
         </p>
         """
 

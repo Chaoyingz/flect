@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    debug: bool = True
     google_measurement_id: str = ""
 
 

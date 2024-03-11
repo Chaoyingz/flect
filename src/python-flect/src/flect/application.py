@@ -18,10 +18,8 @@ class flect(FastAPI):
     def __init__(
         self,
         app: ModuleType,
-        debug: bool = True,
         **kwargs: Any,
     ) -> None:
-        self.debug = debug
         self.default_lifespan = kwargs.pop("lifespan", None)
         super().__init__(**kwargs, lifespan=self.lifespan)
         self.app_module = app

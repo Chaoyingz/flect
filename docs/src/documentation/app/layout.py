@@ -94,29 +94,11 @@ async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
                 ),
                 c.Container(
                     tag="footer",
-                    class_name="border-t text-sm container py-8 mt-8",
+                    class_name="border-t text-sm container py-8 mt-8 flex",
                     children=[
-                        c.Text(text="Built by "),
-                        c.Link(
-                            href="https://github.com/Chaoyingz",
-                            children=[
-                                c.Text(
-                                    text="Chaoying.",
-                                    class_name="underline",
-                                )
-                            ],
-                        ),
-                        c.Text(
-                            text=" The source code is available on ",
-                        ),
-                        c.Link(
-                            href="https://github.com/Chaoyingz/flect/tree/main/docs",
-                            children=[
-                                c.Text(
-                                    text="GitHub.",
-                                    class_name="underline",
-                                )
-                            ],
+                        c.Paragraph(
+                            class_name="text-sm",
+                            text="Built by [Chaoying](https://github.com/Chaoyingz). The source code is available on [GitHub](https://github.com/Chaoyingz/flect/tree/main/docs).",
                         ),
                     ],
                 ),

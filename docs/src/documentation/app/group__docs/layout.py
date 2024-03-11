@@ -130,6 +130,10 @@ docs_nav = [
                         children=[c.Text(text="Markdown", class_name="text-sm")],
                     ),
                     c.NavLink(
+                        href="/components/paragraph/",
+                        children=[c.Text(text="Paragraph", class_name="text-sm")],
+                    ),
+                    c.NavLink(
                         href="/components/table/",
                         children=[c.Text(text="Table", class_name="text-sm")],
                     ),
