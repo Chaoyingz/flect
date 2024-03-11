@@ -25,7 +25,7 @@ class Meta(BaseModel):
 
 
 class HeadMetas(BaseModel):
-    metas: list[Meta] = Field(default_factory=list, description="The metadata of the page.")
+    metas: list[Union[Meta, str]] = Field(default_factory=list, description="The metadata of the page.")
     absolute: bool = Field(default=False, description="Determines if the title is absolute.")
 
 
@@ -83,7 +83,7 @@ class HeadScript(BaseModel):
 
 
 class HeadScripts(BaseModel):
-    scripts: list[HeadScript]
+    scripts: list[Union[HeadScript, str]] = Field(default_factory=list, description="The scripts of the page.")
     absolute: bool = Field(default=False, description="Determines if the scripts are absolute.")
 
 
@@ -163,7 +163,7 @@ class HeadLink(BaseModel):
 
 
 class HeadLinks(BaseModel):
-    links: list[HeadLink]
+    links: list[Union[HeadLink, str]]
     absolute: bool = Field(default=False, description="Determines if the links are absolute.")
 
 
@@ -189,13 +189,22 @@ class Head(BaseModel):
             html += f'<meta name="description" content="{self.description}">\n'
         if self.script is not None:
             for script in self.script.scripts:
-                html += f"<script {script.render_to_html()}/>\n"
+                if isinstance(script, str):
+                    html += script
+                else:
+                    html += f"<script {script.render_to_html()}/>\n"
         if self.link is not None:
             for link in self.link.links:
-                html += f"<link {link.render_to_html()}/>\n"
+                if isinstance(link, str):
+                    html += link
+                else:
+                    html += f"<link {link.render_to_html()}/>\n"
         if self.meta is not None:
             for meta in self.meta.metas:
-                html += f"<meta {meta.render_to_html()}/>\n"
+                if isinstance(meta, str):
+                    html += meta
+                else:
+                    html += f"<meta {meta.render_to_html()}/>\n"
         return html
 
 

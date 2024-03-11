@@ -1,11 +1,29 @@
 from flect import PageResponse
 from flect import components as c
-from flect.head import Head, TitleTemplate
+from flect.head import Head, HeadScripts, TitleTemplate
+
+from documentation.config import settings
 
 
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
     return PageResponse(
-        head=Head(title=TitleTemplate(template="{title} - flect", default="flect")),
+        head=Head(
+            title=TitleTemplate(template="{title} - flect", default="flect"),
+            script=HeadScripts(
+                scripts=[
+                    f"<script async src='https://www.googletagmanager.com/gtag/js?id={settings.google_measurement_id}'></script>",
+                    f"""
+                    <script>
+                      window.dataLayer = window.dataLayer || [];
+                      function gtag(){{dataLayer.push(arguments);}}
+                      gtag('js', new Date());
+
+                      gtag('config', '{settings.google_measurement_id}');
+                    </script>
+                    """,
+                ]
+            ),
+        ),
         body=c.Container(
             tag="div",
             children=[

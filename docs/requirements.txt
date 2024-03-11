@@ -1,1 +1,2 @@
 flect
+pydantic_settings
