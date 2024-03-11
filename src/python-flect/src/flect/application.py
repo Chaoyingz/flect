@@ -55,7 +55,7 @@ class flect(FastAPI):
                         self.reload_event.clear()
                     except asyncio.TimeoutError:
                         pass
-            except asyncio.CancelledError:
+            except Exception:
                 pass
 
         return StreamingResponse(event_generator(), media_type="text/event-stream")
