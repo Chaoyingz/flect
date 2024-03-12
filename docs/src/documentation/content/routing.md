@@ -26,7 +26,7 @@ In this example, each `page.py` file maps to a specific URL path based on its lo
 - `app/dashboard/page.py` maps to `/dashboard/`. This is the page displayed when users navigate to the `/dashboard/` path in your application.
 - `app/dashboard/users/page.py` maps to `/dashboard/users/`. This is the page displayed when users navigate to the `/dashboard/users/` path in your application.
 
-This way, each `page.py` file serves as a unique route in your application, and the folder structure directly translates to the application's routing structure. This makes managing and understanding your application's routes straightforward and inflecttive.
+This way, each `page.py` file serves as a unique route in your application, and the folder structure directly translates to the application's routing structure. This makes managing and understanding your application's routes straightforward and intuitive.
 
 ## Defining Routing Files
 
