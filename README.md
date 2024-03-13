@@ -47,6 +47,7 @@ The key features are:
 - **Folder-Based Routing**: Easy route management through folder structure.
 - **Client-Side Routing**: Fast, smooth page transitions without reloads.
 - **SEO Friendly**: Supports server-side rendering for better search engine visibility.
+- **Custom Components**: You can conveniently use your own built React components in flect.
 
 You can also view the [documentation website](https://flect.celerforge.com/docs/introduction/), which is completely built with flect and deployed using [Vercel](https://vercel.com/), source code can be found [here](https://github.com/Chaoyingz/flect/tree/main/docs).
 

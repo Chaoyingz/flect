@@ -38,7 +38,7 @@
 ## flect 是什么
 
 flect 是一个用于构建全栈 Web 应用程序的 Python 框架。它通过在后端使用与前端 React 组件属性相对应的 Pydantic 模型来构建用户界面。
-这种集成允许开发者利用 Python 快速开发具有交互性和美观的用户界面。
+这种集成可以让开发者利用 Python 快速开发具有交互性和美观的用户界面。
 
 主要特性包括：
 
@@ -47,6 +47,7 @@ flect 是一个用于构建全栈 Web 应用程序的 Python 框架。它通过�
 - **基于文件夹的路由**：通过文件夹结构轻松管理路由。
 - **客户端路由**：无需重新加载即可实现快速、流畅的页面转换。
 - **SEO 友好**：支持服务器端渲染，以获得更好的搜索引擎可见性。
+- **自定义组件**：在 flect 中，你可以方便地使用你自己构建的 React 组件。
 
 您也可以访问[文档网站](https://flect.celerforge.com/docs/introduction/)，该网站完全使用 flect 构建，并通过 [Vercel](https://vercel.com/) 部署，源代码可以在[这里](https://github.com/Chaoyingz/flect/tree/main/docs)找到。
 

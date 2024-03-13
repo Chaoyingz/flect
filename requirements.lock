@@ -22,7 +22,7 @@ h11==0.14.0
     # via uvicorn
 idna==3.6
     # via anyio
-pydantic==2.6.2
+pydantic==2.6.4
     # via fastapi
     # via flect
 pydantic-core==2.16.3

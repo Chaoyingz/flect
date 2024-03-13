@@ -1,11 +1,13 @@
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter'
 import python from 'react-syntax-highlighter/dist/esm/languages/prism/python'
+import tsx from 'react-syntax-highlighter/dist/esm/languages/prism/tsx'
 import dracula from 'react-syntax-highlighter/dist/esm/styles/prism/dracula'
 import { CopyButton } from '@/components/flect/copy-button'
 
 import { cn } from '@/lib/utils'
 
 SyntaxHighlighter.registerLanguage('python', python)
+SyntaxHighlighter.registerLanguage('tsx', tsx)
 
 export type CodeBlockLazyProps = {
   componentType: 'code-block'

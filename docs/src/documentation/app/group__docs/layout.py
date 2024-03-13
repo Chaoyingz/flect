@@ -57,6 +57,10 @@ docs_nav = [
                         href="/learn/form/",
                         children=[c.Text(text="Form", class_name="text-sm")],
                     ),
+                    c.NavLink(
+                        href="/learn/custom-component/",
+                        children=[c.Text(text="Custom Component", class_name="text-sm")],
+                    ),
                 ],
             ),
         ],

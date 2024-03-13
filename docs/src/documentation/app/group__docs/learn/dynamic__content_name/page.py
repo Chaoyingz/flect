@@ -19,7 +19,7 @@ async def sitemap(dynamic_url: str) -> list[Sitemap]:
             change_frequency=None,
             priority=None,
         )
-        for content_name in ["project-structure", "routing", "form"]
+        for content_name in ["project-structure", "routing", "form", "custom-component"]
     ]
 
 

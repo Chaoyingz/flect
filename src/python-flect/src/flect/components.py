@@ -4,11 +4,22 @@ from html import escape
 from typing import Annotated, Literal, Optional, Union
 
 import pyromark
-from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, SerializeAsAny, field_serializer, model_validator
+from pydantic import (
+    AliasGenerator,
+    BaseModel,
+    ConfigDict,
+    Field,
+    SerializeAsAny,
+    WrapSerializer,
+    field_serializer,
+    model_validator,
+)
 from pydantic.alias_generators import to_camel
+from pydantic_core.core_schema import SerializerFunctionWrapHandler
 from typing_extensions import Self
 
 from flect.actions import AnyAction
+from flect.constants import CUSTOM_COMPONENT_MOUNT_FOLDER_NAME
 
 
 class BaseComponent(BaseModel):
@@ -134,6 +145,19 @@ class CopyButton(BaseComponent):
             {escape(self.text)}
         </button>
         """
+
+
+class Custom(BaseComponent):
+    component_type: Literal["custom"] = "custom"
+    package: str
+    component: str
+    uri: Optional[str] = Field(default=None, validate_default=True)
+
+    @model_validator(mode="after")
+    def set_default_uri(self) -> Self:
+        if self.uri is None:
+            self.uri = f"../../{CUSTOM_COMPONENT_MOUNT_FOLDER_NAME}/{self.package}.js"
+        return self
 
 
 class Form(BaseComponent):
@@ -323,13 +347,15 @@ class Text(BaseComponent):
         """
 
 
-AnyComponent = Annotated[
+COMPONENT_DISCRIMINATOR_NAME = "component_type"
+AnyComponentType = Annotated[
     Union[
         Avatar,
         Button,
         CodeBlock,
         Container,
         CopyButton,
+        Custom,
         Form,
         Heading,
         Link,
@@ -340,8 +366,17 @@ AnyComponent = Annotated[
         Table,
         Text,
     ],
-    Field(discriminator="component_type"),
+    Field(discriminator=COMPONENT_DISCRIMINATOR_NAME),
 ]
+
+
+def ser_wrap(v, nxt: SerializerFunctionWrapHandler, info) -> dict:
+    if getattr(v, COMPONENT_DISCRIMINATOR_NAME) == Custom.model_fields[COMPONENT_DISCRIMINATOR_NAME].default:
+        return v.model_dump(by_alias=True)
+    return nxt(v, info)
+
+
+AnyComponent = Annotated[AnyComponentType, WrapSerializer(ser_wrap, when_used="json")]
 
 # Rebuild forward ref models
 for container_component in BaseContainerComponent.__subclasses__():
@@ -353,6 +388,7 @@ __all__ = (
     "CodeBlock",
     "Container",
     "CopyButton",
+    "Custom",
     "Form",
     "Heading",
     "Link",

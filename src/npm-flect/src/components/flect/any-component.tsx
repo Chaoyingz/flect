@@ -12,6 +12,7 @@ import { Paragraph, ParagraphProps } from '@/components/flect/paragraph'
 import { Markdown, MarkdownProps } from '@/components/flect/markdown'
 import { CopyButton, CopyButtonProps } from '@/components/flect/copy-button'
 import { CodeBlock, CodeBlockProps } from '@/components/flect/code-block'
+import { Custom, CustomProps } from '@/components/flect/custom'
 
 export type ComponentProps =
   | AvatarProps
@@ -19,6 +20,7 @@ export type ComponentProps =
   | CodeBlockProps
   | ContainerProps
   | CopyButtonProps
+  | CustomProps
   | FormProps
   | HeadingProps
   | LinkProps
@@ -42,6 +44,8 @@ export function AnyComponent(props: ComponentProps) {
       return <Container {...props} />
     case 'copy-button':
       return <CopyButton {...props} />
+    case 'custom':
+      return <Custom {...props} />
     case 'form':
       return <Form {...props} />
     case 'heading':
