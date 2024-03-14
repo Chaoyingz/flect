@@ -1,9 +1,10 @@
-import { Outlet as RemixOutlet } from 'react-router-dom'
+import { Outlet as RemixOutlet } from "react-router-dom";
 
 export interface OutletProps {
-  componentType: 'outlet'
+  type: "outlet";
 }
 
-export function Outlet() {
-  return <RemixOutlet />
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Outlet(_: OutletProps) {
+  return <RemixOutlet />;
 }

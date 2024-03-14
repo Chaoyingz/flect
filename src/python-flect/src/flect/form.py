@@ -43,7 +43,7 @@ def Checkbox(
 ) -> Any:
     return Field(
         json_schema_extra={
-            "componentType": "checkbox",
+            "fieldType": "checkbox",
             "className": class_name,
         },
         **kwargs,
@@ -59,10 +59,10 @@ def Input(
 ) -> Any:
     return Field(
         json_schema_extra={
-            "componentType": "input",
+            "fieldType": "input",
             "className": class_name,
             "attrs": {
-                "type": type,
+                "fieldType": type,
                 "placeholder": placeholder,
             },
         },
@@ -77,7 +77,7 @@ def Select(
 ) -> Any:
     return Field(
         json_schema_extra={
-            "componentType": "select",
+            "fieldType": "select",
             "className": class_name,
         },
         **kwargs,
@@ -94,7 +94,7 @@ def Textarea(
 ) -> Any:
     return Field(
         json_schema_extra={
-            "componentType": "textarea",
+            "fieldType": "textarea",
             "className": class_name,
             "attrs": {
                 "rows": rows,

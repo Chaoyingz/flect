@@ -1,16 +1,23 @@
-import { Table as TableUI, TableHead, TableBody, TableRow, TableCell, TableHeader } from '@/components/ui/table'
-import { Json } from '@/types'
+import {
+  Table as TableUI,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHeader,
+} from "@/components/ui/table";
+import { Json } from "@/types";
 
 export interface Dataset {
-  [k: string]: Json
+  [k: string]: Json;
 }
 
 export interface TableProps {
-  componentType: 'table'
-  className?: string
+  type: "table";
+  className?: string;
 
-  labels: string[]
-  datasets: Dataset[]
+  labels: string[];
+  datasets: Dataset[];
 }
 
 export function Table(props: TableProps) {
@@ -35,9 +42,9 @@ export function Table(props: TableProps) {
         ))}
       </TableBody>
     </TableUI>
-  )
+  );
 }
 
 function Cell({ value }: { value: Json }) {
-  return <>{JSON.stringify(value)}</>
+  return <>{JSON.stringify(value)}</>;
 }

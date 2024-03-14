@@ -15,7 +15,7 @@ class APIReference(BaseModel):
 def get_api_reference_section(component: c.AnyComponent) -> c.Container:
     props = []
     for field, filed_info in component.model_fields.items():
-        if field in ["component_type", "action_type"]:
+        if field in ["type", "type"]:
             continue
         if field == "children":
             filed_info.annotation = "flect.components.AnyComponents"

@@ -1,6 +1,6 @@
-import { Resolver, appendErrors, FieldError } from 'react-hook-form'
-import Ajv, { DefinedError } from 'ajv'
-import ajvErrors from 'ajv-errors'
+import { Resolver, appendErrors, FieldError } from "react-hook-form";
+import Ajv, { DefinedError } from "ajv";
+import ajvErrors from "ajv-errors";
 
 const parseErrorSchema = (
   ajvErrors: DefinedError[],
@@ -8,55 +8,60 @@ const parseErrorSchema = (
 ): Record<string, FieldError> => {
   // Ajv will return empty instancePath when require error
   ajvErrors.forEach((error) => {
-    if (error.keyword === 'required') {
-      error.instancePath += '/' + error.params.missingProperty
+    if (error.keyword === "required") {
+      error.instancePath += "/" + error.params.missingProperty;
     }
-  })
+  });
 
   return ajvErrors.reduce<Record<string, FieldError>>((previous, error) => {
     // `/deepObject/data` -> `deepObject.data`
-    const path = error.instancePath.substring(1).replace(/\//g, '.')
+    const path = error.instancePath.substring(1).replace(/\//g, ".");
 
     if (!previous[path]) {
       previous[path] = {
         message: error.message,
         type: error.keyword,
-      }
+      };
     }
 
     if (validateAllFieldCriteria) {
-      const types = previous[path].types
-      const messages = types && types[error.keyword]
+      const types = previous[path].types;
+      const messages = types && types[error.keyword];
 
       previous[path] = appendErrors(
         path,
         validateAllFieldCriteria,
         previous,
         error.keyword,
-        messages ? ([] as string[]).concat(messages as string[], error.message || '') : error.message,
-      ) as FieldError
+        messages
+          ? ([] as string[]).concat(messages as string[], error.message || "")
+          : error.message,
+      ) as FieldError;
     }
 
-    return previous
-  }, {})
-}
+    return previous;
+  }, {});
+};
 
 export function ajvResolver(schema: object): Resolver {
-  const ajv = new Ajv({ allErrors: true })
-  ajv.addVocabulary(['componentType', 'className', 'attrs'])
-  ajvErrors(ajv)
+  const ajv = new Ajv({ allErrors: true });
+  ajv.addVocabulary(["type", "className", "attrs"]);
+  ajvErrors(ajv);
   return async (values, _, options) => {
-    const validate = ajv.compile(schema)
-    const valid = validate(values)
+    const validate = ajv.compile(schema);
+    const valid = validate(values);
 
     if (valid) {
-      return { values, errors: {} }
+      return { values, errors: {} };
     } else {
-      const errors = parseErrorSchema(validate.errors as DefinedError[], options.criteriaMode === 'all')
+      const errors = parseErrorSchema(
+        validate.errors as DefinedError[],
+        options.criteriaMode === "all",
+      );
       return {
         values: {},
         errors,
-      }
+      };
     }
-  }
+  };
 }

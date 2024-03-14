@@ -151,7 +151,7 @@ from todo.app.page import TodoInCreate
 
 async def post(form: TodoInCreate) -> ActionResponse:
     return ActionResponse(
-        action=Notify(title="success", type="success", description=f"todo {form.name} created."),
+        action=Notify(title="success", style="success", description=f"todo {form.name} created."),
     )
 ```
 
@@ -244,7 +244,7 @@ from todo.storage import storage
 async def post(form: TodoInCreate) -> ActionResponse:
     storage.insert(TodoInDB(**form.dict()).model_dump())
     return ActionResponse(
-        action=Notify(title="success", type="success", description=f"todo {form.name} created."),
+        action=Notify(title="success", style="success", description=f"todo {form.name} created."),
     )
 ```
 

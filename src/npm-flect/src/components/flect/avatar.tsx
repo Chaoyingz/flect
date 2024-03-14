@@ -1,11 +1,15 @@
-import { AvatarFallback, AvatarImage, Avatar as AvatarUI } from '@/components/ui/avatar'
+import {
+  AvatarFallback,
+  AvatarImage,
+  Avatar as AvatarUI,
+} from "@/components/ui/avatar";
 
 export interface AvatarProps {
-  componentType: 'avatar'
-  className?: string
-  src?: string
-  alt?: string
-  fallback: string
+  type: "avatar";
+  className?: string;
+  src?: string;
+  alt?: string;
+  fallback: string;
 }
 export function Avatar(props: AvatarProps) {
   return (
@@ -13,5 +17,5 @@ export function Avatar(props: AvatarProps) {
       <AvatarImage src={props.src} alt={props.alt} />
       <AvatarFallback>{props.fallback}</AvatarFallback>
     </AvatarUI>
-  )
+  );
 }

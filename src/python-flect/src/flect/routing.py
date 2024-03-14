@@ -291,6 +291,7 @@ def get_server_api_router(
 def get_server_pre_render_router(
     client_routes: list[ClientRoute],
     loader_routes: list[APIRoute],
+    prebuilt_uri: Optional[str] = None,
 ) -> APIRouter:
     """
     Creates an APIRouter for pre-rendering server-side HTML based on the routes.
@@ -301,6 +302,8 @@ def get_server_pre_render_router(
         The list of client-side routes to use for pre-rendering.
     loader_routes : list[APIRoute]
         The list of loader routes to use for pre-rendering.
+    prebuilt_uri : Optional[str], optional
+        The prebuilt URI to use for pre-rendering, by default None
 
     Returns
     -------
@@ -311,7 +314,7 @@ def get_server_pre_render_router(
 
     async def pre_render(request: Request) -> HTMLResponse:
         head_html, element_html = await render_server_side_html(request, client_routes, loader_routes)
-        return HTMLResponse(generate_html(head_html, element_html))
+        return HTMLResponse(generate_html(head_html, element_html, prebuilt_uri))
 
     router.add_api_route("/{path:path}", pre_render, methods=["GET"])
     return router
@@ -330,7 +333,10 @@ def get_server_sitemap_router(
     return router
 
 
-def configure_app_router(app: ModuleType) -> APIRouter:
+def configure_app_router(
+    app: ModuleType,
+    prebuilt_uri: Optional[str] = None,
+) -> APIRouter:
     """
     Constructs the main APIRouter for the application by loading routes from the app module.
 
@@ -338,6 +344,9 @@ def configure_app_router(app: ModuleType) -> APIRouter:
     ----------
     app : ModuleType
         The main application module containing the file structure for routes.
+
+    prebuilt_uri : Optional[str], optional
+        The prebuilt URI to use for the app, by default None
 
     Returns
     -------
@@ -363,5 +372,7 @@ def configure_app_router(app: ModuleType) -> APIRouter:
     root_router.include_router(get_server_api_router(app_folder))
     root_router.include_router(get_server_sitemap_router(client_routes))
     # pre render router should be last because it catches all other routes
-    root_router.include_router(get_server_pre_render_router(client_routes, cast(list[APIRoute], loader_router.routes)))
+    root_router.include_router(
+        get_server_pre_render_router(client_routes, cast(list[APIRoute], loader_router.routes), prebuilt_uri)
+    )
     return root_router

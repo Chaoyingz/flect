@@ -1,8 +1,20 @@
 {
-  "name": "@chaoying/npm-flect",
+  "name": "@chaoying/flect",
+  "description": "flect is a Python framework for building full-stack web applications.",
+  "author": "chaoying",
+  "license": "MIT",
   "private": false,
-  "version": "0.1.9",
+  "version": "0.2.0",
   "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build --emptyOutDir",
@@ -22,7 +34,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.302.0",
-    "next-themes": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.0",
@@ -51,13 +62,10 @@
     "postcss": "^8.4.35",
     "rollup-plugin-base-url": "^0.0.2",
     "tailwindcss": "^3.4.1",
-    "ts-json-schema-generator": "^1.5.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
-    "vite-bundle-analyzer": "^0.8.1"
-  },
-  "description": "Tui is a quick and easy way to build web applications. It's based on FastAPI for speedy backend development and Shadcn UI for slick user interfaces.",
-  "main": "dist/index.html",
-  "author": "chaoying",
-  "license": "MIT"
+    "vite-bundle-analyzer": "^0.8.1",
+    "vite-plugin-dts": "^3.7.3",
+    "vite-plugin-lib-inject-css": "^2.0.0"
+  }
 }

@@ -9,24 +9,24 @@ class BaseAction(BaseModel):
 
 
 class Notify(BaseAction):
-    action_type: Literal["notify"] = "notify"
+    type: Literal["notify"] = "notify"
 
     title: str = Field(..., description="The title of the notification.")
     description: Optional[str] = Field(default=None, description="The description of the notification.")
     position: Optional[
         Literal["top-left", "top-right", "bottom-left", "bottom-right", "top-center", "bottom-center"]
     ] = Field(default=None, description="Position of the toast.")
-    type: Optional[Literal["normal", "action", "success", "info", "warning", "error", "loading", "default"]] = Field(
+    style: Optional[Literal["normal", "action", "success", "info", "warning", "error", "loading", "default"]] = Field(
         default=None, description="Type of the toast."
     )
 
 
 class Redirect(BaseAction):
-    action_type: Literal["redirect"] = "redirect"
+    type: Literal["redirect"] = "redirect"
     url: str = Field(..., description="The URL to redirect to.")
 
 
 AnyAction = Annotated[
     Union[Notify, Redirect],
-    Field(discriminator="action_type"),
+    Field(discriminator="type"),
 ]

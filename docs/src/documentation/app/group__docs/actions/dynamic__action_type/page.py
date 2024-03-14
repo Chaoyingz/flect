@@ -81,12 +81,12 @@ ACTION_DOCS_MAP = {
 async def sitemap(dynamic_url: str) -> list[Sitemap]:
     return [
         Sitemap(
-            url=dynamic_url.format(action_type=action_type),
+            url=dynamic_url.format(type=type),
             last_modified=None,
             change_frequency=None,
             priority=None,
         )
-        for action_type in ACTION_DOCS_MAP
+        for type in ACTION_DOCS_MAP
     ]
 
 

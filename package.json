@@ -1,6 +1,5 @@
 {
   "name": "flect",
-  "private": true,
   "type": "module",
   "workspaces": [
     "src/*"

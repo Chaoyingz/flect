@@ -1,11 +1,13 @@
-const defaultTheme = require("tailwindcss/defaultTheme");
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
-  content: ["./src/**/*.{ts,tsx}"],
-  prefix: "",
-  safelist: ["sr-only"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
+  // prefix: 'fp',
   theme: {
     container: {
       center: true,
@@ -69,11 +71,37 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-      fontFamily: {
-        Inter: ["Inter"],
-        sans: ['"Inter"', ...defaultTheme.fontFamily.sans],
-      },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  safelist: [
+    {
+      pattern: /^(w|max-w|h|max-h)-/,
+    },
+    {
+      pattern: /^(flex|grid)-/,
+    },
+    {
+      pattern: /^(m|p)\w?-\d/,
+    },
+    {
+      pattern: /^gap-\d/,
+    },
+    {
+      pattern: /^text-(\w{2}|\d{1}\w{2})$/,
+    },
+    {
+      pattern: /^(font|justify)-/,
+    },
+    "border-b",
+    "text-center",
+    "invisible",
+    "absolute",
+    "overflow-hidden",
+    "underline",
+    "min-h-screen",
+  ],
+  corePlugins: {
+    preflight: false,
+  },
+  plugins: [require("tailwindcss-animate")],
 };

@@ -1,7 +1,7 @@
 import pathlib
 import re
 from html import escape
-from typing import Annotated, Literal, Optional, Union
+from typing import Annotated, Literal, Optional, Type, Union
 
 import pyromark
 from pydantic import (
@@ -19,7 +19,6 @@ from pydantic_core.core_schema import SerializerFunctionWrapHandler
 from typing_extensions import Self
 
 from flect.actions import AnyAction
-from flect.constants import CUSTOM_COMPONENT_MOUNT_FOLDER_NAME
 
 
 class BaseComponent(BaseModel):
@@ -42,7 +41,7 @@ class BaseContainerComponent(BaseComponent):
 
 
 class Avatar(BaseComponent):
-    component_type: Literal["avatar"] = "avatar"
+    type: Literal["avatar"] = "avatar"
 
     src: Optional[str] = Field(
         default=None,
@@ -68,7 +67,7 @@ class Avatar(BaseComponent):
 
 
 class Button(BaseContainerComponent):
-    component_type: Literal["button"] = "button"
+    type: Literal["button"] = "button"
 
     variant: Literal["default", "destructive", "outline", "secondary", "ghost", "link"] = Field(
         default="default",
@@ -92,7 +91,7 @@ class Button(BaseContainerComponent):
 
 
 class CodeBlock(BaseComponent):
-    component_type: Literal["code-block"] = "code-block"
+    type: Literal["code-block"] = "code-block"
     text: str = Field(
         ...,
         description="Specifies the code text.",
@@ -117,7 +116,7 @@ class CodeBlock(BaseComponent):
 
 
 class Container(BaseContainerComponent):
-    component_type: Literal["container"] = "container"
+    type: Literal["container"] = "container"
 
     tag: Literal["div", "section", "header", "footer", "main", "nav", "aside"] = Field(
         default="div",
@@ -133,7 +132,7 @@ class Container(BaseContainerComponent):
 
 
 class CopyButton(BaseComponent):
-    component_type: Literal["copy-button"] = "copy-button"
+    type: Literal["copy-button"] = "copy-button"
     text: str = Field(
         ...,
         description="Specifies the button's text.",
@@ -148,21 +147,13 @@ class CopyButton(BaseComponent):
 
 
 class Custom(BaseComponent):
-    component_type: Literal["custom"] = "custom"
-    package: str
-    component: str
-    uri: Optional[str] = Field(default=None, validate_default=True)
-
-    @model_validator(mode="after")
-    def set_default_uri(self) -> Self:
-        if self.uri is None:
-            self.uri = f"../../{CUSTOM_COMPONENT_MOUNT_FOLDER_NAME}/{self.package}.js"
-        return self
+    type: Literal["custom"] = "custom"
+    sub_type: str
 
 
 class Form(BaseComponent):
-    component_type: Literal["form"] = "form"
-    model: type[BaseModel] = Field(
+    type: Literal["form"] = "form"
+    model: Type[BaseModel] = Field(
         ...,
         description="Defines the form's data model.",
     )
@@ -180,12 +171,12 @@ class Form(BaseComponent):
     )
 
     @field_serializer("model")
-    def serialize_model(self, model: type[BaseModel]) -> dict:
+    def serialize_model(self, model: Type[BaseModel]) -> dict:
         return model.model_json_schema()
 
 
 class Heading(BaseComponent):
-    component_type: Literal["heading"] = "heading"
+    type: Literal["heading"] = "heading"
 
     level: Literal[1, 2, 3, 4, 5, 6] = Field(
         ...,
@@ -209,7 +200,7 @@ class Heading(BaseComponent):
 
 
 class Link(BaseContainerComponent):
-    component_type: Literal["link"] = "link"
+    type: Literal["link"] = "link"
 
     href: str = Field(
         ...,
@@ -233,7 +224,7 @@ class Link(BaseContainerComponent):
 
 
 class Markdown(BaseComponent):
-    component_type: Literal["markdown"] = "markdown"
+    type: Literal["markdown"] = "markdown"
 
     text: str = Field(
         ...,
@@ -254,7 +245,7 @@ class Markdown(BaseComponent):
 
 
 class NavLink(BaseContainerComponent):
-    component_type: Literal["nav-link"] = "nav-link"
+    type: Literal["nav-link"] = "nav-link"
 
     href: str = Field(
         ...,
@@ -278,11 +269,11 @@ class NavLink(BaseContainerComponent):
 
 
 class Outlet(BaseComponent):
-    component_type: Literal["outlet"] = "outlet"
+    type: Literal["outlet"] = "outlet"
 
 
 class Paragraph(BaseComponent):
-    component_type: Literal["paragraph"] = "paragraph"
+    type: Literal["paragraph"] = "paragraph"
 
     text: str = Field(
         ...,
@@ -301,7 +292,7 @@ class Paragraph(BaseComponent):
 
 
 class Table(BaseComponent):
-    component_type: Literal["table"] = "table"
+    type: Literal["table"] = "table"
 
     labels: list[str] = Field(
         default=[],
@@ -334,7 +325,7 @@ class Table(BaseComponent):
 
 
 class Text(BaseComponent):
-    component_type: Literal["text"] = "text"
+    type: Literal["text"] = "text"
 
     text: str = Field(
         ...,
@@ -347,7 +338,7 @@ class Text(BaseComponent):
         """
 
 
-COMPONENT_DISCRIMINATOR_NAME = "component_type"
+COMPONENT_DISCRIMINATOR_NAME = "type"
 AnyComponentType = Annotated[
     Union[
         Avatar,
@@ -388,7 +379,6 @@ __all__ = (
     "CodeBlock",
     "Container",
     "CopyButton",
-    "Custom",
     "Form",
     "Heading",
     "Link",

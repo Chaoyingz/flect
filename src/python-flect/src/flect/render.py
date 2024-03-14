@@ -11,21 +11,26 @@ from flect import components as c
 from flect.constants import CLIENT_LAYOUT_ROUTER_SUFFIX, CLIENT_ROOT_ROUTER_PREFIX
 from flect.head import Head, merge_head
 from flect.response import PageResponse
-from flect.version import VERSION
 
 if TYPE_CHECKING:
     from flect.routing import ClientRoute
+
+FLECT_PREBUILT_VERSION = "0.2.0"
+FLECT_PREBUILT_URI = f"https://cdn.jsdelivr.net/npm/@chaoying/flect-prebuilt@{FLECT_PREBUILT_VERSION}/dist/assets"
 
 
 def generate_html(
     head_html: str = "",
     element_html: str = "",
+    prebuilt_uri: Optional[str] = None,
 ) -> str:
     """
     Generates the HTML document for the given head and element HTML.
 
     Parameters
     ----------
+    prebuilt_uri : str, optional
+        The prebuilt URI to be used in the template.
     head_html : str, optional
         The server-rendered head HTML to be embedded in the template.
     element_html : str, optional
@@ -36,6 +41,8 @@ def generate_html(
     str
         The complete HTML document as a string.
     """
+    if prebuilt_uri is None:
+        prebuilt_uri = FLECT_PREBUILT_URI
     return f"""\
     <!DOCTYPE html>
     <html lang="en">
@@ -46,12 +53,12 @@ def generate_html(
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
             <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap" rel="stylesheet" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <script type="module" src="/static/assets/index-{VERSION}.js"></script>
-            <link rel="stylesheet" href="/static/assets/index-{VERSION}.css" />
+            <script type="module" src="{prebuilt_uri}/index.js"></script>
+            <link rel="stylesheet" href="{prebuilt_uri}/index.css" />
             {head_html}
         </head>
         <body>
-            <div class="absolute invisible h-0 w-0 overflow-hidden">{element_html}</div>
+            <div class="sr-only">{element_html}</div>
             <div id="root"></div>
         </body>
     </html>
