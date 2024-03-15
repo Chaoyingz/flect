@@ -22,16 +22,16 @@ interface ComponentResolver {
   package?: string;
 }
 
-interface ResolverContextState {
+interface ComponentResolverContextState {
   resolvers: { [resolverName: string]: ComponentResolver };
   registerResolver: (resolver: ComponentResolver) => void;
 }
 
-export const ResolverContext = createContext<ResolverContextState | undefined>(
-  undefined,
-);
+export const ComponentResolverContext = createContext<
+  ComponentResolverContextState | undefined
+>(undefined);
 
-export const ResolverProvider: React.FC<{
+export const ComponentResolverProvider: React.FC<{
   children: ReactNode;
   resolver: ComponentResolver;
 }> = ({ children, resolver }) => {
@@ -58,9 +58,9 @@ export const ResolverProvider: React.FC<{
   }, [resolver]);
 
   return (
-    <ResolverContext.Provider value={{ resolvers, registerResolver }}>
+    <ComponentResolverContext.Provider value={{ resolvers, registerResolver }}>
       {children}
-    </ResolverContext.Provider>
+    </ComponentResolverContext.Provider>
   );
 };
 

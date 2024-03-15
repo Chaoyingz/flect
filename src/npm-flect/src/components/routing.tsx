@@ -10,9 +10,9 @@ import {
 } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import React from "react";
-import { Button } from "./components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ComponentProps } from "@/types";
-import { AnyComponent } from "./components/flect/any-component";
+import { AnyComponent } from "@/components/flect/any-component";
 
 const CLIENT_ROOT_ROUTER_PREFIX = "/flect";
 const CLIENT_ROUTE_ROUTER_PATH = "/_route/";

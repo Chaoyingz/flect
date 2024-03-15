@@ -1,7 +1,7 @@
-import { Router } from "@/routing";
+import { Router } from "@/components/routing";
 import { Toaster } from "@/components/ui/sonner";
-import "@/globals.css";
 import { useHotReload } from "@/hooks/use-hot-reload";
+import "@/globals.css";
 
 export function Flect() {
   useHotReload();

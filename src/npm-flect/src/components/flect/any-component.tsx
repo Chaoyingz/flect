@@ -1,9 +1,9 @@
-import { ResolverContext } from "@/resolver";
+import { ComponentResolverContext } from "@/components/resolver/component-resolver";
 import { ComponentProps } from "@/types";
 import { useContext } from "react";
 
 export function AnyComponent(props: ComponentProps): JSX.Element {
-  const context = useContext(ResolverContext);
+  const context = useContext(ComponentResolverContext);
   if (!context) {
     return (
       <p className="bg-destructive text-destructive-foreground">
