@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
+import React, { createContext, useEffect, useState, ReactNode } from "react";
 import { ComponentProps } from "@/types";
 
 import { Avatar } from "@/components/flect/avatar";
@@ -33,7 +27,7 @@ interface ResolverContextState {
   registerResolver: (resolver: ComponentResolver) => void;
 }
 
-const ResolverContext = createContext<ResolverContextState | undefined>(
+export const ResolverContext = createContext<ResolverContextState | undefined>(
   undefined,
 );
 
@@ -70,31 +64,9 @@ export const ResolverProvider: React.FC<{
   );
 };
 
-export function ComponentResolver(props: ComponentProps): JSX.Element {
-  const context = useContext(ResolverContext);
-  if (!context) {
-    return <>Component resolver context not found.</>;
-  }
-
-  const { resolvers } = context;
-  const resolver = resolvers[props.package];
-  console.log(props);
-  console.log(resolver);
-  if (resolver) {
-    const resolvedComponent = resolver(props);
-    if (resolvedComponent === null) {
-      return <>Component of type {props.type} could not be resolved.</>;
-    }
-    return resolvedComponent;
-  }
-
-  return <>No component resolver found for type {props.type}.</>;
-}
-
 export const FlectComponentResolver: ComponentResolver = (
   props: ComponentProps,
 ) => {
-  console.log(props);
   switch (props.type) {
     case "avatar":
       return <Avatar {...props} />;

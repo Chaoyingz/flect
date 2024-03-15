@@ -11,8 +11,8 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import { Button } from "./components/ui/button";
-import { ComponentResolver } from "./resolver";
 import { ComponentProps } from "@/types";
+import { AnyComponent } from "./components/flect/any-component";
 
 const CLIENT_ROOT_ROUTER_PREFIX = "/flect";
 const CLIENT_ROUTE_ROUTER_PATH = "/_route/";
@@ -31,7 +31,7 @@ type PageResponse = {
 
 const RouteElement = React.memo(() => {
   const response = useLoaderData() as PageResponse;
-  return <ComponentResolver {...response.body} />;
+  return <AnyComponent {...response.body} />;
 });
 
 const ErrorElement = React.memo(() => {
