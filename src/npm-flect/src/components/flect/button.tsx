@@ -2,11 +2,9 @@ import {
   Button as ButtonUI,
   ButtonProps as ButtonPropsUI,
 } from "@/components/ui/button";
-import {
-  AnyComponents,
-  ComponentProps,
-} from "@/components/flect/any-component";
+import { AnyComponents } from "@/components/flect/any-component";
 import { AnyAction, executeAction } from "@/lib/action";
+import { ComponentProps } from "@/types";
 
 export interface ButtonProps extends Omit<ButtonPropsUI, "children"> {
   type: "button";

@@ -1,11 +1,9 @@
 import { cn } from "@/lib/utils";
-import {
-  AnyComponents,
-  ComponentProps,
-} from "@/components/flect/any-component";
+import { AnyComponents } from "@/components/flect/any-component";
 import { Link as RemixLink } from "react-router-dom";
 import { VariantProps } from "class-variance-authority";
 import { linkVariants } from "@/components/flect/link.types";
+import { ComponentProps } from "@/types";
 
 export interface LinkProps extends VariantProps<typeof linkVariants> {
   type: "link";

@@ -1,7 +1,5 @@
-import {
-  AnyComponents,
-  ComponentProps,
-} from "@/components/flect/any-component";
+import { AnyComponents } from "@/components/flect/any-component";
+import { ComponentProps } from "@/types";
 
 export interface ContainerProps {
   type: "container";

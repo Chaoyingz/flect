@@ -5,6 +5,7 @@ from pydantic.alias_generators import to_camel
 
 
 class BaseAction(BaseModel):
+    package: Literal["flect"] = "flect"
     model_config = ConfigDict(extra="forbid", alias_generator=AliasGenerator(serialization_alias=to_camel))
 
 

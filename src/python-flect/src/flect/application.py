@@ -28,8 +28,8 @@ class flect(FastAPI):
 
     def setup_flect(self) -> None:
         app_router = configure_app_router(self.app_module, self.prebuilt_uri)
-        if self.debug:
-            self.add_api_route("/_hotreload", self.hotreload, methods=["GET"])
+        # if self.debug:
+        #     self.add_api_route("/_hotreload", self.hotreload, methods=["GET"])
         self.include_router(app_router, tags=["flect"])
 
     def validate_prebuilt_uri(self, prebuilt_uri: Optional[str]) -> Optional[str]:

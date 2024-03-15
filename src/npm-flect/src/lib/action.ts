@@ -11,7 +11,7 @@ type Notify = {
     | "bottom-right"
     | "top-center"
     | "bottom-center";
-  type:
+  style?:
     | "normal"
     | "action"
     | "success"
@@ -36,28 +36,27 @@ export type ActionResponse = {
 export function executeAction(action: AnyAction) {
   switch (action.type) {
     case "notify": {
-      const { title, type } = action as Notify;
-      switch (type) {
+      const { title, style, ...rest } = action;
+      switch (style) {
         case "success":
-          toast.success(title, action);
+          toast.success(title, rest);
           break;
         case "info":
-          toast.info(title, action);
+          toast.info(title, rest);
           break;
         case "warning":
-          toast.warning(title, action);
+          toast.warning(title, rest);
           break;
         case "error":
-          toast.error(title, action);
+          toast.error(title, rest);
           break;
         default:
-          toast(title, action);
+          toast(title, rest);
       }
       break;
     }
     case "redirect": {
-      const { url } = action as Redirect;
-      window.location.replace(url);
+      window.location.replace(action.url);
     }
   }
 }

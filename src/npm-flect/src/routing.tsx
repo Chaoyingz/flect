@@ -7,115 +7,123 @@ import {
   LoaderFunctionArgs,
   useNavigate,
   RouteProps as RemixRouteProps,
-} from 'react-router-dom'
-import { useCallback, useEffect, useState } from 'react'
-import { AnyComponent, ComponentProps } from '@/components/flect/any-component'
-import React from 'react'
-import { Button } from './components/ui/button'
+} from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import React from "react";
+import { Button } from "./components/ui/button";
+import { ComponentResolver } from "./resolver";
+import { ComponentProps } from "@/types";
 
-const CLIENT_ROOT_ROUTER_PREFIX = '/flect'
-const CLIENT_ROUTE_ROUTER_PATH = '/_route/'
+const CLIENT_ROOT_ROUTER_PREFIX = "/flect";
+const CLIENT_ROUTE_ROUTER_PATH = "/_route/";
 
 export type RouteProps = RemixRouteProps & {
-  children?: RouteProps[]
-  segment: string
-  path: string
-  url: string
-  index: boolean
-}
+  children?: RouteProps[];
+  segment: string;
+  path: string;
+  url: string;
+  index: boolean;
+};
 
 type PageResponse = {
-  body: ComponentProps
-}
+  body: ComponentProps;
+};
 
 const RouteElement = React.memo(() => {
-  const response = useLoaderData() as PageResponse
-  return <AnyComponent {...response.body} />
-})
+  const response = useLoaderData() as PageResponse;
+  return <ComponentResolver {...response.body} />;
+});
 
 const ErrorElement = React.memo(() => {
-  const error = useRouteError() as { statusText?: string; message?: string }
-  const navigate = useNavigate()
-  console.error(error)
+  const error = useRouteError() as { statusText?: string; message?: string };
+  const navigate = useNavigate();
+  console.error(error);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center text-center">
       <div>
-        <h1 className="text-4xl font-medium mb-6">Oops!</h1>
+        <h1 className="mb-6 text-4xl font-medium">Oops!</h1>
         <p className="mb-6">Sorry, an unexpected error has occurred.</p>
         <p>
           <i>{error.statusText || error.message}</i>
         </p>
-        <Button size={'sm'} className="mt-6" onClick={() => navigate(-1)}>
+        <Button size={"sm"} className="mt-6" onClick={() => navigate(-1)}>
           Go Back
         </Button>
       </div>
     </div>
-  )
-})
+  );
+});
 
 interface DefaultPageResponse {
-  [key: string]: unknown
+  [key: string]: unknown;
 }
 
-const fetchJson = async <T = DefaultPageResponse,>(input: RequestInfo, init?: RequestInit): Promise<T> => {
-  const response = await fetch(input, init)
+const fetchJson = async <T = DefaultPageResponse,>(
+  input: RequestInfo,
+  init?: RequestInit,
+): Promise<T> => {
+  const response = await fetch(input, init);
   if (!response.ok) {
-    throw new Error(response.statusText)
+    throw new Error(response.statusText);
   }
-  return await response.json()
-}
+  return await response.json();
+};
 
 const useRoutes = () => {
-  const [routes, setRoutes] = useState<RouteObject[] | undefined>()
+  const [routes, setRoutes] = useState<RouteObject[] | undefined>();
 
   const convertRoute = useCallback((route: RouteProps): RouteObject => {
-    const path = route.path.replace(/{(.*?)}/g, ':$1')
+    const path = route.path.replace(/{(.*?)}/g, ":$1");
     const loader = async ({ params }: LoaderFunctionArgs) => {
-      let url = `${CLIENT_ROOT_ROUTER_PREFIX}${route.url.replace(/{(.*?)}/g, ':$1')}`
+      let url = `${CLIENT_ROOT_ROUTER_PREFIX}${route.url.replace(/{(.*?)}/g, ":$1")}`;
 
       Object.keys(params).forEach((key) => {
-        const value = params[key]
+        const value = params[key];
         if (value) {
-          url = url.replace(`:${key}`, value)
+          url = url.replace(`:${key}`, value);
         }
-      })
-      return fetchJson<ComponentProps[]>(url)
-    }
+      });
+      return fetchJson<ComponentProps[]>(url);
+    };
     const routeObj: Partial<RouteObject> = {
       path: path,
       element: <RouteElement />,
       errorElement: <ErrorElement />,
       loader,
-    }
+    };
     if (route.index === true) {
-      routeObj.index = true
+      routeObj.index = true;
     } else {
-      routeObj.children = route.children?.map(convertRoute)
+      routeObj.children = route.children?.map(convertRoute);
     }
-    return routeObj
-  }, [])
+    return routeObj;
+  }, []);
 
   useEffect(() => {
-    let isMounted = true
+    let isMounted = true;
 
-    fetchJson<RouteProps[]>(`${CLIENT_ROOT_ROUTER_PREFIX}${CLIENT_ROUTE_ROUTER_PATH}`)
+    fetchJson<RouteProps[]>(
+      `${CLIENT_ROOT_ROUTER_PREFIX}${CLIENT_ROUTE_ROUTER_PATH}`,
+    )
       .then((routeProps) => {
         if (isMounted) {
-          setRoutes(routeProps.map(convertRoute))
+          setRoutes(routeProps.map(convertRoute));
         }
       })
-      .catch(console.error)
+      .catch(console.error);
 
     return () => {
-      isMounted = false
-    }
-  }, [])
+      isMounted = false;
+    };
+  }, []);
 
-  return routes
-}
+  return routes;
+};
 
 export const Router = () => {
-  const routeObjects = useRoutes()
-  return routeObjects ? <RouterProvider router={createBrowserRouter(routeObjects)} /> : null
-}
+  const routeObjects = useRoutes();
+  return routeObjects ? (
+    <RouterProvider router={createBrowserRouter(routeObjects)} />
+  ) : null;
+};

@@ -22,6 +22,7 @@ from flect.actions import AnyAction
 
 
 class BaseComponent(BaseModel):
+    package: Literal["flect"] = "flect"
     model_config = ConfigDict(extra="forbid", alias_generator=AliasGenerator(serialization_alias=to_camel))
 
     class_name: Optional[str] = Field(

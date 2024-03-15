@@ -1,45 +1,22 @@
-import { Avatar, AvatarProps } from "@/components/flect/avatar";
-import { Button, ButtonProps } from "@/components/flect/button";
-import { Container, ContainerProps } from "@/components/flect/container";
-import { Heading, HeadingProps } from "@/components/flect/heading";
-import { Link, LinkProps } from "@/components/flect/link";
-import { Text, TextProps } from "@/components/flect/text";
-import { Table, TableProps } from "@/components/flect/table";
-import { Outlet, OutletProps } from "@/components/flect/outlet";
-import { Form, FormProps } from "@/components/flect/form";
-import { NavLink, NavLinkProps } from "@/components/flect/nav-link";
-import { Paragraph, ParagraphProps } from "@/components/flect/paragraph";
-import { Markdown, MarkdownProps } from "@/components/flect/markdown";
-import { CopyButton, CopyButtonProps } from "@/components/flect/copy-button";
-import { CodeBlock, CodeBlockProps } from "@/components/flect/code-block";
-import { useContext } from "react";
-import { ConfigContext } from "@/application";
-
-export type ComponentProps =
-  | AvatarProps
-  | ButtonProps
-  | CodeBlockProps
-  | ContainerProps
-  | CopyButtonProps
-  | FormProps
-  | HeadingProps
-  | LinkProps
-  | MarkdownProps
-  | NavLinkProps
-  | OutletProps
-  | ParagraphProps
-  | TableProps
-  | TextProps;
+import { Avatar } from "@/components/flect/avatar";
+import { Button } from "@/components/flect/button";
+import { Container } from "@/components/flect/container";
+import { Heading } from "@/components/flect/heading";
+import { Link } from "@/components/flect/link";
+import { Text } from "@/components/flect/text";
+import { Table } from "@/components/flect/table";
+import { Outlet } from "@/components/flect/outlet";
+import { Form } from "@/components/flect/form";
+import { NavLink } from "@/components/flect/nav-link";
+import { Paragraph } from "@/components/flect/paragraph";
+import { Markdown } from "@/components/flect/markdown";
+import { CopyButton } from "@/components/flect/copy-button";
+import { CodeBlock } from "@/components/flect/code-block";
+import { Custom } from "@/components/flect/custom";
+import { ComponentProps } from "@/types";
 
 export function AnyComponent(props: ComponentProps): JSX.Element {
-  const { type } = props;
-
-  const { customComponent } = useContext(ConfigContext);
-  if (customComponent) {
-    return customComponent(props);
-  }
-
-  switch (type) {
+  switch (props.type) {
     case "avatar":
       return <Avatar {...props} />;
     case "button":
@@ -50,6 +27,8 @@ export function AnyComponent(props: ComponentProps): JSX.Element {
       return <Container {...props} />;
     case "copy-button":
       return <CopyButton {...props} />;
+    case "custom":
+      return <Custom {...props} />;
     case "form":
       return <Form {...props} />;
     case "heading":

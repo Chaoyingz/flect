@@ -1,7 +1,11 @@
-import { Flect } from "@chaoying/flect";
+import { Flect, resolver } from "@chaoying/flect";
 
 function App() {
-  return <Flect />;
+  return (
+    <resolver.ResolverProvider resolver={resolver.FlectComponentResolver}>
+      <Flect />
+    </resolver.ResolverProvider>
+  );
 }
 
 export default App;
