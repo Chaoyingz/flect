@@ -1,4 +1,5 @@
 export interface TextProps {
+  package: "flect";
   type: "text";
   className?: string;
   text: string;

@@ -4,6 +4,7 @@ import { Link as RemixLink } from "react-router-dom";
 import { linkVariants } from "./link.types";
 
 export interface ParagraphProps {
+  package: "flect";
   type: "paragraph";
   className?: string;
   text: string;

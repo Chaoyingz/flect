@@ -7,6 +7,7 @@ import React from "react";
 import { Check, Copy } from "lucide-react";
 
 export interface CopyButtonProps extends Omit<ButtonPropsUI, "type"> {
+  package: "flect";
   type: "copy-button";
   className?: string;
 }

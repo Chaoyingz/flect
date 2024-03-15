@@ -7,6 +7,7 @@ import { AnyAction, executeAction } from "@/lib/action";
 import { ComponentProps } from "@/types";
 
 export interface ButtonProps extends Omit<ButtonPropsUI, "children"> {
+  package: "flect";
   type: "button";
   onClickAction?: AnyAction;
   className?: string;

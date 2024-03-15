@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 
 export interface HeadingProps {
+  package: "flect";
   type: "heading";
   className?: string;
   level: 1 | 2 | 3 | 4 | 5 | 6;

@@ -2,6 +2,7 @@ import { CopyButton } from "@/components/flect/copy-button";
 import { cn } from "@/lib/utils";
 
 export type CodeBlockProps = {
+  package: "flect";
   type: "code-block";
   className?: string;
   text: string;
@@ -17,6 +18,7 @@ export function CodeBlock({ text, ...props }: CodeBlockProps) {
       )}
     >
       <CopyButton
+        package="flect"
         value={text}
         className="absolute right-4 top-3 z-20 h-6 w-6 p-1.5"
         type="copy-button"

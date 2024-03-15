@@ -4,6 +4,7 @@ import remarkGfm from "remark-gfm";
 import { CodeBlock } from "./code-block";
 
 export interface MarkdownLazyProps {
+  package: "flect";
   type: "markdown";
   className?: string;
   text: string;
@@ -21,6 +22,7 @@ export default function Markdown(props: MarkdownLazyProps) {
         <CodeBlock
           text={children as string}
           type="code-block"
+          package="flect"
           language={language?.[1]}
         />
       );

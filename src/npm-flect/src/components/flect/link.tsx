@@ -6,6 +6,7 @@ import { linkVariants } from "@/components/flect/link.types";
 import { ComponentProps } from "@/types";
 
 export interface LinkProps extends VariantProps<typeof linkVariants> {
+  package: "flect";
   type: "link";
   className?: string;
   href: string;

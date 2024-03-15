@@ -23,7 +23,10 @@ import { CopyButton } from "@/components/flect/copy-button";
 import { CodeBlock } from "@/components/flect/code-block";
 import { Custom } from "@/components/flect/custom";
 
-export type ComponentResolver = (props: ComponentProps) => JSX.Element | null;
+interface ComponentResolver {
+  (props: ComponentProps): JSX.Element | null;
+  package?: string;
+}
 
 interface ResolverContextState {
   resolvers: { [resolverName: string]: ComponentResolver };
@@ -43,7 +46,7 @@ export const ResolverProvider: React.FC<{
   }>({});
 
   const registerResolver = (resolver: ComponentResolver) => {
-    const resolverName = resolver.name;
+    const resolverName = resolver.package;
     if (!resolverName) {
       console.warn(
         "Resolver function is anonymous and cannot be registered. Please provide a named function.",
@@ -74,7 +77,9 @@ export function ComponentResolver(props: ComponentProps): JSX.Element {
   }
 
   const { resolvers } = context;
-  const resolver = resolvers[props.type];
+  const resolver = resolvers[props.package];
+  console.log(props);
+  console.log(resolver);
   if (resolver) {
     const resolvedComponent = resolver(props);
     if (resolvedComponent === null) {
@@ -86,7 +91,9 @@ export function ComponentResolver(props: ComponentProps): JSX.Element {
   return <>No component resolver found for type {props.type}.</>;
 }
 
-export function FlectComponentResolver(props: ComponentProps) {
+export const FlectComponentResolver: ComponentResolver = (
+  props: ComponentProps,
+) => {
   console.log(props);
   switch (props.type) {
     case "avatar":
@@ -122,5 +129,5 @@ export function FlectComponentResolver(props: ComponentProps) {
     default:
       return null;
   }
-}
-FlectComponentResolver.name = "flect";
+};
+FlectComponentResolver.package = "flect";

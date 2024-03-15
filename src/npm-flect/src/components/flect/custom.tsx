@@ -1,4 +1,5 @@
 export interface CustomProps {
+  package: "flect";
   type: "custom";
   className?: string;
   subType: string;

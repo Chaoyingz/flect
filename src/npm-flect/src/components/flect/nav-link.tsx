@@ -5,6 +5,7 @@ import { LinkProps } from "@/components/flect/link";
 import { linkVariants } from "@/components/flect/link.types";
 
 export interface NavLinkProps extends Omit<LinkProps, "type"> {
+  package: "flect";
   type: "nav-link";
 }
 

@@ -5,6 +5,7 @@ import {
 } from "@/components/ui/avatar";
 
 export interface AvatarProps {
+  package: "flect";
   type: "avatar";
   className?: string;
   src?: string;

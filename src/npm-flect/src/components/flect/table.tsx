@@ -13,6 +13,7 @@ export interface Dataset {
 }
 
 export interface TableProps {
+  package: "flect";
   type: "table";
   className?: string;
 

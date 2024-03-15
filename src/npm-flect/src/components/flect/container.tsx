@@ -2,6 +2,7 @@ import { AnyComponents } from "@/components/flect/any-component";
 import { ComponentProps } from "@/types";
 
 export interface ContainerProps {
+  package: "flect";
   type: "container";
   className?: string;
   children?: ComponentProps[];

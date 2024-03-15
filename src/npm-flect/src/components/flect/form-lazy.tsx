@@ -54,6 +54,7 @@ interface Model extends JSONSchema7 {
 }
 
 export interface FormLazyProps {
+  package: "flect";
   type: "form";
   className?: string;
   model: Model;
