@@ -22,9 +22,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import React from "react";
-import { ActionResponse, executeAction } from "@/lib/action";
+import React, { useContext } from "react";
 import { RotateCw } from "lucide-react";
+import { ActionResponse } from "@/types";
+import { resolveAction } from "@/lib/actions";
+import { ActionResolverContext } from "@/contexts/action-resolver";
 
 interface InputAttrs {
   type: "text" | "password" | "email";
@@ -66,7 +68,7 @@ function getDefaultValues(schema: Model): FieldValues {
   const defaults: FieldValues = {};
   Object.keys(schema.properties).forEach((key) => {
     const prop = schema.properties[key];
-    if (prop.default !== undefined) {
+    if (prop.default !== undefined && prop.default !== null) {
       defaults[key] = prop.default;
     }
   });
@@ -74,6 +76,7 @@ function getDefaultValues(schema: Model): FieldValues {
 }
 
 export default function FormLazy(props: FormLazyProps) {
+  const { resolvers } = useContext(ActionResolverContext);
   const form = useForm({
     resolver: ajvResolver(props.model),
     defaultValues: getDefaultValues(props.model),
@@ -89,9 +92,10 @@ export default function FormLazy(props: FormLazyProps) {
     if (!response.ok) {
       throw new Error(response.statusText);
     }
-    const action = (await response.json()) as ActionResponse;
-    executeAction(action.action);
+    const responseJson = (await response.json()) as ActionResponse;
+    resolveAction(resolvers, responseJson.action)();
   }
+
   return (
     <FormUI {...form}>
       <form

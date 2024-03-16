@@ -3,23 +3,22 @@ import {
   ButtonProps as ButtonPropsUI,
 } from "@/components/ui/button";
 import { AnyComponents } from "@/components/flect/any-component";
-import { AnyAction, executeAction } from "@/lib/action";
-import { ComponentProps } from "@/types";
+import { AnyActionProps, AnyComponentProps } from "@/types";
+import { useAction } from "@/hooks/use-action";
 
 export interface ButtonProps extends Omit<ButtonPropsUI, "children"> {
   package: "flect";
   type: "button";
-  onClickAction?: AnyAction;
+  onClickAction?: AnyActionProps;
   className?: string;
-  children?: ComponentProps[];
+  children?: AnyComponentProps[];
 }
 
 export function Button({ children, onClickAction, ...rest }: ButtonProps) {
-  const onClick = onClickAction
-    ? () => executeAction(onClickAction)
-    : undefined;
+  const resolvedAction = useAction(onClickAction);
+
   return (
-    <ButtonUI {...rest} onClick={onClick}>
+    <ButtonUI {...rest} onClick={resolvedAction}>
       <AnyComponents children={children} />
     </ButtonUI>
   );

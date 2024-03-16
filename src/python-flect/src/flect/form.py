@@ -62,7 +62,7 @@ def Input(
             "fieldType": "input",
             "className": class_name,
             "attrs": {
-                "fieldType": type,
+                "type": type,
                 "placeholder": placeholder,
             },
         },

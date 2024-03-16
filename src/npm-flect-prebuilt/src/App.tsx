@@ -1,10 +1,17 @@
-import { Flect, resolver } from "@chaoying/flect";
+import {
+  Flect,
+  ActionResolverProvider,
+  ComponentResolverProvider,
+  components,
+} from "@chaoying/flect";
 
 function App() {
   return (
-    <resolver.ResolverProvider resolver={resolver.FlectComponentResolver}>
-      <Flect />
-    </resolver.ResolverProvider>
+    <ActionResolverProvider resolver={components.FlectActionResolver}>
+      <ComponentResolverProvider resolver={components.FlectComponentResolver}>
+        <Flect />
+      </ComponentResolverProvider>
+    </ActionResolverProvider>
   );
 }
 

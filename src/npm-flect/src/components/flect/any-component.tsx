@@ -1,8 +1,8 @@
-import { ComponentResolverContext } from "@/components/resolver/component-resolver";
-import { ComponentProps } from "@/types";
+import { ComponentResolverContext } from "@/contexts/component-resolver";
+import { AnyComponentProps } from "@/types";
 import { useContext } from "react";
 
-export function AnyComponent(props: ComponentProps): JSX.Element {
+export function AnyComponent(props: AnyComponentProps): JSX.Element {
   const context = useContext(ComponentResolverContext);
   if (!context) {
     return (
@@ -33,7 +33,11 @@ export function AnyComponent(props: ComponentProps): JSX.Element {
   );
 }
 
-export function AnyComponents({ children }: { children?: ComponentProps[] }) {
+export function AnyComponents({
+  children,
+}: {
+  children?: AnyComponentProps[];
+}) {
   return (
     <>
       {children &&

@@ -11,7 +11,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ComponentProps } from "@/types";
+import { AnyComponentProps } from "@/types";
 import { AnyComponent } from "@/components/flect/any-component";
 
 const CLIENT_ROOT_ROUTER_PREFIX = "/flect";
@@ -26,7 +26,7 @@ export type RouteProps = RemixRouteProps & {
 };
 
 type PageResponse = {
-  body: ComponentProps;
+  body: AnyComponentProps;
 };
 
 const RouteElement = React.memo(() => {
@@ -84,7 +84,7 @@ const useRoutes = () => {
           url = url.replace(`:${key}`, value);
         }
       });
-      return fetchJson<ComponentProps[]>(url);
+      return fetchJson<AnyComponentProps[]>(url);
     };
     const routeObj: Partial<RouteObject> = {
       path: path,

@@ -273,6 +273,8 @@ def get_server_api_router(
     is_root: bool = True,
 ) -> APIRouter:
     router = APIRouter()
+    if is_root:
+        router.prefix = CLIENT_ROOT_ROUTER_PREFIX
     route_info = get_route_info(folder, parent_path, absolute_path="/", is_root=is_root)
     route_file = folder / SERVER_API_ROUTE_FILENAME
     if route_file.is_file():

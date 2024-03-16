@@ -91,9 +91,11 @@ class TableExampleModel(BaseModel):
 
 
 class FormExampleModel(BaseModel):
-    username: str = Input(placeholder="Enter your username", pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10)
+    username: str = Input(
+        placeholder="Enter your username", default="", pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10
+    )
     gender: Literal["male", "female"] = Select(default="male", description="The gender of the user.")
-    password: str = Input(type="password", placeholder="Enter your password")
+    password: str = Input(type="password", default="", placeholder="Enter your password")
     hobby: Optional[str] = Textarea(placeholder="Type your hobby", default=None, description="The hobby of the user.")
     terms_accepted: bool = Checkbox(class_name="ml-3", default=False, description="The terms accepted by the user.")
 
@@ -168,7 +170,7 @@ COMPONENT_DOCS_MAP = {
             description="The Form component collects user inputs through various form elements such as input fields, checkboxes, radio buttons, and dropdowns.",
         ),
         get_component_preview_section(
-            preview=c.Form(model=FormExampleModel, submit_url="/components/form/"),
+            preview=c.Form(model=FormExampleModel, submit_url="/flect/components/form/"),
         ),
         get_api_reference_section(component=c.Form),
     ],

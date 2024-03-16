@@ -1,5 +1,4 @@
-import React, { createContext, useEffect, useState, ReactNode } from "react";
-import { ComponentProps } from "@/types";
+import { AnyComponentProps } from "@/types";
 
 import { Avatar } from "@/components/flect/avatar";
 import { Button } from "@/components/flect/button";
@@ -16,56 +15,10 @@ import { Markdown } from "@/components/flect/markdown";
 import { CopyButton } from "@/components/flect/copy-button";
 import { CodeBlock } from "@/components/flect/code-block";
 import { Custom } from "@/components/flect/custom";
-
-interface ComponentResolver {
-  (props: ComponentProps): JSX.Element | null;
-  package?: string;
-}
-
-interface ComponentResolverContextState {
-  resolvers: { [resolverName: string]: ComponentResolver };
-  registerResolver: (resolver: ComponentResolver) => void;
-}
-
-export const ComponentResolverContext = createContext<
-  ComponentResolverContextState | undefined
->(undefined);
-
-export const ComponentResolverProvider: React.FC<{
-  children: ReactNode;
-  resolver: ComponentResolver;
-}> = ({ children, resolver }) => {
-  const [resolvers, setResolvers] = useState<{
-    [resolverName: string]: ComponentResolver;
-  }>({});
-
-  const registerResolver = (resolver: ComponentResolver) => {
-    const resolverName = resolver.package;
-    if (!resolverName) {
-      console.warn(
-        "Resolver function is anonymous and cannot be registered. Please provide a named function.",
-      );
-      return;
-    }
-    setResolvers((prevResolvers) => ({
-      ...prevResolvers,
-      [resolverName]: resolver,
-    }));
-  };
-
-  useEffect(() => {
-    registerResolver(resolver);
-  }, [resolver]);
-
-  return (
-    <ComponentResolverContext.Provider value={{ resolvers, registerResolver }}>
-      {children}
-    </ComponentResolverContext.Provider>
-  );
-};
+import { ComponentResolver } from "@/contexts/component-resolver";
 
 export const FlectComponentResolver: ComponentResolver = (
-  props: ComponentProps,
+  props: AnyComponentProps,
 ) => {
   switch (props.type) {
     case "avatar":

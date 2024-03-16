@@ -1,11 +1,11 @@
 import { AnyComponents } from "@/components/flect/any-component";
-import { ComponentProps } from "@/types";
+import { AnyComponentProps } from "@/types";
 
 export interface ContainerProps {
   package: "flect";
   type: "container";
   className?: string;
-  children?: ComponentProps[];
+  children?: AnyComponentProps[];
   tag: "div" | "section" | "header" | "footer" | "main" | "nav" | "aside";
 }
 

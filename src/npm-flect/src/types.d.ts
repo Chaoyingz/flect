@@ -24,7 +24,7 @@ export type Json =
       [k: string]: Json;
     };
 
-export type ComponentProps =
+export type AnyComponentProps =
   | AvatarProps
   | ButtonProps
   | CodeBlockProps
@@ -40,3 +40,9 @@ export type ComponentProps =
   | ParagraphProps
   | TableProps
   | TextProps;
+
+export type AnyActionProps = NotifyAnyActionProps | RedirectAnyActionProps;
+
+export type ActionResponse = {
+  action: AnyActionProps;
+};
