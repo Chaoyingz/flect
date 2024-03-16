@@ -180,6 +180,9 @@ importers:
 
   src/npm-flect-prebuilt:
     dependencies:
+      '@chaoying/flect':
+        specifier: 0.2.0
+        version: link:../npm-flect
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0

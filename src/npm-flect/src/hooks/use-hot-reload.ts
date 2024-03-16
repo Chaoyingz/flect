@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 
 export function useHotReload() {
+  if (process.env.NODE_ENV === "production") {
+    return;
+  }
   useEffect(() => {
     const source = new EventSource("/_hotreload");
 
