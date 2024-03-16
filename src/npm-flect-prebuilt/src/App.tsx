@@ -2,13 +2,16 @@ import {
   Flect,
   ActionResolverProvider,
   ComponentResolverProvider,
-  components,
 } from "@chaoying/flect";
+import {
+  FlectActionResolver,
+  FlectComponentResolver,
+} from "@chaoying/flect/components";
 
 function App() {
   return (
-    <ActionResolverProvider resolver={components.FlectActionResolver}>
-      <ComponentResolverProvider resolver={components.FlectComponentResolver}>
+    <ActionResolverProvider resolver={FlectActionResolver}>
+      <ComponentResolverProvider resolver={FlectComponentResolver}>
         <Flect />
       </ComponentResolverProvider>
     </ActionResolverProvider>

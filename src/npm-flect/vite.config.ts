@@ -16,9 +16,11 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       lib: {
-        entry: path.resolve(__dirname, "src/index.ts"),
+        entry: {
+          index: path.resolve(__dirname, "src/index.ts"),
+          components: path.resolve(__dirname, "src/components/index.ts"),
+        },
         name: "flect",
-        fileName: "index",
       },
       rollupOptions: {
         external: ["react", "react-dom"],
