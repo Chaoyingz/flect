@@ -1,139 +1,163 @@
-# Custom Component Integration in flect
+# Custom Component Integration in Flect
 
-Custom components significantly expand the capabilities of flect by allowing the integration of your own React components into the framework. Not only do they enable you to add new functionalities, but you can also modify the default styles and logic of existing flect components. This guide details the process of implementing custom components through the creation of your own `prebuilt` package, illustrated with the development of a simple badge component.
+Integrating custom components into Flect significantly enhances the framework's capabilities. By incorporating your own React components, you can tailor Flect's functionality to meet your specific needs.
+
+## Flect's Frontend Ecosystem
+
+Flect's frontend ecosystem comprises two primary packages:
+
+- **The Flect Component Library:** This package includes all of Flect's built-in components.
+- **Prebuilt:** This package is specifically designed for rendering page logic as a React application.
+
+This structure promotes modularity and customization, allowing you to adjust the default styles and logic of Flect components as needed.
+
+## Guide Overview
+
+This guide outlines the steps to implement custom components by creating your own prebuilt package. We will demonstrate this process by developing a simple badge component.
 
 ## Implementing Custom Components: A Step-by-Step Guide
 
-1. **Project Structure Setup**
+### 1. Project Structure Setup
 
-   Start by establishing the project structure and installing necessary dependencies. For projects named "ui", you can utilize the Cookiecutter template by executing the following commands:
+Begin by creating the project structure and installing necessary dependencies. For a project named "ui", use the Cookiecutter template with the following commands:
 
-   ```console
-   cookiecutter https://github.com/Chaoyingz/cookiecutter-flect-prebuilt
-   cd ui
-   pnpm install
-   ```
+```console
+cookiecutter https://github.com/Chaoyingz/cookiecutter-flect-prebuilt
+cd ui
+pnpm install
+```
 
-   This initializes a project using a standard vite react-ts template and installs the required dependencies.
+This will set up a project using a standard Vite React-TS template and install the required dependencies.
 
-2. **Custom Component Development**
+### 2. Custom Component Development
 
-   To develop your custom badge component, open the `src/components/badge.tsx` file and insert the code below:
+Develop your custom badge component by editing the `src/components/badge.tsx` file. Insert the following code:
 
-   ```tsx
-   import { cn } from '@/lib/utils.ts'
+```tsx
+import { cn } from '@/lib/utils.ts'
 
-   interface BadgeProps {
-     package: 'ui'
-     type: 'badge'
-     subType: 'badge'
-     className?: string
-     text: string
-   }
+interface BadgeProps {
+  package: 'ui'
+  type: 'badge'
+  subType: 'badge'
+  className?: string
+  text: string
+}
 
-   export const Badge = (props: BadgeProps) => {
-     return (
-       <div
-         className={cn(
-           'inline-flex rounded-md px-2.5 py-1 text-xs font-semibold bg-primary text-primary-foreground',
-           props.className,
-         )}
-       >
-         {props.text}
-       </div>
-     )
-   }
-   ```
+export const Badge = (props: BadgeProps) => {
+  return (
+    <div
+      className={cn(
+        'inline-flex rounded-md px-2.5 py-1 text-xs font-semibold bg-primary text-primary-foreground',
+        props.className,
+      )}
+    >
+      {props.text}
+    </div>
+  )
+}
+```
 
-   Ensure that the `package`, `type`, and `subType` attributes are specified, with `package` referring to your component's package name and `type` to the component type.
+Ensure to specify the `package`, `type`, and `subType` attributes correctly, with `package` referring to your component's package name and `type` and `subType` referring to the component type.
 
-3. **`ComponentResolver` Implementation**
+### 3. `ComponentResolver` Implementation
 
-   The `ComponentResolver` serves as the mechanism for locating and rendering the appropriate component in response to backend requests. Incorporate the following implementation into the `src/components/component-resolver.tsx` file:
+The `ComponentResolver` locates and renders components in response to backend requests. Implement it in the `src/components/component-resolver.tsx` file as follows:
 
-   ```tsx
-   import { BadgeProps, Badge } from '@/components/badge'
-   import { ComponentResolver } from '@chaoying/flect'
+```tsx
+import { BadgeProps, Badge } from '@/components/badge'
+import { ComponentResolver } from '@chaoying/flect'
 
-   type AnyComponentProps = BadgeProps
+type AnyComponentProps = BadgeProps
 
-   export const UIComponentResolver: ComponentResolver = (props: AnyComponentProps) => {
-     switch (props.subType) {
-       case 'badge':
-         return <Badge {...props} />
-       default:
-         return null
-     }
-   }
-   UIComponentResolver.package = 'ui'
-   ```
+export const UIComponentResolver: ComponentResolver = (props: AnyComponentProps) => {
+  switch (props.subType) {
+    case 'badge':
+      return <Badge {...props} />
+    default:
+      return null
+  }
+}
+UIComponentResolver.package = 'ui'
+```
 
-   It's crucial to correctly set the `package` attribute here.
+### 4. Integrating the `ComponentResolver`
 
-4. **Integrating the `ComponentResolver`**
+Update the `src/app.tsx` file to include the `ComponentResolver`:
 
-   Update the `src/app.tsx` file to include the newly created `ComponentResolver` as shown below:
+```tsx
+import { Flect, ActionResolverProvider, ComponentResolverProvider } from '@chaoying/flect'
+import { UIComponentResolver } from '@/components/component-resolver'
 
-   ```tsx
-   import { Flect, ActionResolverProvider, ComponentResolverProvider } from '@chaoying/flect'
-   import { UIComponentResolver } from '@/components/component-resolver'
+function App() {
+  return (
+    <ActionResolverProvider resolver={FlectActionResolver}>
+      <ComponentResolverProvider resolver={FlectComponentResolver}>
+        <ComponentResolverProvider resolver={UIComponentResolver}>
+          <Flect />
+        </ComponentResolverProvider>
+      </ComponentResolverProvider>
+    </ActionResolverProvider>
+  )
+}
 
-   function App() {
-     return (
-       <ActionResolverProvider resolver={FlectActionResolver}>
-         <ComponentResolverProvider resolver={FlectComponentResolver}>
-           <ComponentResolverProvider resolver={UIComponentResolver}>
-             <Flect />
-           </ComponentResolverProvider>
-         </ComponentResolverProvider>
-       </ActionResolverProvider>
-     )
-   }
+export default App
+```
 
-   export default App
-   ```
+### 5. Building the Component
 
-5. **Building the Component**
+Compile your component package with:
 
-   Compile your component package with the following command:
+```
+pnpm build
+```
 
-   ```
-   pnpm build
-   ```
+### 6. Python Integration
 
-6. **Python Integration**
+Incorporate your component into the Flect Python project by adding the following to a `components.py` file:
 
-   To incorporate your component into the flect Python project, add the following content to a `components.py` file:
+```python
+from typing import Literal, Optional
+from flect import components as c
 
-   ```python
-   from typing import Literal, Optional
-   from flect import components as c
+class BaseUIComponent(c.Custom):
+    package: Literal["ui"] = "ui"
+    sub_type: Literal["badge"] = "badge"
 
+class Badge(BaseUIComponent):
+    class_name: Optional[str] = None
+    text: str
+```
 
-   class BaseUIComponent(c.Custom):
-       package: Literal["docs-ui"] = "ui"
-       sub_type: Literal["badge"] = "badge"
+### 7. Updating prebuilt_uri
 
+Modify `main.py` to update the `prebuilt_uri`:
 
-   class Badge(BaseUIComponent):
-       class_name: Optional[str] = None
-       text: str
-   ```
+```python
+from flect import flect
 
-7. **Using the Custom Component**
+from project import app as project_app
 
-   Your custom component is now ready for use within the flect application, just like any built-in component. For example:
+app = flect(
+    project_app,
+    prebuilt_uri={Your dist assets absolute path here e.g "/tmp/ui/dist/assets"},
+)
+```
 
-   ```python
-   from flect import PageResponse
-   from components import Badge
+### 8. Using the Custom Component
 
-   async def page():
-       return PageResponse(
-           body=Badge(text="Hello Badge!"),
-       )
-   ```
+Your custom component is now ready for use within the Flect application, just like any built-in component. For example:
 
-   Upon starting the service, you'll be greeted with a badge displaying the message "Hello Badge!" on your webpage.
+```python
+from flect import PageResponse
+from components import Badge
 
-This guide provides a thorough walkthrough for integrating custom React components into the flect framework, thereby enhancing your web applications with greater flexibility and functionality.
+async def page():
+    return PageResponse(
+        body=Badge(text="Hello Badge!"),
+    )
+```
+
+Upon starting the service, you will see a badge displaying "Hello Badge!" on your webpage.
+
+![custom-badge](https://github.com/Chaoyingz/flect/assets/32626585/a0cf5dec-71a6-4b25-b054-1d9b66916e1d)
