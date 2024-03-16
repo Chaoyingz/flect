@@ -1,7 +1,7 @@
 {
   "name": "@chaoying/flect-prebuilt",
   "description": "flect is a Python framework for building full-stack web applications.",
-  "version": "0.2.0",
+  "version": "0.2.1-beta.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -38,6 +38,6 @@
     "vite": "^5.1.6"
   },
   "peerDependencies": {
-    "@chaoying/flect": "0.2.0"
+    "@chaoying/flect": "0.2.1-beta.1"
   }
 }

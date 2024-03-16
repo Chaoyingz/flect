@@ -4,7 +4,7 @@
   "author": "chaoying",
   "license": "MIT",
   "private": false,
-  "version": "0.2.0",
+  "version": "0.2.1-beta.1",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,7 +15,8 @@
       "types": "./dist/index.d.ts"
     },
     "./components": {
-      "import": "./dist/components.js"
+      "import": "./dist/components.js",
+      "types": "./dist/components/index.d.ts"
     }
   },
   "scripts": {

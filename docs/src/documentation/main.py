@@ -7,5 +7,5 @@ app = flect(
     document_app,
     docs_url="/documentation",
     debug=settings.debug,
-    prebuilt_uri="/Users/chaoying/dev/os/flect/src/npm-flect-prebuilt/dist/assets",
+    prebuilt_uri="/Users/chaoying/dev/os/flect/docs/docs-ui/dist/assets",
 )

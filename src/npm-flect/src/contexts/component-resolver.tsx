@@ -1,4 +1,10 @@
-import React, { createContext, useEffect, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useContext,
+} from "react";
 import { AnyComponentProps } from "@/types";
 
 export interface ComponentResolver {
@@ -19,9 +25,14 @@ export const ComponentResolverProvider: React.FC<{
   children: ReactNode;
   resolver: ComponentResolver;
 }> = ({ children, resolver }) => {
+  const context = useContext(ComponentResolverContext);
+  const initialState = context
+    ? { ...context.resolvers, [resolver.package]: resolver }
+    : { [resolver.package]: resolver };
+
   const [resolvers, setResolvers] = useState<{
     [resolverName: string]: ComponentResolver;
-  }>({});
+  }>(initialState);
 
   const registerResolver = (resolver: ComponentResolver) => {
     const resolverName = resolver.package;
@@ -39,8 +50,9 @@ export const ComponentResolverProvider: React.FC<{
 
   useEffect(() => {
     registerResolver(resolver);
+    console.log("resolver", resolver.package, resolver);
+    console.log(resolvers);
   }, [resolver]);
-
   return (
     <ComponentResolverContext.Provider value={{ resolvers, registerResolver }}>
       {children}
