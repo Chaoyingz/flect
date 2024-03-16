@@ -1,15 +1,15 @@
-# Custom Component Integration in Flect
+# Custom Component Integration in flect
 
-Integrating custom components into Flect significantly enhances the framework's capabilities. By incorporating your own React components, you can tailor Flect's functionality to meet your specific needs.
+Integrating custom components into flect significantly enhances the framework's capabilities. By incorporating your own React components, you can tailor flect functionality to meet your specific needs.
 
-## Flect's Frontend Ecosystem
+## flect Frontend Ecosystem
 
-Flect's frontend ecosystem comprises two primary packages:
+flect frontend ecosystem comprises two primary packages:
 
-- **The Flect Component Library:** This package includes all of Flect's built-in components.
+- **The flect Component Library:** This package includes all of flect built-in components.
 - **Prebuilt:** This package is specifically designed for rendering page logic as a React application.
 
-This structure promotes modularity and customization, allowing you to adjust the default styles and logic of Flect components as needed.
+This structure promotes modularity and customization, allowing you to adjust the default styles and logic of flect components as needed.
 
 ## Guide Overview
 
@@ -22,7 +22,7 @@ This guide outlines the steps to implement custom components by creating your ow
 Begin by creating the project structure and installing necessary dependencies. For a project named "ui", use the Cookiecutter template with the following commands:
 
 ```console
-cookiecutter https://github.com/Chaoyingz/cookiecutter-flect-prebuilt
+cookiecutter https://github.com/Chaoyingz/cokiecutter-flect-prebuilt
 cd ui
 pnpm install
 ```
@@ -86,15 +86,15 @@ UIComponentResolver.package = 'ui'
 Update the `src/app.tsx` file to include the `ComponentResolver`:
 
 ```tsx
-import { Flect, ActionResolverProvider, ComponentResolverProvider } from '@chaoying/flect'
+import { flect, ActionResolverProvider, ComponentResolverProvider } from '@chaoying/flect'
 import { UIComponentResolver } from '@/components/component-resolver'
 
 function App() {
   return (
-    <ActionResolverProvider resolver={FlectActionResolver}>
-      <ComponentResolverProvider resolver={FlectComponentResolver}>
+    <ActionResolverProvider resolver={flectActionResolver}>
+      <ComponentResolverProvider resolver={flectComponentResolver}>
         <ComponentResolverProvider resolver={UIComponentResolver}>
-          <Flect />
+          <flect />
         </ComponentResolverProvider>
       </ComponentResolverProvider>
     </ActionResolverProvider>
@@ -108,13 +108,13 @@ export default App
 
 Compile your component package with:
 
-```
+```console
 pnpm build
 ```
 
 ### 6. Python Integration
 
-Incorporate your component into the Flect Python project by adding the following to a `components.py` file:
+Incorporate your component into the flect Python project by adding the following to a `components.py` file:
 
 ```python
 from typing import Literal, Optional
@@ -146,7 +146,7 @@ app = flect(
 
 ### 8. Using the Custom Component
 
-Your custom component is now ready for use within the Flect application, just like any built-in component. For example:
+Your custom component is now ready for use within the flect application, just like any built-in component. For example:
 
 ```python
 from flect import PageResponse

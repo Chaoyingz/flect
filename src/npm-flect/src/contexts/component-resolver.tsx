@@ -50,8 +50,6 @@ export const ComponentResolverProvider: React.FC<{
 
   useEffect(() => {
     registerResolver(resolver);
-    console.log("resolver", resolver.package, resolver);
-    console.log(resolvers);
   }, [resolver]);
   return (
     <ComponentResolverContext.Provider value={{ resolvers, registerResolver }}>

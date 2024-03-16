@@ -14,8 +14,6 @@ export function AnyComponent(props: AnyComponentProps): JSX.Element {
 
   const { resolvers } = context;
   const resolver = resolvers[props.package];
-  console.log(resolvers);
-  console.log(props.package, resolver);
   if (resolver) {
     const resolvedComponent = resolver(props);
     if (resolvedComponent === null) {

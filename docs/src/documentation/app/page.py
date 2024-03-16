@@ -1,8 +1,6 @@
 from flect import PageResponse
 from flect import components as c
 
-from documentation.components import Badge
-
 
 async def page() -> PageResponse:
     return PageResponse(
@@ -44,7 +42,6 @@ async def page() -> PageResponse:
                                 ),
                             ],
                         ),
-                        Badge(text="Hello Badge!", class_name="mt-20"),
                     ],
                 )
             ],

@@ -1,14 +1,14 @@
-import { BadgeProps, Badge } from "@/components/badge";
 import { ComponentResolver } from "@chaoying/flect";
+import { Markdown, MarkdownProps } from "@/components/markdown.tsx";
 
-type AnyComponentProps = BadgeProps;
+type AnyComponentProps = MarkdownProps;
 
 export const DocsUIComponentResolver: ComponentResolver = (
   props: AnyComponentProps,
 ) => {
   switch (props.subType) {
-    case "badge":
-      return <Badge {...props} />;
+    case "markdown":
+      return <Markdown {...props} />;
     default:
       return null;
   }

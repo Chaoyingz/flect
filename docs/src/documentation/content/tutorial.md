@@ -131,11 +131,11 @@ async def page() -> PageResponse:
     )
 ```
 
-In the above code, we have defined a ToDo creation form using a pydantic model. Flect will automatically render this form. You will see the following page:
+In the above code, we have defined a ToDo creation form using a pydantic model. flect will automatically render this form. You will see the following page:
 
 ![add-todo-form](https://github.com/Chaoyingz/flect/assets/32626585/fccb63e2-9a7c-491f-bbf8-6d2eac671f7c)
 
-Flect will parse the form validation items and add front-end validation.
+flect will parse the form validation items and add front-end validation.
 
 ## Handle Form
 
@@ -252,8 +252,8 @@ Now our ToDo application should work properly.
 
 ## Conclusion
 
-Congratulations on completing this tutorial! You now have a working ToDo application built with the power of Flect. As you continue to explore Flect, remember that it can be used to build a wide variety of applications, not just ToDo lists.
+Congratulations on completing this tutorial! You now have a working ToDo application built with the power of flect. As you continue to explore flect, remember that it can be used to build a wide variety of applications, not just ToDo lists.
 
-In fact, this very documentation was written using Flect. You can refer to the [Flect Documentation Repository](https://github.com/Chaoyingz/flect/tree/main/docs) on GitHub to see how it was done.
+In fact, this very documentation was written using flect. You can refer to the [flect Documentation Repository](https://github.com/Chaoyingz/flect/tree/main/docs) on GitHub to see how it was done.
 
-Additionally, applications written with Flect can be directly deployed using Vercel, providing a seamless development to deployment experience. Happy coding!
+Additionally, applications written with flect can be directly deployed using Vercel, providing a seamless development to deployment experience. Happy coding!

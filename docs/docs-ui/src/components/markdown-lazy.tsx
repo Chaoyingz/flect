@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { CodeBlock } from "./code-block";
+import { CodeBlock } from "@/components/code-block";
 
 export interface MarkdownLazyProps {
-  package: "flect";
+  package: "docs-ui";
   type: "markdown";
+  subType: "markdown";
   className?: string;
   text: string;
 }
@@ -20,9 +21,10 @@ export default function Markdown(props: MarkdownLazyProps) {
       }
       return (
         <CodeBlock
-          text={children as string}
+          package="docs-ui"
           type="code-block"
-          package="flect"
+          subType="code-block"
+          text={children as string}
           language={language?.[1]}
         />
       );
@@ -31,7 +33,10 @@ export default function Markdown(props: MarkdownLazyProps) {
 
   return (
     <ReactMarkdown
-      className={cn("prose prose-pre:bg-transparent prose-pre:p-0", className)}
+      className={cn(
+        "prose prose-pre:bg-transparent prose-pre:p-0 max-w-screen-lg",
+        className,
+      )}
       remarkPlugins={[remarkGfm]}
       components={components}
     >

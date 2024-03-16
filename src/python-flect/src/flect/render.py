@@ -15,8 +15,9 @@ from flect.response import PageResponse
 if TYPE_CHECKING:
     from flect.routing import ClientRoute
 
-FLECT_PREBUILT_VERSION = "0.2.0"
-FLECT_PREBUILT_URI = f"https://cdn.jsdelivr.net/npm/@chaoying/flect-prebuilt@{FLECT_PREBUILT_VERSION}/dist/assets"
+# FLECT_PREBUILT_VERSION = "0.2.0"
+# FLECT_PREBUILT_URI = f"https://cdn.jsdelivr.net/npm/@chaoying/flect-prebuilt@{FLECT_PREBUILT_VERSION}/dist/assets"
+FLECT_PREBUILT_URI = "https://unpkg.com/@chaoying/flect-prebuilt@0.2.2-beta.0/dist/assets"
 
 
 def generate_html(

@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { MarkdownLazyProps } from "@/components/flect/markdown-lazy";
+import { MarkdownLazyProps } from "@/components/markdown-lazy";
 
 export type { MarkdownLazyProps as MarkdownProps };
 

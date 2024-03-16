@@ -1,7 +1,8 @@
 {
   "name": "docs-ui",
   "description": "Your project description",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "main": "dist/index.html",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,7 +15,9 @@
     "clsx": "^2.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
     "react-syntax-highlighter": "^15.5.0",
+    "remark-gfm": "^4.0.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7"
   },
@@ -38,6 +41,6 @@
     "vite": "^5.1.6"
   },
   "peerDependencies": {
-    "@chaoying/flect": "0.2.1-beta.1"
+    "@chaoying/flect": "0.2.2"
   }
 }

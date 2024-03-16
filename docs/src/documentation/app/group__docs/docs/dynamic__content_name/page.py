@@ -9,6 +9,7 @@ from flect.sitemap import Sitemap
 
 from documentation import CONTENT_DIR
 from documentation.app.group__docs.layout import get_docs_pager
+from documentation.components import Markdown
 
 
 async def sitemap(dynamic_url: str) -> list[Sitemap]:
@@ -34,7 +35,7 @@ async def page(
         body=c.Container(
             tag="div",
             children=[
-                c.Markdown.from_file(CONTENT_DIR / f"{content_name}.md"),
+                Markdown.from_file(CONTENT_DIR / f"{content_name}.md"),
                 get_docs_pager(current_link=request.url.path.replace(CLIENT_ROOT_ROUTER_PREFIX, "")),
             ],
         ),
