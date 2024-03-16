@@ -1,6 +1,6 @@
-import { lazy } from 'react'
-import { MarkdownLazyProps } from '@/components/flect/markdown-lazy'
+import { lazy } from "react";
+import { MarkdownLazyProps } from "@/components/flect/markdown-lazy";
 
-export type { MarkdownLazyProps as MarkdownProps }
+export type { MarkdownLazyProps as MarkdownProps };
 
-export const Markdown = lazy(() => import('./markdown-lazy.tsx'))
+export const Markdown = lazy(() => import("./markdown-lazy.tsx"));

@@ -1,21 +1,20 @@
 import { useEffect } from "react";
 
 export function useHotReload() {
-  if (process.env.NODE_ENV === "production") {
-    return;
-  }
   useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
     const source = new EventSource("/_hotreload");
 
-    source.onmessage = function (event) {
+    source.onmessage = (event) => {
       if (event.data === "reload") {
         source.close();
         window.location.reload();
       }
     };
 
-    return () => {
-      source.close();
-    };
+    return () => source.close();
   }, []);
 }

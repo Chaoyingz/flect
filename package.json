@@ -8,6 +8,8 @@
     "dev": "npm run --workspace=@chaoying/npm-flect build --watch",
     "build": "npm run --workspaces build",
     "prettier": "prettier --write",
+    "lint": "eslint src --ext .ts,.tsx --report-unused-disable-directives --max-warnings 0",
+    "lint-fix": "npm run lint -- --fix",
     "format": "npm run prettier -- . && npm run lint-fix"
   },
   "prettier": {
