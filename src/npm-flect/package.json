@@ -21,7 +21,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --emptyOutDir",
+    "build": "tsc && vite build --emptyOutDir --base=https://unpkg.com/@chaoying/flect@0.2.3/dist/",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

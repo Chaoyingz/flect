@@ -29,7 +29,7 @@ export default defineConfig({
       },
       plugins: [
         baseUrl({
-          url: "/static",
+          url: "https://unpkg.com/docs-ui@0.1.4/dist/",
         }),
       ],
     },

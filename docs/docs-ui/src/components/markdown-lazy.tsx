@@ -11,7 +11,7 @@ export interface MarkdownLazyProps {
   text: string;
 }
 
-export function MarkdownLazy(props: MarkdownLazyProps) {
+export default function MarkdownLazy(props: MarkdownLazyProps) {
   const { text, className } = props;
   const components: Components = {
     code({ children, className }) {

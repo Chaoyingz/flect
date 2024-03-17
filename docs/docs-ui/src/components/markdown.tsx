@@ -1,5 +1,6 @@
-import { MarkdownLazyProps, MarkdownLazy } from "@/components/markdown-lazy";
+import { lazy } from "react";
+import { MarkdownLazyProps } from "@/components/markdown-lazy";
 
 export type { MarkdownLazyProps as MarkdownProps };
 
-export const Markdown = MarkdownLazy;
+export const Markdown = lazy(() => import("./markdown-lazy.tsx"));
