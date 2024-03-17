@@ -1,7 +1,6 @@
 import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { splitVendorChunkPlugin } from "vite";
 
 const serverConfig = {
   host: true,
@@ -12,7 +11,7 @@ const serverConfig = {
 };
 
 export default defineConfig({
-  plugins: [react(), splitVendorChunkPlugin()],
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

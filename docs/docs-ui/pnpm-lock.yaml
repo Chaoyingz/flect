@@ -76,9 +76,6 @@ devDependencies:
   prettier-plugin-tailwindcss:
     specifier: ^0.5.12
     version: 0.5.12(prettier@3.2.5)
-  rollup-plugin-base-url:
-    specifier: ^0.0.2
-    version: 0.0.2
   tailwindcss:
     specifier: ^3.4.1
     version: 3.4.1
@@ -3580,10 +3577,6 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.3
-    dev: true
-
-  /rollup-plugin-base-url@0.0.2:
-    resolution: {integrity: sha512-qbU/72ZtrgYkzGgivk9wNWQCvDgMeHVwFej/1MRJawCJgXijs545UKQ7qfFIJygCVTiUao2Acem+y3VdULq9/w==}
     dev: true
 
   /rollup@4.13.0:
