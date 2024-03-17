@@ -116,7 +116,7 @@ const useRoutes = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [convertRoute]);
 
   return routes;
 };

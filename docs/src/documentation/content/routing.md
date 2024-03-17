@@ -1,62 +1,61 @@
 # Routing
 
-Routing is the foundation of every application. This guide will introduce the essential concepts of web routing and how to effectively manage routing in a flect application.
+Routing serves as the cornerstone of every application. This guide will delve into the crucial aspects of web routing and the best practices for managing routes in a Flex application.
 
 ## Route Segments
 
-Each folder in a route represents a route segment. Each route segment corresponds to a specific segment in a URL path.
+Route segments are represented by folders within a route, each corresponding to a specific segment of a URL path.
 
-Consider the following folder structure:
+Consider this folder hierarchy:
 
-```console
+```markdown
 app
-  ├── layout.py
-  ├── page.py
-  └── dashboard
-    ├── page.py
-    └── users
-      └── page.py
+├── layout.py
+├── page.py
+└── dashboard
+├── page.py
+└── users
+└── page.py
 ```
 
-In this structure, `dashboard` and `users` are route segments. The URL path to access the `users` page under `dashboard` would be `/dashboard/users`.
+In this layout, `dashboard` and `users` function as route segments. To access the `users` page within `dashboard`, the URL path would be `/dashboard/users`.
 
-In this example, each `page.py` file maps to a specific URL path based on its location in the folder structure:
+Each `page.py` file is associated with a distinct URL path, determined by its position in the directory structure:
 
-- `app/page.py` maps to the root URL path (`/`). This is the default page displayed when users visit the base URL of your application.
-- `app/dashboard/page.py` maps to `/dashboard/`. This is the page displayed when users navigate to the `/dashboard/` path in your application.
-- `app/dashboard/users/page.py` maps to `/dashboard/users/`. This is the page displayed when users navigate to the `/dashboard/users/` path in your application.
+- `app/page.py` corresponds to the root URL path (`/`), displaying the default page when visiting the application's base URL.
+- `app/dashboard/page.py` is linked to `/dashboard/`, showing the relevant page upon navigation to this path.
+- `app/dashboard/users/page.py` maps to `/dashboard/users/`, presenting the appropriate page for this path.
 
-This way, each `page.py` file serves as a unique route in your application, and the folder structure directly translates to the application's routing structure. This makes managing and understanding your application's routes straightforward and intuitive.
+This setup allows each `page.py` file to represent a unique route, with the folder structure directly reflecting the routing architecture of the application. It simplifies the management and comprehension of your application's routes, making it intuitive and straightforward.
 
 ## Defining Routing Files
 
 ### layout.py
 
-A layout is a user interface (UI) that is shared across multiple routes. Layouts maintain their state and remain interactive during navigation, without re-rendering. Layouts can also be nested.
+A layout defines a user interface (UI) shared across multiple routes, maintaining its state and interactivity across navigation without needing to re-render. Layouts can also be nested.
 
-Here's how you can define a layout:
+To define a layout:
 
 ```python
 from flect import PageResponse
 from flect import components as c
 
-# The layout function must be named "layout" and accept an "outlet" parameter
+# The layout function should be named "layout" and take an "outlet" parameter
 async def layout(outlet: c.AnyComponent = c.Outlet()) -> PageResponse:
     return PageResponse(
         body=c.Container(
             tag="div",
             class_name="flex",
-            # use the outlet to render the layout's content
-            children=[outlet],
+            children=[outlet],  # the outlet renders the layout's content
         )
     )
 ```
 
 ### page.py
 
-A page is a UI that is unique to a specific route. Each unique page in the application corresponds to a `page.py` file.
+A page represents a UI specific to a route, with each distinct page corresponding to a separate `page.py` file.
 
-Here's how you can define a page:
+To define a page:
 
 ```python
 from flect import PageResponse
@@ -70,4 +69,29 @@ async def page() -> PageResponse:
     )
 ```
 
-This structure provides a clear and scalable way to manage your application's routes.
+### routing.py
+
+The `routing.py` file outlines your application's routes, often used for handling forms. For instance, you can define a POST endpoint to process form submissions as follows:
+
+```python
+from pydantic import BaseModel
+from flect.actions import Notify
+from flect.form import Input
+from flect.response import ActionResponse
+
+class FormExampleModel(BaseModel):
+    username: str = Input(
+        placeholder="Enter your username", default="", pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10
+    )
+
+async def post(form: FormExampleModel) -> ActionResponse:
+    return ActionResponse(
+        action=Notify(
+            title=f"You submitted username: {form.username}",
+        )
+    )
+```
+
+Here, the route name corresponds to the method name, such as `post` for processing POST requests.
+
+This approach offers a clear and scalable framework for managing your application's routing.

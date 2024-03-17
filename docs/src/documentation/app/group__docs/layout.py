@@ -61,6 +61,14 @@ docs_nav = [
                         href="/learn/custom-component/",
                         children=[c.Text(text="Custom Component", class_name="text-sm")],
                     ),
+                    c.NavLink(
+                        href="/learn/tailwindcss/",
+                        children=[c.Text(text="TailwindCSS", class_name="text-sm")],
+                    ),
+                    c.NavLink(
+                        href="/learn/sitemap/",
+                        children=[c.Text(text="Sitemap", class_name="text-sm")],
+                    ),
                 ],
             ),
         ],

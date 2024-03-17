@@ -51,8 +51,6 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  docs/docs-ui: {}
-
   src/npm-flect:
     dependencies:
       '@fengkx/react-syntax-highlighter':
@@ -182,6 +180,9 @@ importers:
 
   src/npm-flect-prebuilt:
     dependencies:
+      '@chaoying/flect':
+        specifier: 0.2.3
+        version: link:../npm-flect
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
