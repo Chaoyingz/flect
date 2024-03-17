@@ -8,14 +8,14 @@ Route segments are represented by folders within a route, each corresponding to 
 
 Consider this folder hierarchy:
 
-```markdown
+```console
 app
-├── layout.py
-├── page.py
-└── dashboard
-├── page.py
-└── users
-└── page.py
+  ├── layout.py
+  ├── page.py
+  └── dashboard
+      ├── page.py
+      └── users
+          └── page.py
 ```
 
 In this layout, `dashboard` and `users` function as route segments. To access the `users` page within `dashboard`, the URL path would be `/dashboard/users`.
