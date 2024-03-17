@@ -16,9 +16,8 @@ export interface ButtonProps extends Omit<ButtonPropsUI, "children"> {
 
 export function Button({ children, onClickAction, ...rest }: ButtonProps) {
   const resolvedAction = useAction(onClickAction);
-
   return (
-    <ButtonUI {...rest} onClick={resolvedAction}>
+    <ButtonUI {...rest} onClick={() => resolvedAction()}>
       <AnyComponents children={children} />
     </ButtonUI>
   );
