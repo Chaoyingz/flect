@@ -33,9 +33,3 @@ Dynamic routes allow for more flexible navigation paths:
 Route groups help organize related routes without affecting the actual routing:
 
 - `group__{folder}`: Represents a group of related routes. This does not affect the routing but helps in organizing similar routes together.
-
-### SEO
-
-Search Engine Optimization (SEO) helps improve the application's visibility on search engines:
-
-- `sitemap.py`: This file is used for SEO purposes. It provides a map of the application's routes, making it easier for search engines to crawl and index the application.
