@@ -18,7 +18,7 @@ export type CodeBlockLazyProps = {
   language?: string;
 };
 
-export default function CodeBlockLazy(props: CodeBlockLazyProps) {
+export function CodeBlockLazy(props: CodeBlockLazyProps) {
   return (
     <div className="relative">
       <CopyButton
