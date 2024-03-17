@@ -1,7 +1,6 @@
 import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { baseUrl } from "rollup-plugin-base-url";
 
 const serverConfig = {
   host: true,
@@ -11,8 +10,11 @@ const serverConfig = {
   },
 };
 
+const version = process.env.npm_package_version;
+
 export default defineConfig({
   plugins: [react()],
+  base: `https://unpkg.com/docs-ui@${version}/dist/`,
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -27,11 +29,7 @@ export default defineConfig({
         chunkFileNames: `assets/[name].js`,
         assetFileNames: `assets/[name].[ext]`,
       },
-      plugins: [
-        baseUrl({
-          url: "https://unpkg.com/docs-ui@0.1.4/dist/",
-        }),
-      ],
+      plugins: [],
     },
   },
 });
