@@ -99,6 +99,9 @@ module.exports = {
     "overflow-hidden",
     "underline",
     "min-h-screen",
+    "text-primary",
+    "bg-primary",
+    "bg-primary-foreground",
   ],
   corePlugins: {
     preflight: false,
