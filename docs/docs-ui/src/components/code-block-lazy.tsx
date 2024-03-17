@@ -32,6 +32,7 @@ export default function CodeBlockLazy(props: CodeBlockLazyProps) {
         PreTag="div"
         language={props.language}
         style={dracula}
+        wrapLongLines
       >
         {props.text}
       </SyntaxHighlighter>
