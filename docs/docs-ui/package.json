@@ -1,7 +1,7 @@
 {
   "name": "docs-ui",
   "description": "Your project description",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "dist/index.html",
   "type": "module",
   "scripts": {
@@ -41,6 +41,6 @@
     "vite": "^5.1.6"
   },
   "peerDependencies": {
-    "@chaoying/flect": "0.2.3"
+    "@chaoying/flect": "0.2.4"
   }
 }

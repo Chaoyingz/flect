@@ -4,7 +4,7 @@
   "author": "chaoying",
   "license": "MIT",
   "private": false,
-  "version": "0.2.3",
+  "version": "0.2.4",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,7 +21,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --emptyOutDir --base=https://unpkg.com/@chaoying/flect@0.2.3/dist/",
+    "build": "tsc && vite build --emptyOutDir",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

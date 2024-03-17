@@ -1,6 +1,7 @@
 import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { splitVendorChunkPlugin } from "vite";
 
 const serverConfig = {
   host: true,
@@ -10,11 +11,8 @@ const serverConfig = {
   },
 };
 
-const version = process.env.npm_package_version;
-
 export default defineConfig({
-  plugins: [react()],
-  base: `https://unpkg.com/docs-ui@${version}/dist/`,
+  plugins: [react(), splitVendorChunkPlugin()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
