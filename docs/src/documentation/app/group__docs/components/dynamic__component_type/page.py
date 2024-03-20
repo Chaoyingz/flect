@@ -3,6 +3,7 @@ from typing import Annotated, Any, Literal, Optional
 import flect.components as c
 from fastapi import Path, Request
 from flect import PageResponse
+from flect.actions import DispatchEvent
 from flect.form import Checkbox, Input, Select, Textarea
 from flect.head import Head
 from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
@@ -159,6 +160,33 @@ COMPONENT_DOCS_MAP = {
                 tag="div",
                 children=[
                     c.Text(text="This is a sample text in container."),
+                ],
+            ),
+        ),
+        get_api_reference_section(component=c.Container),
+    ],
+    "dialog": [
+        get_component_description_section(
+            title="Dialog",
+            description="A window overlaid on either the primary window or another dialog window, rendering the "
+            "content underneath inert.",
+        ),
+        get_component_preview_section(
+            preview=c.Container(
+                tag="div",
+                children=[
+                    c.Text(text="This is a sample text in dialog."),
+                    c.Button(
+                        children=[c.Text(text="Open dialog")],
+                        on_click_action=DispatchEvent(event="dialog:open"),
+                    ),
+                    c.Dialog(
+                        title="Dialog",
+                        children=[
+                            c.Text(text="This is a sample text in dialog."),
+                        ],
+                        trigger=DispatchEvent(event="dialog:open"),
+                    ),
                 ],
             ),
         ),

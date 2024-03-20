@@ -13,6 +13,7 @@ import { MarkdownProps } from "@/components/flect/markdown";
 import { CopyButtonProps } from "@/components/flect/copy-button";
 import { CodeBlockProps } from "@/components/flect/code-block";
 import { CustomProps } from "@/components/flect/custom";
+import { DialogProps } from "@/components/flect/dialog";
 
 export type Json =
   | string
@@ -31,6 +32,7 @@ export type AnyComponentProps =
   | ContainerProps
   | CopyButtonProps
   | CustomProps
+  | DialogProps
   | FormProps
   | HeadingProps
   | LinkProps
@@ -41,7 +43,10 @@ export type AnyComponentProps =
   | TableProps
   | TextProps;
 
-export type AnyActionProps = NotifyAnyActionProps | RedirectAnyActionProps;
+export type AnyActionProps =
+  | NotifyActionProps
+  | RedirectActionProps
+  | DispatchEventActionProps;
 
 export type ActionResponse = {
   action: AnyActionProps;

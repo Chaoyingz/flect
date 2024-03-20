@@ -16,6 +16,7 @@ import { CopyButton } from "@/components/flect/copy-button";
 import { CodeBlock } from "@/components/flect/code-block";
 import { Custom } from "@/components/flect/custom";
 import { ComponentResolver } from "@/contexts/component-resolver";
+import { Dialog } from "@/components/flect/dialog";
 
 export const FlectComponentResolver: ComponentResolver = (
   props: AnyComponentProps,
@@ -31,6 +32,8 @@ export const FlectComponentResolver: ComponentResolver = (
       return <Container {...props} />;
     case "copy-button":
       return <CopyButton {...props} />;
+    case "dialog":
+      return <Dialog {...props} />;
     case "custom":
       return <Custom {...props} />;
     case "form":

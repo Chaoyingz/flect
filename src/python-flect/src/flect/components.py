@@ -18,7 +18,7 @@ from pydantic.alias_generators import to_camel
 from pydantic_core.core_schema import SerializerFunctionWrapHandler
 from typing_extensions import Self
 
-from flect.actions import AnyAction
+from flect.actions import AnyAction, DispatchEvent
 
 
 class BaseComponent(BaseModel):
@@ -150,6 +150,22 @@ class CopyButton(BaseComponent):
 class Custom(BaseComponent):
     type: Literal["custom"] = "custom"
     sub_type: str
+
+
+class Dialog(BaseContainerComponent):
+    type: Literal["dialog"] = "dialog"
+    title: str = Field(
+        ...,
+        description="Specifies the dialog's title.",
+    )
+    description: Optional[str] = Field(
+        default=None,
+        description="Specifies the dialog's description.",
+    )
+    trigger: DispatchEvent = Field(
+        ...,
+        description="Specifies the event that triggers the dialog.",
+    )
 
 
 class Form(BaseComponent):
@@ -348,6 +364,7 @@ AnyComponentType = Annotated[
         Container,
         CopyButton,
         Custom,
+        Dialog,
         Form,
         Heading,
         Link,
@@ -380,6 +397,8 @@ __all__ = (
     "CodeBlock",
     "Container",
     "CopyButton",
+    "Custom",
+    "Dialog",
     "Form",
     "Heading",
     "Link",

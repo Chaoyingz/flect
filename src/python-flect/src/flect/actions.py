@@ -27,7 +27,12 @@ class Redirect(BaseAction):
     path: str = Field(..., description="The path to redirect to.")
 
 
+class DispatchEvent(BaseAction):
+    type: Literal["dispatch-event"] = "dispatch-event"
+    event: str = Field(..., description="The event to dispatch.")
+
+
 AnyAction = Annotated[
-    Union[Notify, Redirect],
+    Union[Notify, Redirect, DispatchEvent],
     Field(discriminator="type"),
 ]

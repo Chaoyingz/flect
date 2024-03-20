@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { AnyActionProps } from "@/types";
 import { ActionResolver } from "@/contexts/action-resolver";
 
-export type NotifyAnyActionProps = {
+export type NotifyActionProps = {
   package: "flect";
   type: "notify";
   title: string;
@@ -25,10 +25,16 @@ export type NotifyAnyActionProps = {
     | "default";
 };
 
-export type RedirectAnyActionProps = {
+export type RedirectActionProps = {
   package: "flect";
   type: "redirect";
   url: string;
+};
+
+export type DispatchEventActionProps = {
+  package: "flect";
+  type: "dispatch-event";
+  event: string;
 };
 
 export function resolveAction(
@@ -56,7 +62,7 @@ export function resolveAction(
   return resolvedAction;
 }
 
-export function notifyAction(props: NotifyAnyActionProps) {
+export function notifyAction(props: NotifyActionProps) {
   const { title, style, ...rest } = props;
   switch (style) {
     case "success":
@@ -76,6 +82,11 @@ export function notifyAction(props: NotifyAnyActionProps) {
   }
 }
 
-export function redirectAction(props: RedirectAnyActionProps) {
+export function redirectAction(props: RedirectActionProps) {
   window.location.replace(props.url);
+}
+
+export function dispatchEventAction(props: DispatchEventActionProps) {
+  console.log(props.event);
+  window.dispatchEvent(new CustomEvent(props.event));
 }

@@ -1,5 +1,9 @@
 import { ActionResolver } from "@/contexts/action-resolver";
-import { notifyAction, redirectAction } from "@/lib/actions";
+import {
+  dispatchEventAction,
+  notifyAction,
+  redirectAction,
+} from "@/lib/actions";
 import { AnyActionProps } from "@/types";
 
 export const FlectActionResolver: ActionResolver = (props: AnyActionProps) => {
@@ -9,6 +13,9 @@ export const FlectActionResolver: ActionResolver = (props: AnyActionProps) => {
     }
     case "redirect": {
       return () => redirectAction(props);
+    }
+    case "dispatch-event": {
+      return () => dispatchEventAction(props);
     }
   }
 

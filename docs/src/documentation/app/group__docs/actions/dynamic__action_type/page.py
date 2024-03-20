@@ -12,6 +12,48 @@ from documentation.app.group__docs.component import get_api_reference_section
 from documentation.app.group__docs.layout import get_docs_pager
 
 ACTION_DOCS_MAP = {
+    "dispatch-event": [
+        c.Container(
+            children=[
+                c.Heading(
+                    level=1,
+                    text="Dispatch Event",
+                    class_name="text-3xl mb-3",
+                ),
+                c.Paragraph(text="The Dispatch Event action is used to dispatch an event."),
+            ]
+        ),
+        c.Container(
+            children=[
+                c.Heading(
+                    level=2,
+                    text="Try it out",
+                    class_name="text-2xl mb-6 border-b pb-2",
+                ),
+                c.Button(
+                    on_click_action=a.DispatchEvent(
+                        event="dialog:open",
+                    ),
+                    children=[
+                        c.Text(
+                            text="Click me",
+                        )
+                    ],
+                ),
+                c.Dialog(
+                    title="Dialog",
+                    children=[
+                        c.Heading(
+                            level=2,
+                            text="Hello dialog!",
+                        )
+                    ],
+                    trigger=a.DispatchEvent(event="dialog:open"),
+                ),
+            ]
+        ),
+        get_api_reference_section(a.Notify),
+    ],
     "notify": [
         c.Container(
             children=[

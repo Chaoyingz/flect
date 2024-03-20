@@ -86,6 +86,10 @@ docs_nav = [
                 class_name="flex flex-col gap-2",
                 children=[
                     c.NavLink(
+                        href="/actions/dispatch-event/",
+                        children=[c.Text(text="Dispatch Event", class_name="text-sm")],
+                    ),
+                    c.NavLink(
                         href="/actions/notify/",
                         children=[c.Text(text="Notify", class_name="text-sm")],
                     ),
@@ -124,6 +128,10 @@ docs_nav = [
                     c.NavLink(
                         href="/components/container/",
                         children=[c.Text(text="Container", class_name="text-sm")],
+                    ),
+                    c.NavLink(
+                        href="/components/dialog/",
+                        children=[c.Text(text="Dialog", class_name="text-sm")],
                     ),
                     c.NavLink(
                         href="/components/form/",
