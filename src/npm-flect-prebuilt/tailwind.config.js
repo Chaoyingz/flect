@@ -100,6 +100,7 @@ module.exports = {
     "underline",
     "min-h-screen",
     "text-primary",
+    "text-primary-foreground",
     "bg-primary",
     "bg-primary-foreground",
   ],

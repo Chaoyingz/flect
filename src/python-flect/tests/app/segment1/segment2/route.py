@@ -3,4 +3,4 @@ from flect import actions as a
 
 
 async def post() -> ActionResponse:
-    return ActionResponse(action=a.Redirect(url=""))
+    return ActionResponse(action=a.Redirect(path=""))

@@ -24,7 +24,7 @@ class Notify(BaseAction):
 
 class Redirect(BaseAction):
     type: Literal["redirect"] = "redirect"
-    url: str = Field(..., description="The URL to redirect to.")
+    path: str = Field(..., description="The path to redirect to.")
 
 
 AnyAction = Annotated[

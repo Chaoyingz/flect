@@ -64,7 +64,7 @@ ACTION_DOCS_MAP = {
                     class_name="text-2xl mb-6 border-b pb-2",
                 ),
                 c.Button(
-                    on_click_action=a.Redirect(url="/actions/notify/"),
+                    on_click_action=a.Redirect(path="/actions/notify/"),
                     children=[
                         c.Text(
                             text="Click button will redirect to /actions/notify/",
