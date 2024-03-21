@@ -2,6 +2,7 @@ import {
   Flect,
   ActionResolverProvider,
   ComponentResolverProvider,
+  getMetaContent,
 } from "@chaoying/flect";
 import {
   FlectActionResolver,
@@ -14,7 +15,7 @@ function App() {
     <ActionResolverProvider resolver={FlectActionResolver}>
       <ComponentResolverProvider resolver={FlectComponentResolver}>
         <ComponentResolverProvider resolver={DocsUIComponentResolver}>
-          <Flect />
+          <Flect debug={Boolean(getMetaContent("flect:debug"))} />
         </ComponentResolverProvider>
       </ComponentResolverProvider>
     </ActionResolverProvider>
