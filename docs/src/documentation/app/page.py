@@ -14,7 +14,7 @@ async def page() -> PageResponse:
                     children=[
                         c.Heading(
                             level=1,
-                            text="Turning ideas into web app fast111",
+                            text="Turning ideas into web app fast",
                             class_name="text-center text-5xl font-bold",
                         ),
                         c.Text(
