@@ -194,6 +194,18 @@ COMPONENT_DOCS_MAP = {
         ),
         get_api_reference_section(component=c.Container),
     ],
+    "display": [
+        get_component_description_section(
+            title="Display",
+            description="The Display component displays other components.",
+        ),
+        get_component_preview_section(
+            preview=c.Display(
+                value='{"b": 1}',
+            ),
+        ),
+        get_api_reference_section(component=c.Display),
+    ],
     "form": [
         get_component_description_section(
             title="Form",

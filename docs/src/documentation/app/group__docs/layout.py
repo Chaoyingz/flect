@@ -134,6 +134,10 @@ docs_nav = [
                         children=[c.Text(text="Dialog", class_name="text-sm")],
                     ),
                     c.NavLink(
+                        href="/components/display/",
+                        children=[c.Text(text="Display", class_name="text-sm")],
+                    ),
+                    c.NavLink(
                         href="/components/form/",
                         children=[c.Text(text="Form", class_name="text-sm")],
                     ),

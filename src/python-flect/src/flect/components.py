@@ -18,6 +18,7 @@ from pydantic_core.core_schema import SerializerFunctionWrapHandler
 from typing_extensions import Self
 
 from flect.actions import AnyAction, DispatchEvent
+from flect.types import JsonData
 
 
 class BaseComponent(BaseModel):
@@ -164,6 +165,18 @@ class Dialog(BaseContainerComponent):
     trigger: DispatchEvent = Field(
         ...,
         description="Specifies the event that triggers the dialog.",
+    )
+
+
+class Display(BaseComponent):
+    type: Literal["display"] = "display"
+    display_type: Literal["auto", "boolean", "json", "null", "text"] = Field(
+        default="auto",
+        description="Specifies the display's type.",
+    )
+    value: JsonData = Field(
+        ...,
+        description="Specifies the display's value.",
     )
 
 
@@ -366,6 +379,7 @@ AnyComponentType = Annotated[
         CopyButton,
         Custom,
         Dialog,
+        Display,
         Form,
         Heading,
         Link,
@@ -400,6 +414,7 @@ __all__ = (
     "CopyButton",
     "Custom",
     "Dialog",
+    "Display",
     "Form",
     "Heading",
     "Link",

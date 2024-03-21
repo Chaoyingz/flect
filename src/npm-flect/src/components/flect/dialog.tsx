@@ -25,7 +25,6 @@ export function Dialog(props: DialogProps) {
   const { dispatched, setDispatched } = useDispatchActionListen(
     props.trigger.event,
   );
-  console.log(dispatched);
   return (
     <DialogUI open={dispatched} onOpenChange={setDispatched}>
       <DialogContent className={cn("sm:max-w-[425px]", props.className)}>

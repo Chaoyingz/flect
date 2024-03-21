@@ -8,13 +8,14 @@ import {
 } from "@/components/ui/table";
 import { Json } from "@/types";
 import { JSONSchema7 } from "json-schema";
+import { Display, DisplayType } from "@/components/flect/display";
 
 export interface Dataset {
   [k: string]: Json;
 }
 
 interface Model extends JSONSchema7 {
-  displayType: "text" | "boolean";
+  displayType: DisplayType;
   properties: {
     [key: string]: Model;
   };
@@ -30,7 +31,6 @@ export interface TableProps {
 }
 
 export function Table(props: TableProps) {
-  const columns = Object.keys(props.model.properties);
   return (
     <TableUI className={props.className}>
       <TableHeader>
@@ -47,10 +47,10 @@ export function Table(props: TableProps) {
       <TableBody>
         {props.datasets.map((dataset, index) => (
           <TableRow key={index}>
-            {columns.map((key, index) => {
+            {Object.keys(props.model.properties).map((key, index) => {
               return (
                 <TableCell key={index}>
-                  <Cell
+                  <Display
                     displayType={props.model.properties[key].displayType}
                     value={dataset[key]}
                   />
@@ -62,28 +62,4 @@ export function Table(props: TableProps) {
       </TableBody>
     </TableUI>
   );
-}
-
-interface CellProps {
-  displayType: "text" | "boolean";
-  value: Json;
-}
-
-function Cell({ displayType, value }: CellProps) {
-  switch (displayType) {
-    case "text":
-      return <TextDisplay value={value} />;
-    case "boolean":
-      return <BooleanDisplay value={value} />;
-    default:
-      return <TextDisplay value={value} />;
-  }
-}
-
-function TextDisplay({ value }: { value: Json }) {
-  return <>{value}</>;
-}
-
-function BooleanDisplay({ value }: { value: Json }) {
-  return <>{value ? "true" : "false"}</>;
 }

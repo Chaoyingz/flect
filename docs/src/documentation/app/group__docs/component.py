@@ -22,12 +22,12 @@ def get_api_reference_section(component: c.AnyComponent) -> c.Container:
             filed_info.default = "[]"
             filed_info.description = "The children of the component."
         if filed_info.default == PydanticUndefined:
-            filed_info.default = "-"
+            filed_info.default = None
         props.append(
             APIReference(
                 prop=field,
                 type=str(filed_info.annotation),
-                default=filed_info.default or "-",
+                default=filed_info.default,
                 description=filed_info.description,
             )
         )
