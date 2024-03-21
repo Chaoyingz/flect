@@ -39,6 +39,6 @@ def get_api_reference_section(component: c.AnyComponent) -> c.Container:
                 text="API Reference",
                 class_name="text-2xl mb-6 border-b pb-2",
             ),
-            c.Table(datasets=props),
+            c.Table(model=APIReference, datasets=props),
         ],
     )

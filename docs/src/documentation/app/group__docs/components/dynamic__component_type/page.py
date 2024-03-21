@@ -4,6 +4,7 @@ import flect.components as c
 from fastapi import Path, Request
 from flect import PageResponse
 from flect.actions import DispatchEvent
+from flect.display import BooleanDisplay, TextDisplay
 from flect.form import Checkbox, Input, Select, Textarea
 from flect.head import Head
 from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
@@ -86,9 +87,10 @@ def get_component_preview_section(
 
 
 class TableExampleModel(BaseModel):
-    column1: str
+    column1: Annotated[str, TextDisplay(title="Column 1")]
     column2: str
     column3: str
+    is_active: Annotated[bool, BooleanDisplay()]
 
 
 class FormExampleModel(BaseModel):
@@ -263,18 +265,21 @@ COMPONENT_DOCS_MAP = {
         ),
         get_component_preview_section(
             preview=c.Table(
+                model=TableExampleModel,
                 datasets=[
                     TableExampleModel(
                         column1="Value 1",
                         column2="Value 2",
                         column3="Value 3",
+                        is_active=True,
                     ),
                     TableExampleModel(
                         column1="Value 4",
                         column2="Value 5",
                         column3="Value 6",
+                        is_active=False,
                     ),
-                ]
+                ],
             )
         ),
         get_api_reference_section(component=c.Table),

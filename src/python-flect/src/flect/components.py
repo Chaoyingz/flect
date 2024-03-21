@@ -12,7 +12,6 @@ from pydantic import (
     SerializeAsAny,
     WrapSerializer,
     field_serializer,
-    model_validator,
 )
 from pydantic.alias_generators import to_camel
 from pydantic_core.core_schema import SerializerFunctionWrapHandler
@@ -311,31 +310,33 @@ class Paragraph(BaseComponent):
 class Table(BaseComponent):
     type: Literal["table"] = "table"
 
-    labels: list[str] = Field(
-        default=[],
-        description="Defines the table's column labels. Defaults to the keys of the dataset.",
+    model: Type[BaseModel] = Field(
+        ...,
+        description="Defines the table's data model.",
     )
     datasets: list[SerializeAsAny[BaseModel]] = Field(
         ...,
         description="Specifies the table's data.",
     )
 
-    @model_validator(mode="after")
-    def set_default_labels(self) -> Self:
-        if not self.labels and self.datasets:
-            self.labels = list(self.datasets[0].model_fields.keys())
-        return self
+    @field_serializer("model")
+    def serialize_model(self, model: Type[BaseModel]) -> dict:
+        return model.model_json_schema()
 
     def render_to_html(self) -> str:
+        labels = [field.title or name for name, field in self.model.model_fields.items()]
+        tbody = ""
+        for row in self.datasets:
+            tbody += f"<tr>{''.join(f'<td>{escape(getattr(row, field_name))}</td>' for field_name in self.model.model_fields.keys())}</tr>"
         return f"""\
         <table>
             <thead>
                 <tr>
-                    {"".join(f"<th>{escape(label)}</th>" for label in self.labels)}
+                    {"".join(f"<th>{escape(label)}</th>" for label in labels)}
                 </tr>
             </thead>
             <tbody>
-                {"".join(f"<tr>{''.join(f'<td>{escape(str(getattr(dataset, label)))}</td>' for label in self.labels)}</tr>" for dataset in self.datasets)}
+                {tbody}
             </tbody>
         </table>
         """
