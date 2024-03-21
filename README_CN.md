@@ -121,6 +121,7 @@ async def page() -> PageResponse:
                 c.Table(
                     datasets=todos,
                     class_name="border p-5",
+                    model=TodoInDB
                 )
             ]
         )
