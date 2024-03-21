@@ -7,5 +7,5 @@ app = flect(
     document_app,
     docs_url="/documentation",
     debug=settings.debug,
-    prebuilt_uri="https://unpkg.com/docs-ui@0.1.6/dist/assets",
+    prebuilt_uri="https://unpkg.com/docs-ui@0.1.7/dist/assets",
 )
