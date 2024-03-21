@@ -15,7 +15,12 @@ function App() {
     <ActionResolverProvider resolver={FlectActionResolver}>
       <ComponentResolverProvider resolver={FlectComponentResolver}>
         <ComponentResolverProvider resolver={DocsUIComponentResolver}>
-          <Flect debug={Boolean(getMetaContent("flect:debug"))} />
+          <Flect
+            debug={
+              Boolean(getMetaContent("flect:debug")) ||
+              process.env.NODE_ENV === "development"
+            }
+          />
         </ComponentResolverProvider>
       </ComponentResolverProvider>
     </ActionResolverProvider>

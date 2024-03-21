@@ -13,7 +13,9 @@ async def page() -> PageResponse:
                     class_name="flex justify-center py-32 flex-col items-center",
                     children=[
                         c.Heading(
-                            level=1, text="Turning ideas into web app fast", class_name="text-center text-5xl font-bold"
+                            level=1,
+                            text="Turning ideas into web app fast111",
+                            class_name="text-center text-5xl font-bold",
                         ),
                         c.Text(
                             text="flect enables you to quickly create full-stack web applications using Python.",

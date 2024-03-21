@@ -9,6 +9,11 @@ class BaseAction(BaseModel):
     model_config = ConfigDict(extra="forbid", alias_generator=AliasGenerator(serialization_alias=to_camel))
 
 
+class DispatchEvent(BaseAction):
+    type: Literal["dispatch-event"] = "dispatch-event"
+    event: str = Field(..., description="The event to dispatch.")
+
+
 class Notify(BaseAction):
     type: Literal["notify"] = "notify"
 
@@ -27,12 +32,7 @@ class Redirect(BaseAction):
     path: str = Field(..., description="The path to redirect to.")
 
 
-class DispatchEvent(BaseAction):
-    type: Literal["dispatch-event"] = "dispatch-event"
-    event: str = Field(..., description="The event to dispatch.")
-
-
 AnyAction = Annotated[
-    Union[Notify, Redirect, DispatchEvent],
+    Union[DispatchEvent, Notify, Redirect],
     Field(discriminator="type"),
 ]

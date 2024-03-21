@@ -87,6 +87,5 @@ export function redirectAction(props: RedirectActionProps) {
 }
 
 export function dispatchEventAction(props: DispatchEventActionProps) {
-  console.log(props.event);
   window.dispatchEvent(new CustomEvent(props.event));
 }

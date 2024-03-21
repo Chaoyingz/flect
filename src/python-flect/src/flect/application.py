@@ -6,7 +6,6 @@ from types import ModuleType
 from typing import Any, Optional
 
 from fastapi import FastAPI
-from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from flect.routing import configure_app_router
@@ -28,8 +27,6 @@ class flect(FastAPI):
 
     def setup_flect(self) -> None:
         app_router = configure_app_router(self.app_module, self.prebuilt_uri)
-        if self.debug:
-            self.add_api_route("/_hotreload", self.hotreload, methods=["GET"])
         self.include_router(app_router, tags=["flect"])
 
     def validate_prebuilt_uri(self, prebuilt_uri: Optional[str]) -> Optional[str]:
@@ -50,18 +47,3 @@ class flect(FastAPI):
 
     def on_sigterm(self, *_: Any) -> None:
         self.reload_event.set()
-
-    async def hotreload(self) -> StreamingResponse:
-        async def event_generator():
-            try:
-                while True:
-                    try:
-                        await asyncio.wait_for(self.reload_event.wait(), timeout=5.0)
-                        yield "data: reload\n\n"
-                        self.reload_event.clear()
-                    except (asyncio.TimeoutError, asyncio.exceptions.CancelledError):
-                        pass
-            except Exception:
-                pass
-
-        return StreamingResponse(event_generator(), media_type="text/event-stream")

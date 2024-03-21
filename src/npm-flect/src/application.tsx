@@ -1,14 +1,13 @@
 import { Router } from "@/components/routing";
 import { Toaster } from "@/components/ui/sonner";
-import { useHotReload } from "@/hooks/use-hot-reload";
 import "@/globals.css";
+import { ConfigContextState, ConfigProvider } from "@/contexts/config";
 
-export function Flect() {
-  useHotReload();
+export function Flect(props: ConfigContextState) {
   return (
-    <>
+    <ConfigProvider config={props}>
       <Router />
       <Toaster />
-    </>
+    </ConfigProvider>
   );
 }
