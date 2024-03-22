@@ -7,7 +7,7 @@ except ImportError:
 
 
 class Settings(BaseSettings):
-    debug: bool = True
+    debug: bool = False
     google_measurement_id: str = ""
 
 

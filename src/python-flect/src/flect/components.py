@@ -340,7 +340,10 @@ class Table(BaseComponent):
         labels = [field.title or name for name, field in self.model.model_fields.items()]
         tbody = ""
         for row in self.datasets:
-            tbody += f"<tr>{''.join(f'<td>{escape(getattr(row, field_name))}</td>' for field_name in self.model.model_fields.keys())}</tr>"
+            row_html = "".join(
+                f'<td>{escape(str(getattr(row, field_name, "")))}</td>' for field_name in self.model.model_fields.keys()
+            )
+            tbody += f"<tr>{row_html}</tr>"
         return f"""\
         <table>
             <thead>
