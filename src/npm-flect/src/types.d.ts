@@ -15,6 +15,7 @@ export type AnyComponentProps =
   | ContainerProps
   | CopyButtonProps
   | CustomProps
+  | DataGridProps
   | DialogProps
   | DisplayProps
   | FormProps

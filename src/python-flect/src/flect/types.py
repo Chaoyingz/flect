@@ -27,7 +27,7 @@ class JsonDataSchema:
 JsonData = Annotated[Any, JsonDataSchema()]
 
 
-class FieldKwargs(TypedDict):
+class FieldKwargs(TypedDict, total=False):
     default_factory: Optional[Callable[[], Any]]
     alias: Optional[str]
     alias_priority: Optional[int]

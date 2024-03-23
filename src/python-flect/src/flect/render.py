@@ -7,7 +7,7 @@ from fastapi.routing import APIRoute
 from starlette._utils import get_route_path
 from starlette.routing import compile_path
 
-from flect import components as c
+from flect.component.components import AnyComponent
 from flect.constants import CLIENT_LAYOUT_ROUTER_SUFFIX, CLIENT_ROOT_ROUTER_PREFIX
 from flect.head import Head, merge_head
 from flect.response import PageResponse
@@ -64,9 +64,7 @@ def generate_html(
     """
 
 
-async def get_route_response(
-    request: Request, route: APIRoute, outlet: Optional[c.AnyComponent] = None
-) -> PageResponse:
+async def get_route_response(request: Request, route: APIRoute, outlet: Optional[AnyComponent] = None) -> PageResponse:
     """
     Obtains a response from a route given a request and optional outlet component.
 
@@ -76,13 +74,13 @@ async def get_route_response(
         The request object.
     route : APIRoute
         The route for which the response is to be obtained.
-    outlet : Optional[c.AnyComponent], optional
+    outlet : Optional[AnyComponent], optional
         An optional outlet component to be included in the response, by default None.
 
     Returns
     -------
-    Optional[c.AnyComponent]
-        The component to be rendered, if any.
+    PageResponse
+        The response obtained from the route.
     """
     async with AsyncExitStack() as async_exit_stack:
         values, *_ = await solve_dependencies(
@@ -103,7 +101,7 @@ async def handle_route_response(
     path: str,
     request: Request,
     children_head: Optional[Head] = None,
-    children_body: Optional[c.AnyComponent] = None,
+    children_body: Optional[AnyComponent] = None,
 ) -> PageResponse:
     match = route.path_regex.match(path)
     if not match:

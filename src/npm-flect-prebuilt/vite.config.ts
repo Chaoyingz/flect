@@ -9,6 +9,9 @@ const serverConfig = {
   proxy: {
     "/flect": "http://localhost:8000/",
   },
+  watch: {
+    ignored: ["!**/node_modules/@chaoying/flect/**"],
+  },
 };
 
 export default defineConfig({
@@ -19,6 +22,9 @@ export default defineConfig({
     },
   },
   server: serverConfig,
+  optimizeDeps: {
+    exclude: ["@chaoying/flect"],
+  },
   preview: serverConfig,
   build: {
     rollupOptions: {

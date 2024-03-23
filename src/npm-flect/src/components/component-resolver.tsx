@@ -18,6 +18,7 @@ import { Custom } from "@/components/flect/custom";
 import { ComponentResolver } from "@/contexts/component-resolver";
 import { Dialog } from "@/components/flect/dialog";
 import { Display } from "@/components/flect/display";
+import { DataGrid } from "@/components/flect/data-grid";
 
 export const FlectComponentResolver: ComponentResolver = (
   props: AnyComponentProps,
@@ -33,6 +34,8 @@ export const FlectComponentResolver: ComponentResolver = (
       return <Container {...props} />;
     case "copy-button":
       return <CopyButton {...props} />;
+    case "data-grid":
+      return <DataGrid {...props} />;
     case "dialog":
       return <Dialog {...props} />;
     case "display":

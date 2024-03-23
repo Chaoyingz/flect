@@ -1,6 +1,6 @@
 from typing import Optional
 
-import flect.components as c
+from flect import components as c
 from pydantic import BaseModel
 from pydantic_core import PydanticUndefined
 
@@ -22,7 +22,7 @@ def get_api_reference_section(component: c.AnyComponent) -> c.Container:
             filed_info.default = "[]"
             filed_info.description = "The children of the component."
         if filed_info.default == PydanticUndefined:
-            filed_info.default = None
+            filed_info.default = "None"
         props.append(
             APIReference(
                 prop=field,

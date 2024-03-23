@@ -1,9 +1,9 @@
 from typing import Annotated
 
 import flect.actions as a
-import flect.components as c
 from fastapi import Path, Request
 from flect import PageResponse
+from flect import components as c
 from flect.head import Head
 from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
 from flect.sitemap import Sitemap

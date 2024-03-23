@@ -43,9 +43,9 @@ const parseErrorSchema = (
   }, {});
 };
 
-export function ajvResolver(schema: object): Resolver {
+export function ajvResolver(schema: object, addVocabulary: string[]): Resolver {
   const ajv = new Ajv({ allErrors: true });
-  ajv.addVocabulary(["fieldType", "className", "attrs"]);
+  ajv.addVocabulary(addVocabulary);
   ajvErrors(ajv);
   return async (values, _, options) => {
     const validate = ajv.compile(schema);

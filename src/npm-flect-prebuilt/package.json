@@ -17,7 +17,8 @@
     "react-dom": "^18.2.0",
     "react-syntax-highlighter": "^15.5.0",
     "tailwind-merge": "^2.2.1",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "@chaoying/flect": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.2.64",
@@ -37,8 +38,5 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
     "vite": "^5.1.6"
-  },
-  "peerDependencies": {
-    "@chaoying/flect": "0.2.5"
   }
 }

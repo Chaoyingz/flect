@@ -1,15 +1,14 @@
 from typing import Annotated, Any, Literal, Optional
 
-import flect.components as c
 from fastapi import Path, Request
-from flect import PageResponse
+from flect import PageResponse, display, form
+from flect import components as c
 from flect.actions import DispatchEvent
-from flect.display import BooleanDisplay, TextDisplay
-from flect.form import Checkbox, Input, Select, Textarea
+from flect.component import data_grid
 from flect.head import Head
 from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
 from flect.sitemap import Sitemap
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from documentation.app.group__docs.component import get_api_reference_section
 from documentation.app.group__docs.layout import get_docs_pager
@@ -87,20 +86,34 @@ def get_component_preview_section(
 
 
 class TableExampleModel(BaseModel):
-    column1: Annotated[str, TextDisplay(title="Column 1")]
+    column1: Annotated[str, display.TextDisplay(title="Column 1")]
     column2: str
     column3: str
-    is_active: Annotated[bool, BooleanDisplay()]
+    is_active: Annotated[bool, display.BooleanDisplay()]
 
 
 class FormExampleModel(BaseModel):
-    username: str = Input(
+    username: str = form.Input(
         placeholder="Enter your username", default="", pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10
     )
-    gender: Literal["male", "female"] = Select(default="male", description="The gender of the user.")
-    password: str = Input(type="password", default="", placeholder="Enter your password")
-    hobby: Optional[str] = Textarea(placeholder="Type your hobby", default=None, description="The hobby of the user.")
-    terms_accepted: bool = Checkbox(class_name="ml-3", default=False, description="The terms accepted by the user.")
+    gender: Literal["male", "female"] = form.Select(default="male", description="The gender of the user.")
+    password: str = form.Input(type="password", default="", placeholder="Enter your password")
+    hobby: Optional[str] = form.Textarea(
+        placeholder="Type your hobby", default=None, description="The hobby of the user."
+    )
+    terms_accepted: bool = form.Checkbox(
+        class_name="ml-3", default=False, description="The terms accepted by the user."
+    )
+
+
+class DataGridExampleItemModel(BaseModel):
+    company_name: str = data_grid.Input(editable=False, default="flect")
+    country: Literal["US", "UK", "CA"] = data_grid.Select()
+    name: str = data_grid.Input()
+
+
+class DataGridExampleModel(BaseModel):
+    rows: list[DataGridExampleItemModel] = Field(min_length=10)
 
 
 COMPONENT_DOCS_MAP = {
@@ -166,6 +179,16 @@ COMPONENT_DOCS_MAP = {
             ),
         ),
         get_api_reference_section(component=c.Container),
+    ],
+    "data-grid": [
+        get_component_description_section(
+            title="DataGrid",
+            description="The DataGrid component displays data in tabular format.",
+        ),
+        get_component_preview_section(
+            preview=c.DataGrid(model=DataGridExampleModel, datasets=[], submit_url="/flect/components/data-grid/"),
+        ),
+        get_api_reference_section(component=c.DataGrid),
     ],
     "dialog": [
         get_component_description_section(

@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 from flect.actions import AnyAction
-from flect.components import AnyComponent
+from flect.component.components import AnyComponent
 from flect.head import Head
 
 

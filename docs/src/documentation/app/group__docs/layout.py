@@ -130,6 +130,10 @@ docs_nav = [
                         children=[c.Text(text="Container", class_name="text-sm")],
                     ),
                     c.NavLink(
+                        href="/components/data-grid/",
+                        children=[c.Text(text="Data Grid", class_name="text-sm")],
+                    ),
+                    c.NavLink(
                         href="/components/dialog/",
                         children=[c.Text(text="Dialog", class_name="text-sm")],
                     ),

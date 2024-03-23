@@ -21,12 +21,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { cn, getDefaultValues } from "@/lib/utils";
 import React, { useContext } from "react";
 import { RotateCw } from "lucide-react";
 import { ActionResponse } from "@/types";
 import { resolveAction } from "@/lib/actions";
 import { ActionResolverContext } from "@/contexts/action-resolver";
+
+interface CheckboxAttrs {
+  checked?: boolean;
+}
 
 interface InputAttrs {
   type: "text" | "password" | "email";
@@ -44,7 +48,7 @@ interface SelectAttrs {
 }
 
 type Fieldtypes = "checkbox" | "input" | "select" | "textarea";
-type FieldAttrs = InputAttrs | TextAreaAttrs | SelectAttrs;
+type FieldAttrs = CheckboxAttrs | InputAttrs | SelectAttrs | TextAreaAttrs;
 
 interface Model extends JSONSchema7 {
   fieldType: Fieldtypes;
@@ -64,21 +68,10 @@ export interface FormProps {
   submitText?: string;
 }
 
-function getDefaultValues(schema: Model): FieldValues {
-  const defaults: FieldValues = {};
-  Object.keys(schema.properties).forEach((key) => {
-    const prop = schema.properties[key];
-    if (prop.default !== undefined && prop.default !== null) {
-      defaults[key] = prop.default;
-    }
-  });
-  return defaults;
-}
-
 export function Form(props: FormProps) {
   const { resolvers } = useContext(ActionResolverContext);
   const form = useForm({
-    resolver: ajvResolver(props.model),
+    resolver: ajvResolver(props.model, ["fieldType", "className", "attrs"]),
     defaultValues: getDefaultValues(props.model),
   });
   async function onSubmit(values: FieldValues) {
@@ -104,13 +97,6 @@ export function Form(props: FormProps) {
       >
         {props.model.properties &&
           Object.entries(props.model.properties).map(([key, value]) => {
-            let modifiedAttrs = value.attrs;
-            if (value.fieldType === "select" && value.enum) {
-              modifiedAttrs = {
-                ...value.attrs,
-                options: value.enum as string[],
-              };
-            }
             if (
               typeof value === "object" &&
               value !== null &&
@@ -125,12 +111,7 @@ export function Form(props: FormProps) {
                     <FormItem>
                       <FormLabel>{value.title || key}</FormLabel>
                       <FormControl>
-                        <FormFieldSlot
-                          fieldType={value.fieldType}
-                          attrs={modifiedAttrs}
-                          field={field}
-                          className={value.className}
-                        />
+                        <FormFieldSlot schema={value} control={field} />
                       </FormControl>
                       <FormDescription>{value.description}</FormDescription>
                       <FormMessage />
@@ -161,52 +142,52 @@ export function Form(props: FormProps) {
 }
 
 interface FormFieldSlotProps {
-  fieldType: Fieldtypes;
-  attrs?: FieldAttrs;
-  className?: string;
-  field: ControllerRenderProps;
+  schema: Model;
+  control: ControllerRenderProps;
 }
 
-const FormFieldSlot = React.memo(
-  ({ fieldType, attrs, field, className }: FormFieldSlotProps) => {
-    switch (fieldType) {
-      case "checkbox":
-        return <Checkbox className={className} {...field} />;
-      case "input":
-        return (
-          <Input className={className} {...field} {...(attrs as InputAttrs)} />
-        );
-      case "select": {
-        const { options } = attrs as SelectAttrs;
-        return (
-          <Select
-            onValueChange={field.onChange}
-            defaultValue={field.value}
-            value={field.value}
-          >
-            <SelectTrigger className={cn("w-[180px]", className)}>
-              <SelectValue placeholder={field.name} />
-            </SelectTrigger>
-            <SelectContent>
-              {options.map((value) => (
-                <SelectItem key={value} value={value}>
-                  {value}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        );
-      }
-      case "textarea":
-        return (
-          <Textarea
-            className={className}
-            {...field}
-            {...(attrs as TextAreaAttrs)}
-          />
-        );
-      default:
-        return null;
+const FormFieldSlot = React.memo(({ schema, control }: FormFieldSlotProps) => {
+  switch (schema.fieldType) {
+    case "checkbox":
+      return <Checkbox className={schema.className} {...control} />;
+    case "input":
+      return (
+        <Input
+          className={schema.className}
+          {...control}
+          {...(schema.attrs as InputAttrs)}
+        />
+      );
+    case "select": {
+      const options = schema.enum as string[];
+      return (
+        <Select
+          onValueChange={control.onChange}
+          defaultValue={control.value}
+          value={control.value}
+        >
+          <SelectTrigger className={cn("w-[180px]", schema.className)}>
+            <SelectValue placeholder={control.name} />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map((value) => (
+              <SelectItem key={value} value={value}>
+                {value}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      );
     }
-  },
-);
+    case "textarea":
+      return (
+        <Textarea
+          className={schema.className}
+          {...control}
+          {...(schema.attrs as TextAreaAttrs)}
+        />
+      );
+    default:
+      return null;
+  }
+});

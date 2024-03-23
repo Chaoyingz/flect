@@ -20,6 +20,28 @@ from typing_extensions import Self
 from flect.actions import AnyAction, DispatchEvent
 from flect.types import JsonData
 
+__all__ = (
+    "Avatar",
+    "Button",
+    "CodeBlock",
+    "Container",
+    "CopyButton",
+    "Custom",
+    "DataGrid",
+    "Dialog",
+    "Display",
+    "Form",
+    "Heading",
+    "Link",
+    "Markdown",
+    "NavLink",
+    "Outlet",
+    "Paragraph",
+    "Table",
+    "Text",
+    "AnyComponent",
+)
+
 
 class BaseComponent(BaseModel):
     package: Literal["flect"] = "flect"
@@ -150,6 +172,34 @@ class CopyButton(BaseComponent):
 class Custom(BaseComponent):
     type: Literal["custom"] = "custom"
     sub_type: str
+
+
+class DataGrid(BaseComponent):
+    type: Literal["data-grid"] = "data-grid"
+    model: Type[BaseModel] = Field(
+        ...,
+        description="Defines the data grid's data model.",
+    )
+    datasets: list[SerializeAsAny[BaseModel]] = Field(
+        ...,
+        description="Defines the data grid's datasets.",
+    )
+    submit_method: Literal["POST", "PUT", "PATCH"] = Field(
+        default="POST",
+        description="Specifies the HTTP method for form submission.",
+    )
+    submit_url: str = Field(
+        ...,
+        description="Specifies the URL where the form will be submitted.",
+    )
+    submit_text: Optional[str] = Field(
+        default=None,
+        description="Specifies the text for the submit button.",
+    )
+
+    @field_serializer("model")
+    def serialize_model(self, model: Type[BaseModel]) -> dict:
+        return model.model_json_schema()
 
 
 class Dialog(BaseContainerComponent):
@@ -381,6 +431,7 @@ AnyComponentType = Annotated[
         Container,
         CopyButton,
         Custom,
+        DataGrid,
         Dialog,
         Display,
         Form,
@@ -408,24 +459,3 @@ AnyComponent = Annotated[AnyComponentType, WrapSerializer(ser_wrap, when_used="j
 # Rebuild forward ref models
 for container_component in BaseContainerComponent.__subclasses__():
     container_component.model_rebuild()
-
-__all__ = (
-    "Avatar",
-    "Button",
-    "CodeBlock",
-    "Container",
-    "CopyButton",
-    "Custom",
-    "Dialog",
-    "Display",
-    "Form",
-    "Heading",
-    "Link",
-    "Markdown",
-    "NavLink",
-    "Outlet",
-    "Paragraph",
-    "Table",
-    "Text",
-    "AnyComponent",
-)
