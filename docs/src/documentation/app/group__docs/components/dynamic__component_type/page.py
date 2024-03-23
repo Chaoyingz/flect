@@ -106,14 +106,14 @@ class FormExampleModel(BaseModel):
     )
 
 
-class DataGridExampleItemModel(BaseModel):
+class DataGridExampleRowModel(BaseModel):
     company_name: str = data_grid.Input(editable=False, default="flect")
     country: Literal["US", "UK", "CA"] = data_grid.Select()
-    name: str = data_grid.Input()
+    name: str = data_grid.Input(pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10)
 
 
 class DataGridExampleModel(BaseModel):
-    rows: list[DataGridExampleItemModel] = Field(min_length=10)
+    rows: list[DataGridExampleRowModel] = Field(max_length=10)
 
 
 COMPONENT_DOCS_MAP = {

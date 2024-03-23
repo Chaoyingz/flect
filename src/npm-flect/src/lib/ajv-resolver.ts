@@ -6,7 +6,6 @@ const parseErrorSchema = (
   ajvErrors: DefinedError[],
   validateAllFieldCriteria: boolean,
 ): Record<string, FieldError> => {
-  // Ajv will return empty instancePath when require error
   ajvErrors.forEach((error) => {
     if (error.keyword === "required") {
       error.instancePath += "/" + error.params.missingProperty;
@@ -14,7 +13,6 @@ const parseErrorSchema = (
   });
 
   return ajvErrors.reduce<Record<string, FieldError>>((previous, error) => {
-    // `/deepObject/data` -> `deepObject.data`
     const path = error.instancePath.substring(1).replace(/\//g, ".");
 
     if (!previous[path]) {
@@ -47,10 +45,11 @@ export function ajvResolver(schema: object, addVocabulary: string[]): Resolver {
   const ajv = new Ajv({ allErrors: true });
   ajv.addVocabulary(addVocabulary);
   ajvErrors(ajv);
+  const validate = ajv.compile(schema);
   return async (values, _, options) => {
-    const validate = ajv.compile(schema);
     const valid = validate(values);
 
+    console.log("errors", validate.errors);
     if (valid) {
       return { values, errors: {} };
     } else {

@@ -45,6 +45,7 @@ interface TextAreaAttrs {
 
 interface SelectAttrs {
   options: string[];
+  placeholder?: string;
 }
 
 type Fieldtypes = "checkbox" | "input" | "select" | "textarea";
@@ -149,25 +150,35 @@ interface FormFieldSlotProps {
 const FormFieldSlot = React.memo(({ schema, control }: FormFieldSlotProps) => {
   switch (schema.fieldType) {
     case "checkbox":
-      return <Checkbox className={schema.className} {...control} />;
+      return (
+        <Checkbox
+          className={schema.className}
+          {...control}
+          value={control.value ?? ""}
+        />
+      );
     case "input":
       return (
         <Input
           className={schema.className}
           {...control}
           {...(schema.attrs as InputAttrs)}
+          value={control.value ?? ""}
         />
       );
     case "select": {
       const options = schema.enum as string[];
+      const attrs = schema.attrs as SelectAttrs;
       return (
         <Select
           onValueChange={control.onChange}
           defaultValue={control.value}
-          value={control.value}
+          value={control.value ?? ""}
         >
           <SelectTrigger className={cn("w-[180px]", schema.className)}>
-            <SelectValue placeholder={control.name} />
+            <SelectValue
+              placeholder={attrs.placeholder || `Select ${schema.title}`}
+            />
           </SelectTrigger>
           <SelectContent>
             {options.map((value) => (
@@ -185,6 +196,7 @@ const FormFieldSlot = React.memo(({ schema, control }: FormFieldSlotProps) => {
           className={schema.className}
           {...control}
           {...(schema.attrs as TextAreaAttrs)}
+          value={control.value ?? ""}
         />
       );
     default:

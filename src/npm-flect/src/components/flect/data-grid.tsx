@@ -11,6 +11,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormMessage,
 } from "@/components/ui/form";
 import { ajvResolver } from "@/lib/ajv-resolver";
 import {
@@ -45,6 +46,7 @@ interface InputAttrs {
 
 interface SelectAttrs {
   options: string[];
+  placeholder?: string;
 }
 
 type Fieldtypes = "input" | "select";
@@ -128,7 +130,6 @@ export function DataGrid(props: DataGridProps) {
     control: form.control,
     name: "rows",
   });
-  console.log(form.getValues());
   console.log(getDefaultValues(props.datasets, defaultRowValues));
   console.log(fields);
   async function onSubmit(values: FieldValues) {
@@ -150,7 +151,7 @@ export function DataGrid(props: DataGridProps) {
     <FormUI {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn("space-y-8", props.className)}
+        className={cn(props.className)}
       >
         <Table>
           <TableHeader>
@@ -182,6 +183,7 @@ export function DataGrid(props: DataGridProps) {
                                   control={field}
                                 />
                               </FormControl>
+                              <FormMessage />
                             </FormItem>
                           )}
                         />
@@ -193,10 +195,16 @@ export function DataGrid(props: DataGridProps) {
             })}
           </TableBody>
         </Table>
+        <div className="text-destructive">
+          {form.formState.errors.rows &&
+            typeof form.formState.errors.rows.message === "string" && (
+              <p>{form.formState.errors.rows.message}</p>
+            )}
+        </div>
         <div>
           <div className="border-b px-3.5">
             <button
-              className="flex h-9 items-center gap-1 text-secondary-foreground hover:text-primary-foreground"
+              className="flex h-9 items-center gap-1 text-secondary-foreground"
               onClick={() => append(defaultRowValues)}
               type="button"
             >
@@ -205,20 +213,22 @@ export function DataGrid(props: DataGridProps) {
             </button>
           </div>
         </div>
-        {form.formState.isSubmitting ? (
-          <Button
-            type="submit"
-            className="w-36"
-            disabled={form.formState.isSubmitting}
-          >
-            <RotateCw className="mr-2 h-4 w-4 animate-spin" />
-            Submitting...
-          </Button>
-        ) : (
-          <Button type="submit" className="min-w-36">
-            {props.submitText || "Submit"}
-          </Button>
-        )}
+        <div className="mt-4">
+          {form.formState.isSubmitting ? (
+            <Button
+              type="submit"
+              className="w-36"
+              disabled={form.formState.isSubmitting}
+            >
+              <RotateCw className="mr-2 h-4 w-4 animate-spin" />
+              Submitting...
+            </Button>
+          ) : (
+            <Button type="submit" className="min-w-36">
+              {props.submitText || "Submit"}
+            </Button>
+          )}
+        </div>
       </form>
     </FormUI>
   );
@@ -237,18 +247,22 @@ const FormFieldSlot = React.memo(({ schema, control }: FormFieldSlotProps) => {
           className={schema.className}
           {...control}
           {...(schema.attrs as InputAttrs)}
+          value={control.value ?? ""}
         />
       );
     case "select": {
+      const attrs = schema.attrs as SelectAttrs;
       const options = schema.enum as string[];
       return (
         <Select
           onValueChange={control.onChange}
-          defaultValue={control.value}
-          value={control.value}
+          defaultValue={control.value ?? ""}
+          value={control.value ?? ""}
         >
           <SelectTrigger className={cn("w-[180px]", schema.className)}>
-            <SelectValue placeholder={control.name} />
+            <SelectValue
+              placeholder={attrs.placeholder || `Select ${schema.title}`}
+            />
           </SelectTrigger>
           <SelectContent>
             {options.map((value) => (

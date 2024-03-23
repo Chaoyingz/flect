@@ -26,27 +26,6 @@ export function getDefaultValues(schema: Model) {
     const prop = schema.properties[key];
     if (prop.default !== undefined && prop.default !== null) {
       defaultRow[key] = prop.default;
-    } else {
-      switch (prop.type) {
-        case "string":
-          defaultRow[key] = "";
-          break;
-        case "number":
-        case "integer":
-          defaultRow[key] = 0;
-          break;
-        case "boolean":
-          defaultRow[key] = false;
-          break;
-        case "array":
-          defaultRow[key] = [];
-          break;
-        case "object":
-          defaultRow[key] = {};
-          break;
-        default:
-          break;
-      }
     }
   });
   return defaultRow;
