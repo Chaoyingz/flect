@@ -5,7 +5,12 @@ module.exports = {
   darkMode: ["class"],
   content: ["./src/**/*.{ts,tsx}"],
   prefix: "",
-  safelist: ["sr-only"],
+  safelist: [
+    "sr-only",
+    {
+      pattern: /^(col-span)-/,
+    },
+  ],
   theme: {
     container: {
       center: true,
@@ -75,5 +80,9 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+    require("@thoughtbot/tailwindcss-aria-attributes"),
+  ],
 };

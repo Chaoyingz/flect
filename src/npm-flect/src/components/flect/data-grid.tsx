@@ -11,7 +11,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
 } from "@/components/ui/form";
 import { ajvResolver } from "@/lib/ajv-resolver";
 import {
@@ -23,21 +22,14 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useContext } from "react";
-import { RotateCw } from "lucide-react";
+import { Plus, RotateCw, Trash } from "lucide-react";
 import { ActionResponse, Json } from "@/types";
 import { resolveAction } from "@/lib/actions";
 import { ActionResolverContext } from "@/contexts/action-resolver";
 import { JSONSchema7 } from "json-schema";
-import {
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableBody,
-} from "@/components/ui/table";
 import { getDefaultValues as getDefaultRowValues } from "@/lib/utils";
 import React from "react";
+import { FormTooltipMessage } from "./form";
 
 interface InputAttrs {
   type: "text" | "password" | "email";
@@ -126,7 +118,7 @@ export function DataGrid(props: DataGridProps) {
     ]),
     defaultValues: getDefaultValues(props.datasets, defaultRowValues),
   });
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "rows",
   });
@@ -154,46 +146,69 @@ export function DataGrid(props: DataGridProps) {
         className={cn(props.className)}
       >
         <Table>
-          <TableHeader>
-            <TableRow>
+          <div>
+            <TableHeader>
               {Object.keys(rowSchema.properties).map((key, index) => {
                 return (
-                  <TableHead key={index}>
+                  <TableCell
+                    key={index}
+                    className={cn(
+                      "px-3.5",
+                      rowSchema.properties[key].className,
+                    )}
+                  >
                     {rowSchema.properties[key].title}
-                  </TableHead>
+                  </TableCell>
                 );
               })}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+              <TableCell className="px-3.5">Actions</TableCell>
+            </TableHeader>
+          </div>
+          <div>
             {fields.map((row, colIndex) => {
               return (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} className="grid grid-cols-12">
                   {Object.keys(rowSchema.properties).map((key) => {
                     return (
-                      <TableCell key={`${row.id}-${key}`}>
+                      <TableCell
+                        key={`${row.id}-${key}`}
+                        className={cn(
+                          "p-0",
+                          rowSchema.properties[key].className,
+                        )}
+                      >
                         <FormField
+                          key={`${row.id}-${key}`}
                           control={form.control}
                           name={`rows.${colIndex}.${key}`}
                           render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <FormFieldSlot
-                                  schema={rowSchema.properties[key]}
-                                  control={field}
-                                />
-                              </FormControl>
-                              <FormMessage />
+                            <FormItem className="relative space-y-0">
+                              <FormFieldSlot
+                                schema={rowSchema.properties[key]}
+                                control={field}
+                              />
+                              <FormTooltipMessage />
                             </FormItem>
                           )}
                         />
                       </TableCell>
                     );
                   })}
+                  <TableCell className="invisible col-span-1 flex items-center px-2 group-hover:visible">
+                    <Button
+                      variant="ghost"
+                      size={"sm"}
+                      className="h-auto p-1.5"
+                      onClick={() => remove(colIndex)}
+                      type="button"
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               );
             })}
-          </TableBody>
+          </div>
         </Table>
         <div className="text-destructive">
           {form.formState.errors.rows &&
@@ -204,11 +219,11 @@ export function DataGrid(props: DataGridProps) {
         <div>
           <div className="border-b px-3.5">
             <button
-              className="flex h-9 items-center gap-1 text-secondary-foreground"
+              className="flex h-9 items-center gap-1 text-foreground/70 hover:text-foreground"
               onClick={() => append(defaultRowValues)}
               type="button"
             >
-              {/* <Icons.plus size={14} strokeWidth={2} /> */}
+              <Plus className="h-4 w-4" />
               Add new field
             </button>
           </div>
@@ -239,16 +254,21 @@ interface FormFieldSlotProps {
   control: ControllerRenderProps<FieldValues, `rows.${number}.${string}`>;
 }
 
-const FormFieldSlot = React.memo(({ schema, control }: FormFieldSlotProps) => {
+function FormFieldSlot({ schema, control }: FormFieldSlotProps) {
   switch (schema.fieldType) {
     case "input":
       return (
-        <Input
-          className={schema.className}
-          {...control}
-          {...(schema.attrs as InputAttrs)}
-          value={control.value ?? ""}
-        />
+        <FormControl>
+          <Input
+            className={cn(
+              "focus:ring-none h-9 rounded-none border-0 bg-background ring-offset-0 focus:border focus:ring-0 focus-visible:ring-0 aria-invalid:border-destructive",
+              schema.className,
+            )}
+            {...control}
+            {...(schema.attrs as InputAttrs)}
+            value={control.value ?? ""}
+          />
+        </FormControl>
       );
     case "select": {
       const attrs = schema.attrs as SelectAttrs;
@@ -259,11 +279,18 @@ const FormFieldSlot = React.memo(({ schema, control }: FormFieldSlotProps) => {
           defaultValue={control.value ?? ""}
           value={control.value ?? ""}
         >
-          <SelectTrigger className={cn("w-[180px]", schema.className)}>
-            <SelectValue
-              placeholder={attrs.placeholder || `Select ${schema.title}`}
-            />
-          </SelectTrigger>
+          <FormControl>
+            <SelectTrigger
+              className={cn(
+                "focus:ring-none z-10 h-9 rounded-none border-0 bg-background px-3.5 focus:border focus:ring-0 focus-visible:ring-0 aria-invalid:border-destructive",
+                schema.className,
+              )}
+            >
+              <SelectValue
+                placeholder={attrs.placeholder || `Select ${schema.title}`}
+              />
+            </SelectTrigger>
+          </FormControl>
           <SelectContent>
             {options.map((value) => (
               <SelectItem key={value} value={value}>
@@ -277,4 +304,61 @@ const FormFieldSlot = React.memo(({ schema, control }: FormFieldSlotProps) => {
     default:
       return null;
   }
-});
+}
+
+function Table({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return <div className={cn("border-t text-sm", className)}>{children}</div>;
+}
+
+function TableHeader({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "grid grid-cols-12 border-b font-medium text-primary",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+function TableRow({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("group grid grid-cols-12 border-b", className)}>
+      {children}
+    </div>
+  );
+}
+
+function TableCell({
+  children,
+  className,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("h-9 border-r leading-9 last:border-0", className)}>
+      {children}
+    </div>
+  );
+}

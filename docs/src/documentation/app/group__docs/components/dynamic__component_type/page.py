@@ -107,9 +107,9 @@ class FormExampleModel(BaseModel):
 
 
 class DataGridExampleRowModel(BaseModel):
-    company_name: str = data_grid.Input(editable=False, default="flect")
-    country: Literal["US", "UK", "CA"] = data_grid.Select()
-    name: str = data_grid.Input(pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10)
+    company_name: str = data_grid.Input(editable=False, default="flect", class_name="col-span-3")
+    country: Literal["US", "UK", "CA"] = data_grid.Select(class_name="col-span-3")
+    name: str = data_grid.Input(pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10, class_name="col-span-5")
 
 
 class DataGridExampleModel(BaseModel):
@@ -186,7 +186,9 @@ COMPONENT_DOCS_MAP = {
             description="The DataGrid component displays data in tabular format.",
         ),
         get_component_preview_section(
-            preview=c.DataGrid(model=DataGridExampleModel, datasets=[], submit_url="/flect/components/data-grid/"),
+            preview=c.DataGrid(
+                model=DataGridExampleModel, datasets=[], submit_url="/flect/components/data-grid/", class_name="p-3"
+            ),
         ),
         get_api_reference_section(component=c.DataGrid),
     ],

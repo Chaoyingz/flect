@@ -10,6 +10,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  useFormField,
 } from "@/components/ui/form";
 import { JSONSchema7 } from "json-schema";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,10 +24,15 @@ import {
 } from "@/components/ui/select";
 import { cn, getDefaultValues } from "@/lib/utils";
 import React, { useContext } from "react";
-import { RotateCw } from "lucide-react";
+import { RotateCw, ShieldAlert } from "lucide-react";
 import { ActionResponse } from "@/types";
 import { resolveAction } from "@/lib/actions";
 import { ActionResolverContext } from "@/contexts/action-resolver";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface CheckboxAttrs {
   checked?: boolean;
@@ -111,9 +117,7 @@ export function Form(props: FormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{value.title || key}</FormLabel>
-                      <FormControl>
-                        <FormFieldSlot schema={value} control={field} />
-                      </FormControl>
+                      <FormFieldSlot schema={value} control={field} />
                       <FormDescription>{value.description}</FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -151,20 +155,24 @@ const FormFieldSlot = React.memo(({ schema, control }: FormFieldSlotProps) => {
   switch (schema.fieldType) {
     case "checkbox":
       return (
-        <Checkbox
-          className={schema.className}
-          {...control}
-          value={control.value ?? ""}
-        />
+        <FormControl>
+          <Checkbox
+            className={schema.className}
+            {...control}
+            value={control.value ?? ""}
+          />
+        </FormControl>
       );
     case "input":
       return (
-        <Input
-          className={schema.className}
-          {...control}
-          {...(schema.attrs as InputAttrs)}
-          value={control.value ?? ""}
-        />
+        <FormControl>
+          <Input
+            className={schema.className}
+            {...control}
+            {...(schema.attrs as InputAttrs)}
+            value={control.value ?? ""}
+          />
+        </FormControl>
       );
     case "select": {
       const options = schema.enum as string[];
@@ -175,11 +183,13 @@ const FormFieldSlot = React.memo(({ schema, control }: FormFieldSlotProps) => {
           defaultValue={control.value}
           value={control.value ?? ""}
         >
-          <SelectTrigger className={cn("w-[180px]", schema.className)}>
-            <SelectValue
-              placeholder={attrs.placeholder || `Select ${schema.title}`}
-            />
-          </SelectTrigger>
+          <FormControl>
+            <SelectTrigger className={cn("w-[180px]", schema.className)}>
+              <SelectValue
+                placeholder={attrs.placeholder || `Select ${schema.title}`}
+              />
+            </SelectTrigger>
+          </FormControl>
           <SelectContent>
             {options.map((value) => (
               <SelectItem key={value} value={value}>
@@ -192,14 +202,45 @@ const FormFieldSlot = React.memo(({ schema, control }: FormFieldSlotProps) => {
     }
     case "textarea":
       return (
-        <Textarea
-          className={schema.className}
-          {...control}
-          {...(schema.attrs as TextAreaAttrs)}
-          value={control.value ?? ""}
-        />
+        <FormControl>
+          <Textarea
+            className={schema.className}
+            {...control}
+            {...(schema.attrs as TextAreaAttrs)}
+            value={control.value ?? ""}
+          />
+        </FormControl>
       );
     default:
       return null;
   }
 });
+
+export const FormTooltipMessage = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+  // eslint-disable-next-line
+>(({ className, children, ...props }, _) => {
+  const { error, formMessageId } = useFormField();
+  const body = error ? String(error?.message) : children;
+
+  if (!body) {
+    return null;
+  }
+
+  return (
+    <Tooltip id={formMessageId} {...props}>
+      <TooltipTrigger asChild>
+        <div className="absolute right-2 top-0 z-10 flex h-full items-center justify-center">
+          <ShieldAlert size="18" className="bg-background text-destructive" />
+        </div>
+      </TooltipTrigger>
+      <TooltipContent
+        className={cn("text-sm font-medium text-destructive", className)}
+      >
+        {body}
+      </TooltipContent>
+    </Tooltip>
+  );
+});
+FormTooltipMessage.displayName = "FormTooltipMessage";
