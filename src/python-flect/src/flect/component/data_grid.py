@@ -5,7 +5,7 @@ from typing_extensions import Unpack
 
 from flect.types import FieldKwargs
 
-__all__ = "Combobox", "Input", "Select"
+__all__ = "Combobox", "ComboboxOption", "Input", "Select"
 
 
 class ComboboxOption(BaseModel):
