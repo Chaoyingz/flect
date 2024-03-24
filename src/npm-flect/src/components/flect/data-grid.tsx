@@ -228,7 +228,7 @@ export function DataGrid(props: DataGridProps) {
             </button>
           </div>
         </div>
-        <div className="mt-4">
+        <div className="mt-6">
           {form.formState.isSubmitting ? (
             <Button
               type="submit"
@@ -261,7 +261,7 @@ function FormFieldSlot({ schema, control }: FormFieldSlotProps) {
         <FormControl>
           <Input
             className={cn(
-              "focus:ring-none h-9 rounded-none border-0 bg-background ring-offset-0 focus:border focus:ring-0 focus-visible:ring-0 aria-invalid:border-destructive",
+              "focus:ring-none h-9 rounded-none border-0 bg-background ring-offset-0 focus:border focus:border-foreground focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 aria-invalid:border aria-invalid:border-destructive",
               schema.className,
             )}
             {...control}
@@ -282,7 +282,7 @@ function FormFieldSlot({ schema, control }: FormFieldSlotProps) {
           <FormControl>
             <SelectTrigger
               className={cn(
-                "focus:ring-none z-10 h-9 rounded-none border-0 bg-background px-3.5 focus:border focus:ring-0 focus-visible:ring-0 aria-invalid:border-destructive",
+                "focus:ring-none z-10 h-9 rounded-none border-0 bg-background px-3.5 focus:border focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 data-[state=open]:border data-[state=open]:border-foreground aria-invalid:border aria-invalid:border-destructive",
                 schema.className,
               )}
             >
