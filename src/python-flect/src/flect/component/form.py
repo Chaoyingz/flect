@@ -45,12 +45,16 @@ def Input(
 def Select(
     *,
     class_name: Optional[str] = None,
+    placeholder: Optional[str] = None,
     **kwargs: Unpack[FieldKwargs],
 ) -> Any:
     return Field(
         json_schema_extra={
             "fieldType": "select",
             "className": class_name,
+            "attrs": {
+                "placeholder": placeholder,
+            },
         },
         **kwargs,
     )

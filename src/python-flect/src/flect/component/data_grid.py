@@ -28,7 +28,7 @@ def Combobox(
             "className": class_name,
             "attrs": {
                 "placeholder": placeholder,
-                "options": [option.model_dump() for option in options or []],
+                "options": [option.model_dump() for option in options] if options else None,
             },
         },
         **kwargs,

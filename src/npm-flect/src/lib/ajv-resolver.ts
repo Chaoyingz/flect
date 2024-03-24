@@ -49,7 +49,6 @@ export function ajvResolver(schema: object, addVocabulary: string[]): Resolver {
   return async (values, _, options) => {
     const valid = validate(values);
 
-    console.log("errors", validate.errors);
     if (valid) {
       return { values, errors: {} };
     } else {

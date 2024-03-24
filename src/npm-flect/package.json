@@ -4,7 +4,7 @@
   "author": "chaoying",
   "license": "MIT",
   "private": false,
-  "version": "0.2.5",
+  "version": "0.2.7",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
