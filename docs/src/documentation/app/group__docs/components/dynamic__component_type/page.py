@@ -107,9 +107,62 @@ class FormExampleModel(BaseModel):
 
 
 class DataGridExampleRowModel(BaseModel):
-    company_name: str = data_grid.Input(editable=False, default="flect", class_name="col-span-3")
-    country: Literal["US", "UK", "CA"] = data_grid.Select(class_name="col-span-3")
-    name: str = data_grid.Input(pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10, class_name="col-span-5")
+    company_name: str = data_grid.Input(editable=False, default="flect", class_name="col-span-2")
+    country: Literal[
+        "Albania",
+        "Andorra",
+        "Armenia",
+        "Austria",
+        "Azerbaijan",
+        "Belarus",
+        "Belgium",
+        "Bosnia and Herzegovina",
+        "Bulgaria",
+        "Croatia",
+        "Cyprus",
+        "Czech Republic",
+        "Denmark",
+        "Estonia",
+        "Finland",
+        "France",
+        "Georgia",
+        "Germany",
+        "Greece",
+        "Hungary",
+        "Iceland",
+        "Ireland",
+        "Italy",
+        "Kazakhstan",
+        "Kosovo",
+        "Latvia",
+        "Liechtenstein",
+        "Lithuania",
+        "Luxembourg",
+        "Malta",
+        "Moldova",
+        "Monaco",
+        "Montenegro",
+        "Netherlands",
+        "North Macedonia",
+        "Norway",
+        "Poland",
+        "Portugal",
+        "Romania",
+        "Russia",
+        "San Marino",
+        "Serbia",
+        "Slovakia",
+        "Slovenia",
+        "Spain",
+        "Sweden",
+        "Switzerland",
+        "Turkey",
+        "Ukraine",
+        "United Kingdom",
+        "Vatican City",
+    ] = data_grid.Combobox(class_name="col-span-3")
+    gender: Literal["male", "female"] = data_grid.Select(class_name="col-span-2")
+    name: str = data_grid.Input(pattern=r"^[a-zA-Z0-9]+$", min_items=2, max_items=10, class_name="col-span-4")
 
 
 class DataGridExampleModel(BaseModel):

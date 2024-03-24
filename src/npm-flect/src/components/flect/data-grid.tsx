@@ -3,6 +3,7 @@ import {
   FieldValues,
   useFieldArray,
   ControllerRenderProps,
+  UseFormReturn,
 } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,14 +23,36 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useContext } from "react";
-import { Plus, RotateCw, Trash } from "lucide-react";
+import { CheckIcon, ChevronsUpDown, Plus, RotateCw, Trash } from "lucide-react";
 import { ActionResponse, Json } from "@/types";
 import { resolveAction } from "@/lib/actions";
 import { ActionResolverContext } from "@/contexts/action-resolver";
 import { JSONSchema7 } from "json-schema";
 import { getDefaultValues as getDefaultRowValues } from "@/lib/utils";
 import React from "react";
-import { FormTooltipMessage } from "./form";
+import { FormTooltipMessage } from "@/components/flect/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+
+interface ComboboxOption {
+  label: string;
+  value: string;
+}
+
+interface ComboboxAttrs {
+  placeholder?: string;
+  options: ComboboxOption[];
+}
 
 interface InputAttrs {
   type: "text" | "password" | "email";
@@ -41,8 +64,8 @@ interface SelectAttrs {
   placeholder?: string;
 }
 
-type Fieldtypes = "input" | "select";
-type FieldAttrs = InputAttrs | SelectAttrs;
+type Fieldtypes = "combobox" | "input" | "select";
+type FieldAttrs = ComboboxAttrs | InputAttrs | SelectAttrs;
 
 interface ModelRow extends JSONSchema7 {
   fieldType: Fieldtypes;
@@ -104,11 +127,9 @@ function getDefaultValues(datasets: Dataset[], defaultRowValues: FieldValues) {
 }
 
 export function DataGrid(props: DataGridProps) {
-  console.log(props);
   const { resolvers } = useContext(ActionResolverContext);
   const rowSchema = getRowSchema(props.model);
   const defaultRowValues = getDefaultRowValues(rowSchema);
-  console.log("rowSchema", rowSchema);
   const form = useForm({
     resolver: ajvResolver(props.model, [
       "fieldType",
@@ -122,8 +143,6 @@ export function DataGrid(props: DataGridProps) {
     control: form.control,
     name: "rows",
   });
-  console.log(getDefaultValues(props.datasets, defaultRowValues));
-  console.log(fields);
   async function onSubmit(values: FieldValues) {
     const response = await fetch(props.submitUrl, {
       method: "POST",
@@ -184,6 +203,7 @@ export function DataGrid(props: DataGridProps) {
                           render={({ field }) => (
                             <FormItem className="relative space-y-0">
                               <FormFieldSlot
+                                form={form}
                                 schema={rowSchema.properties[key]}
                                 control={field}
                               />
@@ -250,12 +270,73 @@ export function DataGrid(props: DataGridProps) {
 }
 
 interface FormFieldSlotProps {
+  form: UseFormReturn;
   schema: ModelRow;
   control: ControllerRenderProps<FieldValues, `rows.${number}.${string}`>;
 }
 
-function FormFieldSlot({ schema, control }: FormFieldSlotProps) {
+function FormFieldSlot({ form, schema, control }: FormFieldSlotProps) {
   switch (schema.fieldType) {
+    case "combobox": {
+      const attrs = schema.attrs as ComboboxAttrs;
+      const options: ComboboxOption[] =
+        attrs?.options ||
+        (Array.isArray(schema.enum)
+          ? schema.enum.map((item) => ({ value: item, label: item }))
+          : []);
+      return (
+        <Popover>
+          <PopoverTrigger asChild>
+            <FormControl>
+              <Button
+                variant="outline"
+                role="combobox"
+                className={cn(
+                  "h-9 w-full justify-between rounded-none border-0 aria-invalid:border aria-invalid:border-destructive",
+                  !control.value && "text-muted-foreground",
+                )}
+              >
+                {control.value
+                  ? options.find((option) => option.value === control.value)
+                      ?.label
+                  : attrs.placeholder || `Select ${schema.title}`}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </FormControl>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput
+                placeholder={attrs.placeholder || `Select ${schema.title}`}
+                className="h-9"
+              />
+              <CommandEmpty>No {schema.title} found.</CommandEmpty>
+              <CommandGroup>
+                {options.map((option) => (
+                  <CommandItem
+                    value={option.label}
+                    key={option.value}
+                    onSelect={() => {
+                      form.setValue(control.name, option.value);
+                    }}
+                  >
+                    {option.label}
+                    <CheckIcon
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        option.value === control.value
+                          ? "opacity-100"
+                          : "opacity-0",
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      );
+    }
     case "input":
       return (
         <FormControl>
