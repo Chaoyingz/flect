@@ -134,6 +134,10 @@ docs_nav = [
                         children=[c.Text(text="Data Grid", class_name="text-sm")],
                     ),
                     c.NavLink(
+                        href="/components/deferred-fetch/",
+                        children=[c.Text(text="Deferred Fetch", class_name="text-sm")],
+                    ),
+                    c.NavLink(
                         href="/components/dialog/",
                         children=[c.Text(text="Dialog", class_name="text-sm")],
                     ),

@@ -28,6 +28,7 @@ __all__ = (
     "CopyButton",
     "Custom",
     "DataGrid",
+    "DeferredFetch",
     "Dialog",
     "Display",
     "Form",
@@ -200,6 +201,18 @@ class DataGrid(BaseComponent):
     @field_serializer("model")
     def serialize_model(self, model: Type[BaseModel]) -> dict:
         return model.model_json_schema()
+
+
+class DeferredFetch(BaseComponent):
+    type: Literal["deferred-fetch"] = "deferred-fetch"
+    path: str = Field(
+        ...,
+        description="Specifies the path for the deferred fetch.",
+    )
+    trigger: DispatchEvent = Field(
+        ...,
+        description="Specifies the event that triggers the deferred fetch.",
+    )
 
 
 class Dialog(BaseContainerComponent):
@@ -432,6 +445,7 @@ AnyComponentType = Annotated[
         CopyButton,
         Custom,
         DataGrid,
+        DeferredFetch,
         Dialog,
         Display,
         Form,

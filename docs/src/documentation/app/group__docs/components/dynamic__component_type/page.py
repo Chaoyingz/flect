@@ -240,10 +240,31 @@ COMPONENT_DOCS_MAP = {
         ),
         get_component_preview_section(
             preview=c.DataGrid(
-                model=DataGridExampleModel, datasets=[], submit_url="/flect/components/data-grid/", class_name="p-3"
+                model=DataGridExampleModel, datasets=[], submit_url="/flect/components/data_grid/", class_name="p-3"
             ),
         ),
         get_api_reference_section(component=c.DataGrid),
+    ],
+    "deferred-fetch": [
+        get_component_description_section(
+            title="DeferredFetch",
+            description="The DeferredFetch component provides an asynchronous API call.",
+        ),
+        get_component_preview_section(
+            preview=c.Container(
+                children=[
+                    c.Text(text="This is a sample text in deferred fetch."),
+                    c.Button(
+                        children=[c.Text(text="Click me")],
+                        on_click_action=DispatchEvent(event="deferred-fetch-button:click"),
+                    ),
+                    c.DeferredFetch(
+                        path="/flect/components/deferred_fetch/",
+                        trigger=DispatchEvent(event="deferred-fetch-button:click"),
+                    ),
+                ]
+            )
+        ),
     ],
     "dialog": [
         get_component_description_section(

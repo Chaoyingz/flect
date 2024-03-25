@@ -28,7 +28,7 @@ export type NotifyActionProps = {
 export type RedirectActionProps = {
   package: "flect";
   type: "redirect";
-  url: string;
+  path: string;
 };
 
 export type DispatchEventActionProps = {
@@ -83,7 +83,7 @@ export function notifyAction(props: NotifyActionProps) {
 }
 
 export function redirectAction(props: RedirectActionProps) {
-  window.location.replace(props.url);
+  window.location.replace(props.path);
 }
 
 export function dispatchEventAction(props: DispatchEventActionProps) {
