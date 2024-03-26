@@ -5,7 +5,7 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 from pydantic import BaseModel, Field
 
 if TYPE_CHECKING:
-    from flect.routing import ClientRoute
+    from flect.routing.client import ClientRoute
 
 
 class Sitemap(BaseModel):
@@ -20,9 +20,11 @@ async def get_sitemap_objs(routes: list["ClientRoute"]) -> list[Sitemap]:
     for route in routes:
         if route.is_page:
             if route.sitemap:
-                sitemaps.extend(await route.sitemap(route.url))
+                sitemaps.extend(await route.sitemap(route.path))
             elif not route.is_dynamic:
-                sitemaps.append(Sitemap(url=route.url, last_modified=None, change_frequency=None, priority=None))
+                sitemaps.append(
+                    Sitemap(url=route.loader_path, last_modified=None, change_frequency=None, priority=None)
+                )
         sitemaps.extend(await get_sitemap_objs(route.children))
     return sorted(sitemaps, key=lambda sitemap: sitemap.url)
 

@@ -5,9 +5,8 @@ from fastapi import FastAPI, Request
 from flect import PageResponse
 from flect import components as c
 from flect.render import generate_html, get_route_response, render_server_side_html
-from flect.routing import RouteInfo, get_route_info
 
-from tests.app.utils import APP_PATH, convert_path_to_regex_str
+from tests.app.utils import convert_path_to_regex_str
 
 
 def test_generate_html():
@@ -45,55 +44,6 @@ async def test_get_route_response(app, route_request):
 async def test_resolve_route_response(route_request, client_routes, loader_routes):
     response = await render_server_side_html(route_request, client_routes, loader_routes)
     assert response is not None
-
-
-@pytest.mark.parametrize(
-    ("folder", "parent_path", "absolute_path", "is_root", "expected"),
-    [
-        (
-            APP_PATH,
-            "",
-            "/",
-            True,
-            RouteInfo("", "", "", "/"),
-        ),
-        (
-            APP_PATH / "segment1",
-            "",
-            "/",
-            False,
-            RouteInfo("segment1", "/segment1/", "/segment1/", "/segment1/"),
-        ),
-        (
-            APP_PATH / "segment1" / "dynamic__segment_id",
-            "",
-            "/",
-            False,
-            RouteInfo("{segment_id}", "/{segment_id}/", "/{segment_id}/", "/dynamic__segment_id/"),
-        ),
-        (
-            APP_PATH / "segment1" / "group__segment2",
-            "",
-            "/",
-            False,
-            RouteInfo("", "", "group__segment2/", "/group__segment2/"),
-        ),
-    ],
-)
-def test_get_route_info(
-    folder,
-    parent_path,
-    absolute_path,
-    is_root,
-    expected,
-):
-    info = get_route_info(
-        folder,
-        parent_path,
-        absolute_path,
-        is_root,
-    )
-    assert info == expected
 
 
 @pytest.mark.parametrize(

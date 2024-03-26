@@ -14,14 +14,14 @@ import { Button } from "@/components/ui/button";
 import { AnyComponentProps } from "@/types";
 import { AnyComponent } from "@/components/flect/any-component";
 
-const CLIENT_ROOT_ROUTER_PREFIX = "/flect";
-const CLIENT_ROUTE_ROUTER_PATH = "/_route/";
+const ROOT_ROUTE_PREFIX = "/flect";
+const NAVIGATION_ROUTE_PATH = "/_route/";
 
 export type RouteProps = RemixRouteProps & {
   children?: RouteProps[];
   segment: string;
   path: string;
-  url: string;
+  loader_path: string;
   index: boolean;
 };
 
@@ -76,7 +76,7 @@ const useRoutes = () => {
   const convertRoute = useCallback((route: RouteProps): RouteObject => {
     const path = route.path.replace(/{(.*?)}/g, ":$1");
     const loader = async ({ params }: LoaderFunctionArgs) => {
-      let url = `${CLIENT_ROOT_ROUTER_PREFIX}${route.url.replace(/{(.*?)}/g, ":$1")}`;
+      let url = `${ROOT_ROUTE_PREFIX}${route.loader_path.replace(/{(.*?)}/g, ":$1")}`;
 
       Object.keys(params).forEach((key) => {
         const value = params[key];
@@ -103,9 +103,7 @@ const useRoutes = () => {
   useEffect(() => {
     let isMounted = true;
 
-    fetchJson<RouteProps[]>(
-      `${CLIENT_ROOT_ROUTER_PREFIX}${CLIENT_ROUTE_ROUTER_PATH}`,
-    )
+    fetchJson<RouteProps[]>(`${ROOT_ROUTE_PREFIX}${NAVIGATION_ROUTE_PATH}`)
       .then((routeProps) => {
         if (isMounted) {
           setRoutes(routeProps.map(convertRoute));

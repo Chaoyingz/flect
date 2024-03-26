@@ -8,12 +8,12 @@ from starlette._utils import get_route_path
 from starlette.routing import compile_path
 
 from flect.component.components import AnyComponent
-from flect.constants import CLIENT_LAYOUT_ROUTER_SUFFIX, CLIENT_ROOT_ROUTER_PREFIX
+from flect.constants import LAYOUT_ROUTE_SUFFIX, ROOT_ROUTE_PREFIX
 from flect.head import Head, merge_head
 from flect.response import PageResponse
 
 if TYPE_CHECKING:
-    from flect.routing import ClientRoute
+    from flect.routing.client import ClientRoute
 
 FLECT_PREBUILT_URI = "https://unpkg.com/@chaoying/flect-prebuilt@0.2.8/dist/assets"
 
@@ -158,7 +158,7 @@ async def render_server_side_html(
         the server-rendered body HTML string
     """
     request_path = get_route_path(request.scope)
-    loader_path = CLIENT_ROOT_ROUTER_PREFIX + request_path
+    loader_path = ROOT_ROUTE_PREFIX + request_path
     matched_page_route = get_matched_route(loader_routes, loader_path)
     if not matched_page_route:
         return "", ""
@@ -173,15 +173,10 @@ async def render_server_side_html(
     if matched_client_route:
         absolute_path = matched_client_route.absolute_path
         if matched_client_route.index:
-            layout_path = (
-                CLIENT_ROOT_ROUTER_PREFIX
-                + "/".join(absolute_path.rsplit("/", 3)[:-3])
-                + "/"
-                + CLIENT_LAYOUT_ROUTER_SUFFIX
-            )
+            layout_path = ROOT_ROUTE_PREFIX + "/".join(absolute_path.rsplit("/", 3)[:-3]) + "/" + LAYOUT_ROUTE_SUFFIX
         else:
-            layout_path = CLIENT_ROOT_ROUTER_PREFIX + absolute_path + CLIENT_LAYOUT_ROUTER_SUFFIX
-        while layout_path.startswith(CLIENT_ROOT_ROUTER_PREFIX):
+            layout_path = ROOT_ROUTE_PREFIX + absolute_path + LAYOUT_ROUTE_SUFFIX
+        while layout_path.startswith(ROOT_ROUTE_PREFIX):
             matched_layout_route = get_matched_route(loader_routes, layout_path)
             if matched_layout_route:
                 layout_response = await handle_route_response(
@@ -193,7 +188,7 @@ async def render_server_side_html(
                 )
                 page_response.head = layout_response.head or page_response.head
                 page_response.body = layout_response.body or page_response.body
-            layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/" + CLIENT_LAYOUT_ROUTER_SUFFIX
+            layout_path = "/".join(layout_path.rsplit("/", 3)[:-3]) + "/" + LAYOUT_ROUTE_SUFFIX
 
     head_html = page_response.head.render_to_html() if page_response.head else ""
     element_html = page_response.body.render_to_html() if page_response.body else ""

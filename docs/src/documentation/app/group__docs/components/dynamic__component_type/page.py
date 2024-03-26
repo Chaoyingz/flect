@@ -5,8 +5,8 @@ from flect import PageResponse, display, form
 from flect import components as c
 from flect.actions import DispatchEvent
 from flect.component import data_grid
+from flect.constants import ROOT_ROUTE_PREFIX
 from flect.head import Head
-from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
 from flect.sitemap import Sitemap
 from pydantic import BaseModel, Field
 
@@ -437,7 +437,7 @@ async def page(
             class_name="flex gap-12 flex-col",
             children=[
                 *component_elements,
-                get_docs_pager(current_link=request.url.path.replace(CLIENT_ROOT_ROUTER_PREFIX, "")),
+                get_docs_pager(current_link=request.url.path.replace(ROOT_ROUTE_PREFIX, "")),
             ],
         ),
     )

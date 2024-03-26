@@ -1,16 +1,20 @@
 import pathlib
 
 import pytest
-from flect.routing import get_client_loader_router, get_client_routes
+from fastapi import FastAPI
+from flect.routing.client import get_client_routes
+from flect.routing.server import generate_loader_routes
+from starlette.testclient import TestClient
 
-from tests import app
+# from flect.routing import get_client_loader_router, get_client_routes
+from tests import app as test_app_module
 
-APP_FOLDER = pathlib.Path(app.__file__).parent
+APP_FOLDER = pathlib.Path(test_app_module.__file__).parent
 
 
 @pytest.fixture(scope="session")
 def app_module():
-    return app
+    return test_app_module
 
 
 @pytest.fixture(scope="session")
@@ -26,5 +30,15 @@ def client_routes(app_folder):
 
 @pytest.fixture(scope="session")
 def loader_routes(client_routes):
-    loader_router = get_client_loader_router(client_routes)
-    return loader_router.routes
+    loader_routes = generate_loader_routes(client_routes)
+    return list(loader_routes)
+
+
+@pytest.fixture
+def app():
+    return FastAPI()
+
+
+@pytest.fixture
+def client(app):
+    return TestClient(app)

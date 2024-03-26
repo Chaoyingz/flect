@@ -4,8 +4,8 @@ import flect.actions as a
 from fastapi import Path, Request
 from flect import PageResponse
 from flect import components as c
+from flect.constants import ROOT_ROUTE_PREFIX
 from flect.head import Head
-from flect.routing import CLIENT_ROOT_ROUTER_PREFIX
 from flect.sitemap import Sitemap
 
 from documentation.app.group__docs.component import get_api_reference_section
@@ -147,7 +147,7 @@ async def page(
             class_name="flex gap-12 flex-col",
             children=[
                 *component_elements,
-                get_docs_pager(current_link=request.url.path.replace(CLIENT_ROOT_ROUTER_PREFIX, "")),
+                get_docs_pager(current_link=request.url.path.replace(ROOT_ROUTE_PREFIX, "")),
             ],
         ),
     )

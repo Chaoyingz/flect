@@ -2,7 +2,7 @@ import { useDispatchActionListen } from "@/hooks/use-dispatch-action-listen";
 import { DispatchEventActionProps } from "@/lib/actions";
 import { AnyComponentProps } from "@/types";
 import { useState, useEffect } from "react";
-import { AnyComponent, AnyComponents } from "@/components/flect/any-component";
+import { AnyComponent } from "@/components/flect/any-component";
 
 export interface DeferredFetchProps {
   package: "flect";

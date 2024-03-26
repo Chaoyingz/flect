@@ -6,7 +6,7 @@ from typing import Any, Optional
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from flect.routing import configure_app_router
+from flect.routing.server import get_app_router
 
 
 class flect(FastAPI):
@@ -23,8 +23,7 @@ class flect(FastAPI):
         self.setup_flect()
 
     def setup_flect(self) -> None:
-        app_router = configure_app_router(self.app_module, self.prebuilt_uri)
-        self.include_router(app_router, tags=["flect"])
+        self.include_router(get_app_router(self.app_module, self.prebuilt_uri), tags=["flect"])
 
     def validate_prebuilt_uri(self, prebuilt_uri: Optional[str]) -> Optional[str]:
         if prebuilt_uri is not None:
