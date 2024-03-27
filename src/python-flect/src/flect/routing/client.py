@@ -12,6 +12,7 @@ from flect.constants import (
     LAYOUT_ROUTE_FILENAME,
     LAYOUT_ROUTE_SUFFIX,
     PAGE_ROUTE_FILENAME,
+    ROOT_ROUTE_PREFIX,
 )
 from flect.response import PageResponse
 from flect.sitemap import Sitemap
@@ -82,7 +83,7 @@ def parse_route_info_from_folder(
     folder: pathlib.Path,
     is_root_folder: bool,
     parent_path: str,
-    absolute_path: str,
+    absolute_path: str = f"{ROOT_ROUTE_PREFIX}/",
 ) -> RouteInfo:
     """
     Parses the route information from the given folder.
@@ -112,7 +113,7 @@ def parse_route_info_from_folder(
 
     path = f"{parent_path.rstrip('/')}/{segment}/" if segment else parent_path
 
-    loader_path = f"{path}{folder.stem}/" if folder.stem.startswith(GROUP_ROUTE_PREFIX) else path
+    loader_path = ROOT_ROUTE_PREFIX + (f"{path}{folder.stem}/" if folder.stem.startswith(GROUP_ROUTE_PREFIX) else path)
 
     absolute_path = f"{absolute_path}{folder.stem}/" if not is_root_folder else absolute_path
     return RouteInfo(segment=segment, path=path, absolute_path=absolute_path, loader_path=loader_path)
@@ -122,7 +123,7 @@ def get_client_routes(
     folder: pathlib.Path,
     is_root_folder: bool = True,
     parent_path: str = "/",
-    absolute_path: str = "/",
+    absolute_path: str = f"{ROOT_ROUTE_PREFIX}/",
 ) -> list[ClientRoute]:
     """
     Gets a list of ClientRoute objects from the given folder.

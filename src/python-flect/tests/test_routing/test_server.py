@@ -1,5 +1,5 @@
 from fastapi.routing import APIRoute
-from flect.constants import NAVIGATION_ROUTE_PATH
+from flect.constants import NAVIGATION_ROUTE_PATH, ROOT_ROUTE_PREFIX
 from flect.routing.server import (
     generate_api_routes,
     generate_loader_routes,
@@ -15,7 +15,7 @@ def test_generate_navigation_routes(client_routes, client):
     routes = generate_navigation_routes(client_routes)
     route = next(routes, None)
     client.app.routes.append(route)
-    response = client.get(NAVIGATION_ROUTE_PATH)
+    response = client.get(f"{ROOT_ROUTE_PREFIX}{NAVIGATION_ROUTE_PATH}")
     assert response.status_code == 200
     assert response.json() == [route.model_dump() for route in client_routes]
 

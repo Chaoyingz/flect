@@ -3,7 +3,7 @@ import pathlib
 import pytest
 from fastapi import FastAPI
 from flect.routing.client import get_client_routes
-from flect.routing.server import generate_loader_routes
+from flect.routing.server import generate_loader_routes, sort_routes_by_path
 from starlette.testclient import TestClient
 
 # from flect.routing import get_client_loader_router, get_client_routes
@@ -31,7 +31,7 @@ def client_routes(app_folder):
 @pytest.fixture(scope="session")
 def loader_routes(client_routes):
     loader_routes = generate_loader_routes(client_routes)
-    return list(loader_routes)
+    return sorted(loader_routes, key=sort_routes_by_path)
 
 
 @pytest.fixture

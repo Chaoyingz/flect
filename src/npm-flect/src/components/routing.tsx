@@ -76,7 +76,7 @@ const useRoutes = () => {
   const convertRoute = useCallback((route: RouteProps): RouteObject => {
     const path = route.path.replace(/{(.*?)}/g, ":$1");
     const loader = async ({ params }: LoaderFunctionArgs) => {
-      let url = `${ROOT_ROUTE_PREFIX}${route.loader_path.replace(/{(.*?)}/g, ":$1")}`;
+      let url = `${route.loader_path.replace(/{(.*?)}/g, ":$1")}`;
 
       Object.keys(params).forEach((key) => {
         const value = params[key];

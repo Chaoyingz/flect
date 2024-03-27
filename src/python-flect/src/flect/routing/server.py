@@ -41,7 +41,7 @@ def generate_navigation_routes(client_routes: list[ClientRoute]) -> Generator[AP
     async def get_navigation_route() -> list[ClientRoute]:
         return client_routes
 
-    yield APIRoute(path=NAVIGATION_ROUTE_PATH, endpoint=get_navigation_route)
+    yield APIRoute(path=f"{ROOT_ROUTE_PREFIX}{NAVIGATION_ROUTE_PATH}", endpoint=get_navigation_route)
 
 
 def generate_loader_routes(routes: list[ClientRoute]) -> Generator[APIRoute, None, None]:
@@ -98,7 +98,7 @@ def generate_api_routes(
         for method in API_ROUTE_METHODS:
             endpoint = getattr(module, method.lower(), None)
             if endpoint:
-                yield APIRoute(path=route_info.path, endpoint=endpoint, methods=[method])
+                yield APIRoute(path=f"{ROOT_ROUTE_PREFIX}{route_info.path}", endpoint=endpoint, methods=[method])
 
     for child_folder in folder.iterdir():
         if child_folder.is_dir() and child_folder.name not in EXCLUDED_FOLDER_NAMES:
@@ -185,7 +185,7 @@ def sort_routes_by_path(route: APIRoute) -> tuple:
     is_catch_all = "{path:path}" in path
     first_dynamic = path.find("{") if is_dynamic else float("inf")
 
-    return (is_catch_all, level, is_dynamic, num_dynamic, first_dynamic)
+    return is_catch_all, level, is_dynamic, num_dynamic, first_dynamic
 
 
 def get_app_router(
@@ -216,8 +216,6 @@ def get_app_router(
         raise RuntimeError("App module missing '__file__' attribute. Ensure it's a proper package or module.")
     app_folder = pathlib.Path(cast(str, app.__file__)).parent
 
-    root_router = APIRouter(prefix=ROOT_ROUTE_PREFIX)
-
     client_routes = get_client_routes(app_folder)
     navigation_routes = generate_navigation_routes(client_routes)
     api_routes = generate_api_routes(app_folder)
@@ -225,13 +223,12 @@ def get_app_router(
     server_side_render_routes = generate_server_side_render_routes(client_routes, loader_routes, prebuilt_uri)
     sitemap_routes = generate_sitemap_routes(client_routes)
 
+    root_router = APIRouter()
     for route in sorted(
         chain(
             navigation_routes, api_routes, (route for route in loader_routes), server_side_render_routes, sitemap_routes
         ),
         key=sort_routes_by_path,
     ):
-        if route.name != "get_server_side_render_route":
-            route.path = ROOT_ROUTE_PREFIX + route.path
         root_router.routes.append(route)
     return root_router

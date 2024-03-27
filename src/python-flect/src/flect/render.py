@@ -16,6 +16,26 @@ if TYPE_CHECKING:
     from flect.routing.client import ClientRoute
 
 FLECT_PREBUILT_URI = "https://unpkg.com/@chaoying/flect-prebuilt@0.2.8/dist/assets"
+HTML_TEMPLATE = """\
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap" rel="stylesheet" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script type="module" src="{prebuilt_uri}/index.js"></script>
+        <link rel="stylesheet" href="{prebuilt_uri}/index.css" />
+        {head_html}
+    </head>
+    <body>
+        <div class="sr-only">{element_html}</div>
+        <div id="root"></div>
+    </body>
+</html>\
+"""
 
 
 def generate_html(
@@ -42,26 +62,7 @@ def generate_html(
     """
     if prebuilt_uri is None:
         prebuilt_uri = FLECT_PREBUILT_URI
-    return f"""\
-    <!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="UTF-8" />
-            <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-            <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap" rel="stylesheet" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <script type="module" src="{prebuilt_uri}/index.js"></script>
-            <link rel="stylesheet" href="{prebuilt_uri}/index.css" />
-            {head_html}
-        </head>
-        <body>
-            <div class="sr-only">{element_html}</div>
-            <div id="root"></div>
-        </body>
-    </html>
-    """
+    return HTML_TEMPLATE.format(prebuilt_uri=prebuilt_uri, head_html=head_html, element_html=element_html)
 
 
 async def get_route_response(request: Request, route: APIRoute, outlet: Optional[AnyComponent] = None) -> PageResponse:
@@ -169,13 +170,10 @@ async def render_server_side_html(
         request,
     )
 
+    # handle layout
     matched_client_route = get_matched_client_route(request_path, client_routes)
     if matched_client_route:
-        absolute_path = matched_client_route.absolute_path
-        if matched_client_route.index:
-            layout_path = ROOT_ROUTE_PREFIX + "/".join(absolute_path.rsplit("/", 3)[:-3]) + "/" + LAYOUT_ROUTE_SUFFIX
-        else:
-            layout_path = ROOT_ROUTE_PREFIX + absolute_path + LAYOUT_ROUTE_SUFFIX
+        layout_path = matched_client_route.absolute_path + LAYOUT_ROUTE_SUFFIX
         while layout_path.startswith(ROOT_ROUTE_PREFIX):
             matched_layout_route = get_matched_route(loader_routes, layout_path)
             if matched_layout_route:

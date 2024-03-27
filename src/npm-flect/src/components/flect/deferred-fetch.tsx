@@ -28,9 +28,5 @@ export function DeferredFetch(props: DeferredFetchProps) {
     }
   }, [dispatched, props.path]);
 
-  useEffect(() => {
-    console.log(componentProps);
-  }, [componentProps]);
-
   return componentProps && <AnyComponent {...componentProps} />;
 }
