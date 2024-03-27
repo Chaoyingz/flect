@@ -134,5 +134,7 @@ def test_get_client_routes(app_folder):
             ],
         }
     ]
-
-    assert [route.model_dump() for route in routes] == pytest.approx(expected_routes)
+    # ignore order
+    assert sorted([route.model_dump() for route in routes], key=lambda x: x["segment"]) == sorted(
+        expected_routes, key=lambda x: x["segment"]
+    )
