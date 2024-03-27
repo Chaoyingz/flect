@@ -65,7 +65,7 @@ def test_parse_route_info_from_folder(
 
 def test_get_client_routes(app_folder):
     routes = get_client_routes(app_folder)
-    assert [route.model_dump() for route in routes] == [
+    expected_routes = [
         {
             "segment": "",
             "path": "/",
@@ -134,3 +134,5 @@ def test_get_client_routes(app_folder):
             ],
         }
     ]
+
+    assert [route.model_dump() for route in routes] == pytest.approx(expected_routes)
