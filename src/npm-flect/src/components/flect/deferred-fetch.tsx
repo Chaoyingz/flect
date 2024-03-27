@@ -22,7 +22,6 @@ export function DeferredFetch(props: DeferredFetchProps) {
       fetch(props.path)
         .then((response) => response.json())
         .then((json) => {
-          console.log("body", json.body);
           setComponentProps(json.body);
         });
     }

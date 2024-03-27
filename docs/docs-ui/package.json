@@ -1,7 +1,7 @@
 {
   "name": "docs-ui",
   "description": "Your project description",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "main": "dist/index.html",
   "type": "module",
   "scripts": {
