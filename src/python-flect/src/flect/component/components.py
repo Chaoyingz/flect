@@ -225,8 +225,12 @@ class Dialog(BaseContainerComponent):
         default=None,
         description="Specifies the dialog's description.",
     )
-    trigger: DispatchEvent = Field(
-        ...,
+    default_open: bool = Field(
+        default=False,
+        description="Specifies whether the dialog is open by default.",
+    )
+    trigger: Optional[DispatchEvent] = Field(
+        None,
         description="Specifies the event that triggers the dialog.",
     )
 
