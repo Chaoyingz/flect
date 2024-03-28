@@ -16,7 +16,7 @@ click==8.1.7
     # via uvicorn
 fastapi==0.110.0
     # via flect
-flect==0.2.8
+flect==0.2.10
     # via docs
 h11==0.14.0
     # via uvicorn

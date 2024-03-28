@@ -6,7 +6,7 @@ authors = [
     { name = "Chaoying", email = "chaunceywe@gmail.com" }
 ]
 dependencies = [
-    "flect>=0.2.9",
+    "flect>=0.2.10",
     "pydantic-settings>=2.2.1",
 ]
 readme = "README.md"
