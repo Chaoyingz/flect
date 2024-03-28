@@ -74,12 +74,28 @@ def test_get_client_routes(app_folder):
             "index": False,
             "children": [
                 {
+                    "segment": "",
+                    "path": "/",
+                    "absolute_path": "/flect/",
+                    "loader_path": "/flect/",
+                    "index": True,
+                    "children": [],
+                },
+                {
                     "segment": "segment1",
                     "path": "/segment1/",
                     "absolute_path": "/flect/segment1/",
                     "loader_path": "/flect/segment1/_layout/",
                     "index": False,
                     "children": [
+                        {
+                            "segment": "segment1",
+                            "path": "/segment1/",
+                            "absolute_path": "/flect/segment1/",
+                            "loader_path": "/flect/segment1/",
+                            "index": True,
+                            "children": [],
+                        },
                         {
                             "segment": "",
                             "path": "/segment1/",
@@ -98,14 +114,6 @@ def test_get_client_routes(app_folder):
                             ],
                         },
                         {
-                            "segment": "{segment_id}",
-                            "path": "/segment1/{segment_id}/",
-                            "absolute_path": "/flect/segment1/dynamic__segment_id/",
-                            "loader_path": "/flect/segment1/{segment_id}/",
-                            "index": False,
-                            "children": [],
-                        },
-                        {
                             "segment": "segment2",
                             "path": "/segment1/segment2/",
                             "absolute_path": "/flect/segment1/segment2/",
@@ -114,24 +122,17 @@ def test_get_client_routes(app_folder):
                             "children": [],
                         },
                         {
-                            "segment": "segment1",
-                            "path": "/segment1/",
-                            "absolute_path": "/flect/segment1/",
-                            "loader_path": "/flect/segment1/",
-                            "index": True,
+                            "segment": "{segment_id}",
+                            "path": "/segment1/{segment_id}/",
+                            "absolute_path": "/flect/segment1/dynamic__segment_id/",
+                            "loader_path": "/flect/segment1/{segment_id}/",
+                            "index": False,
                             "children": [],
                         },
                     ],
                 },
-                {
-                    "segment": "",
-                    "path": "/",
-                    "absolute_path": "/flect/",
-                    "loader_path": "/flect/",
-                    "index": True,
-                    "children": [],
-                },
             ],
         }
     ]
+
     assert [route.model_dump() for route in routes] == expected_routes

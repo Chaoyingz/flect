@@ -105,12 +105,12 @@ def parse_route_info_from_folder(
     RouteInfo
         The parsed route information.
     """
-    segment = ""
-    if not is_root_folder and not folder.stem.startswith(GROUP_ROUTE_PREFIX):
-        if folder.stem.startswith(DYNAMIC_ROUTE_PREFIX):
-            segment = "{" + folder.stem[len(DYNAMIC_ROUTE_PREFIX) :] + "}"
-        else:
-            segment = folder.stem
+    if not is_root_folder and folder.stem.startswith(DYNAMIC_ROUTE_PREFIX):
+        segment = "{" + folder.stem[len(DYNAMIC_ROUTE_PREFIX) :] + "}"
+    elif not is_root_folder and not folder.stem.startswith(GROUP_ROUTE_PREFIX):
+        segment = folder.stem
+    else:
+        segment = ""
 
     path = f"{parent_path.rstrip('/')}/{segment}/" if segment else parent_path
 
@@ -120,7 +120,7 @@ def parse_route_info_from_folder(
     return RouteInfo(segment=segment, path=path, absolute_path=absolute_path, loader_path=loader_path)
 
 
-def get_client_routes(
+def parse_client_routes(
     folder: pathlib.Path,
     is_root_folder: bool = True,
     parent_path: str = "/",
@@ -153,7 +153,7 @@ def get_client_routes(
 
     for child_folder in folder.iterdir():
         if child_folder.is_dir() and child_folder.name not in EXCLUDED_FOLDER_NAMES:
-            routes.extend(get_client_routes(child_folder, False, route_info.path, route_info.absolute_path))
+            routes.extend(parse_client_routes(child_folder, False, route_info.path, route_info.absolute_path))
 
     if page_file.is_file():
         page_module = load_module(page_file)
@@ -184,4 +184,15 @@ def get_client_routes(
             )
         ]
 
-    return sorted(routes, key=lambda route: path_priority(route.loader_path))
+    return routes
+
+
+def sort_client_routes(routes: list[ClientRoute]) -> list[ClientRoute]:
+    for route in routes:
+        if route.children:
+            route.children = sort_client_routes(route.children)
+    return sorted(routes, key=lambda r: path_priority(r.loader_path))
+
+
+def get_client_routes(folder: pathlib.Path) -> list[ClientRoute]:
+    return sort_client_routes(parse_client_routes(folder))
