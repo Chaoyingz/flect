@@ -11,7 +11,7 @@ class BaseAction(BaseModel):
 
 class DispatchEvent(BaseAction):
     type: Literal["dispatch-event"] = "dispatch-event"
-    event: str = Field(..., description="The event to dispatch.")
+    event: str = Field(..., min_length=1, description="The event to dispatch.")
 
 
 class Notify(BaseAction):
