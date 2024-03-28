@@ -15,6 +15,7 @@ from flect.constants import (
     ROOT_ROUTE_PREFIX,
 )
 from flect.response import PageResponse
+from flect.routing.sort import path_priority
 from flect.sitemap import Sitemap
 from flect.utils import load_module
 
@@ -32,7 +33,7 @@ class ClientRoute(BaseModel):
     )
     absolute_path: str = Field(
         ...,
-        description="The complete path of the route from the root, useful for matching routes.",
+        description="The complete path of the route from the root, useful for matching group route.",
     )
     loader_path: str = Field(
         ...,
@@ -183,4 +184,4 @@ def get_client_routes(
             )
         ]
 
-    return routes
+    return sorted(routes, key=lambda route: path_priority(route.loader_path))

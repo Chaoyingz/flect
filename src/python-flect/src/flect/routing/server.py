@@ -19,6 +19,7 @@ from flect.constants import (
 from flect.render import generate_html, render_server_side_html
 from flect.response import PageResponse
 from flect.routing.client import ClientRoute, get_client_routes, parse_route_info_from_folder
+from flect.routing.sort import path_priority
 from flect.sitemap import generate_sitemap_xml
 from flect.utils import load_module
 
@@ -163,31 +164,6 @@ def generate_sitemap_routes(
     yield APIRoute("/sitemap.xml", get_sitemap_route, methods=["GET"])
 
 
-def sort_routes_by_path(route: APIRoute) -> tuple:
-    """
-    Sorts an APIRoute object based on its path, prioritizing static paths over dynamic paths,
-    and ensuring catch-all routes are sorted last.
-
-    Parameters
-    ----------
-    route : APIRoute
-        The APIRoute object to sort.
-
-    Returns
-    -------
-    tuple
-        A tuple that ensures the correct sorting of routes, with catch-all routes placed last.
-    """
-    path = route.path
-    level = path.count("/")
-    is_dynamic = "{" in path
-    num_dynamic = path.count("{")
-    is_catch_all = "{path:path}" in path
-    first_dynamic = path.find("{") if is_dynamic else float("inf")
-
-    return is_catch_all, level, is_dynamic, num_dynamic, first_dynamic
-
-
 def get_app_router(
     app: ModuleType,
     prebuilt_uri: Optional[str] = None,
@@ -228,7 +204,7 @@ def get_app_router(
         chain(
             navigation_routes, api_routes, (route for route in loader_routes), server_side_render_routes, sitemap_routes
         ),
-        key=sort_routes_by_path,
+        key=lambda r: path_priority(r.path),
     ):
         root_router.routes.append(route)
     return root_router
