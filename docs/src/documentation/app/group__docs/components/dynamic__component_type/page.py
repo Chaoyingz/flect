@@ -236,7 +236,7 @@ COMPONENT_DOCS_MAP = {
     "data-grid": [
         get_component_description_section(
             title="DataGrid",
-            description="The DataGrid component displays data in tabular format.",
+            description="The DataGrid component is used to edit and display data.",
         ),
         get_component_preview_section(
             preview=c.DataGrid(
@@ -265,6 +265,7 @@ COMPONENT_DOCS_MAP = {
                 ]
             )
         ),
+        get_api_reference_section(component=c.DeferredFetch),
     ],
     "dialog": [
         get_component_description_section(
@@ -291,7 +292,7 @@ COMPONENT_DOCS_MAP = {
                 ],
             ),
         ),
-        get_api_reference_section(component=c.Container),
+        get_api_reference_section(component=c.Dialog),
     ],
     "display": [
         get_component_description_section(

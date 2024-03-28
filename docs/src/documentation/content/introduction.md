@@ -20,7 +20,7 @@ This project is inspired by the [FastUI](https://github.com/pydantic/FastUI) and
 
 ## Why use flect?
 
-flect leverages Python code for the development of web applications’ user interfaces, presenting several benefits:
+flect enables developers to harness the combined power of Python and JavaScript ecosystems, facilitating the creation of web applications with efficiency and ease:
 
 > If you're a Python developer — you can build responsive web applications using React without writing a single line of JavaScript, or touching npm.
 >

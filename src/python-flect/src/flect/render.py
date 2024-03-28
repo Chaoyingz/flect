@@ -15,7 +15,7 @@ from flect.response import PageResponse
 if TYPE_CHECKING:
     from flect.routing.client import ClientRoute
 
-FLECT_PREBUILT_URI = "https://unpkg.com/@chaoying/flect-prebuilt@0.2.9/dist/assets"
+FLECT_PREBUILT_URI = "https://unpkg.com/@chaoying/flect-prebuilt@0.2.10/dist/assets"
 HTML_TEMPLATE = """\
 <!DOCTYPE html>
 <html lang="en">
